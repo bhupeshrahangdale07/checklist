@@ -1,0 +1,36 @@
+<template>
+    <div class="slds-form-element slds-form-element_vertical slds-is-editing slds-m-top_medium">
+        <!-- <form onsubmit={handleSubmitAddItemForm}> -->
+        <label class="slds-form-element__label  slds-text-title_bold" for="horizontal-combobox-id-06"
+            id="combobox-label-id-18">
+            Create Checklist Item
+        </label>
+        <div class="slds-form-element__control">
+            <div class="slds-combobox_container">
+                <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click">
+
+                    <div class="add-item-form slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" >
+                        <lightning-input type="text" name="ChecklistItemFormField" id={checkPointField.fieldApiName}
+                            onchange={handleChangeAddItemFormField} data-fieldname={checkPointField.fieldApiName}
+                            variant="label-hidden" placeholder="Add Item" required="true"
+                            max-length="255" style="font-size: small;"></lightning-input>
+                        <lightning-textarea name="ChecklistItemFormField" onchange={handleChangeAddItemFormField}
+                            data-fieldname={descriptionField.fieldApiName} variant="label-hidden"
+                            placeholder="Add Description" max-length="255" style="font-size: small;"></lightning-textarea>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="slds-form-element slds-form-element_vertical slds-m-top_none">
+            <div class="footerbtns">
+                <button class="btn-cancel slds-button slds-button_brand" style="color: #ffffff; background: #1b96ff;" onclick={handleSubmitAddItemForm}
+                    data-checklistid={checklistId}>Save</button>
+                <button class="btn-cancel slds-button slds-button_neutral" onclick={handleAddItemCancel}
+                    data-checklistid={checklistId}>Cancel</button>
+            </div>
+        </div>
+        <!--  -->
+    </div>
+</template>

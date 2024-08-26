@@ -1,0 +1,185 @@
+<template>
+    <div>
+        <section class="checklist-1-main sldc-color-background-alt">
+            <div class="checklist-main-inner slds-var-p-around_large">
+                <!-- <div class="slds-grid  slds-grid_vertical-align-center slds-var-m-bottom_small">
+                    <div class="slds-col slds-medium-size_7-of-12 slds-large-size_7-of-12">
+                        <div class="slds-grid slds-grid_vertical-align-center">
+                            <div class="check-1-col slds-p-left_none"> 
+                                <lightning-icon class="btn-primary slds-p-around_x-small" size='small' variant="inverse"
+                                    icon-name="utility:edit_form"
+                                    alternative-text="Checklist Genius Icon"></lightning-icon>
+                            </div>
+                            <div class="slds-col slds-m-left_small"> 
+                                <div class="checklist-title slds-page-header__title">Checklist Genius</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div lwc:if={showCreateChecklist}
+                        class="slds-col slds-medium-size_5-of-12 slds-large-size_5-of-12 slds-grid slds-grid_align-end">
+
+                        <!- - Commented the mobile view  - ->
+                            <div lwc:if={isMobile1}>
+                            <button class="btn-cancel slds-button slds-button_brand" onclick={handleCreateChecklist}
+                                style="color: #ffffff; background: #1b96ff;">
+                                <lightning-icon icon-name="utility:add" alternative-text="Add Item" title="Add Item"
+                                    size="xx-small" variant="inverse"></lightning-icon>
+                                <span class="slds-m-left_x-small" style=" font-size: smaller;">
+                                    Create Checklist
+                                </span>
+                            </button>
+                        </div>
+                        <div lwc:else> 
+                        <button class="btn-primary slds-button slds-button_brand slds-var-p-around_x-small"
+                            onclick={handleCreateChecklist}>
+                            <svg class="form-button slds-button__icon slds-button__icon_left" aria-hidden="true">
+                                <use xlink:href={icon2}></use>
+                            </svg>
+                            Create Checklist
+                        </button>
+                        <!- - Commented the mobile view  - ->
+                            </div> 
+                    </div>
+                </div> -->
+
+                <div class="slds-grid slds-m-bottom_small blockDiv">
+                    <div class="slds-align-bottom slds-col">
+                        <div class="slds-grid slds-grid_vertical-align-center">
+                            <div class="check-1-col slds-p-left_none"> 
+                                <lightning-icon class="btn-primary slds-p-around_x-small" size='small' variant="inverse"
+                                    icon-name="utility:edit_form"
+                                    alternative-text="Checklist Genius Icon"></lightning-icon>
+                            </div>
+                            <div class="slds-col slds-m-left_small"> 
+                                <div class="checklist-title slds-page-header__title">Checklist Genius Duc</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-no-flex slds-grid slds-align-bottom slds-shrink">
+                        <!--<lightning-button-icon-stateful icon-name="utility:filterList" selected={openFiltersList}
+                            onclick={handleOpenFiltersList} alternative-text="Filters" 
+                            class="slds-align-middle slds-m-right_xx-small"></lightning-button-icon-stateful> -->
+
+                            <lightning-button-icon-stateful icon-name="utility:filterList" selected={openFiltersList}
+                            onclick={handleOpenFiltersList} alternative-text="Filters" 
+                            class="slds-align-middle slds-m-right_xx-small" size="medium"></lightning-button-icon-stateful>
+                            
+                        <button style={checklistBtnStyle} class="btn-primary slds-button slds-button_brand slds-p-vertical_xx-small slds-p-horizontal_x-small"
+                            onclick={handleCreateChecklist}>
+                            <svg class="form-button slds-button__icon slds-button__icon_left" aria-hidden="true">
+                                <use xlink:href={icon2}></use>
+                            </svg>
+                            Create Checklist
+                        </button>
+                    </div>
+                </div>
+
+                <!-- for Testing added the length to check filters
+                <div lwc:if={_CheckList} class="slds-p-around_small">
+                    Checklist : {_CheckList.length}
+                </div> 
+                -->
+
+                <div lwc:if={openFiltersList} class="slds-m-bottom_small">
+                    <lightning-combobox label="Filter" variant="label-hidden" placeholder="Select a Filter."
+                        options={filterOptions}
+                        value={selectedFilter}
+                        onchange={handleFilterChange}></lightning-combobox>
+                </div>
+
+                <div lwc:else>
+                    <div lwc:if={showSelectedFilters}>
+                        <!-- 
+                        <template for:each={selectedFilters} for:item="filter">
+                            <lightning-pill class="slds-m-right_x-small" key={filter.name} label={filter.label} has-error></lightning-pill>
+                        </template>
+                        <br> 
+                        -->
+                        <lightning-pill-container class="ChecklistIndexFilterPill" items={selectedFilters} onitemremove={handleItemRemove}></lightning-pill-container>
+                    </div>
+                </div>
+
+                <div class="slds-p-around_small" lwc:if={showInstructions}>
+                    <p style="text-align: justify; color: red;">
+                        <!-- {label.Checklist_Relation_Validation} -->
+                        We're sorry, but we couldn't find a relationship field in the Checklist object that links to the
+                        current record. To use the checklist feature, please create a new lookup field in the Checklist
+                        object that establishes a relationship with the object you are currently viewing. Once the field
+                        is created, you'll be able to utilize this feature seamlessly. If you need assistance with
+                        creating the field, please reach out to your Salesforce administrator. Thank you!
+                    </p>
+                </div>
+
+                <div lwc:if={CheckList} class="slds-is-relative">
+                    <!-- Commented the mobile view  
+                        <div lwc:if={isMobile1}>
+                        <c-checklist-details-mob check-list={_CheckList}></c-checklist-details-mob>
+                    </div>
+                    <div lwc:else>-->
+                    
+                    <!-- 
+                        * c-checklist-details is the component where we are Displaying the List of Checklists with Checkboxes
+                    -->
+
+                    <div lwc:if={_CheckList}>
+                    <c-checklist-details-duc check-list={_CheckList} onhandlecompletedchecklist={handlecompletedchecklist} onhandleuncompletedchecklist={handleuncompletedchecklist}
+                        flexipage-region-width={flexipageRegionWidth}></c-checklist-details-duc>
+                    </div>
+                    
+                        <template lwc:if={isLoadingChecklistDetails}>
+                            <lightning-spinner alternative-text="Loading" size="x-small" variant="brand"></lightning-spinner>
+                        </template>
+                    <!-- Commented the mobile view  </div> -->
+                </div>
+
+                <div lwc:if={openCreateChecklistDialog}>
+                    <!-- Commented the mobile view  -->
+                        <div lwc:if={isNotMobile}>
+
+                    <!-- 
+                        * c-modal-pop-up is a generic component used for showing a popup.
+                    -->
+                    <c-modal-pop-up-duc show-modal={openCreateChecklistDialog} enable-header="true"
+                        onclose={closeDialogModal}>
+                        <div slot="header">
+                            <h2 slot="header" id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+                                Create New Checklist
+                            </h2>
+                        </div>
+                        <div slot="body">
+                            <div style="min-height: 30%;">
+
+                                <!-- 
+                                    * c-create-checklist is the popup component is used to Select the Checklist Type.
+                                    * onselected this event will fire when we select any Checklist Type.
+                                -->
+                                <c-create-checklist-dialog-duc
+                                    onselected={handleCreateChecklistDialog}></c-create-checklist-dialog-duc>
+                            </div>
+                        </div>
+                    </c-modal-pop-up-duc>
+                    <!-- Commented the mobile view  -->
+                        </div>
+
+                    <!-- <c-create-checklist-dialog ></c-create-checklist-dialog> -->
+                </div>
+
+                <div lwc:if={openCreateChecklist}>
+                    <!-- 
+                        * c-create-checklist is the popup component is used to Create new Checklist an items. 
+                        * template-type is used to set the type of checklist is it "With Template" or "Without Template" 
+                        * record-id  record id to Relate the checklist to.
+                        * onaddnewchecklistsuccess this event will fire when we save the checklist and items.
+                        * onclose this will close the popup when we click on cancel button.
+                     -->
+                    <c-create-checklist-duc template-type={openCreateChecklistType} record-id={recordId}
+                        onclose={handleCloseCreateChecklist}
+                        onback={handleBackCreateChecklist}
+                        onaddnewchecklistsuccess={handleOnAddNewChecklistSuccess}></c-create-checklist-duc>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+</template>

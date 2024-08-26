@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Checklist_Item_Checked_Count__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Checklist Item Checked Count</label>
+    <summaryFilterItems>
+        <field>Checklist_Item__c.Checked__c</field>
+        <operation>equals</operation>
+        <value>Yes, Not Applicable</value>
+    </summaryFilterItems>
+    <summaryForeignKey>Checklist_Item__c.Checklist__c</summaryForeignKey>
+    <summaryOperation>count</summaryOperation>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

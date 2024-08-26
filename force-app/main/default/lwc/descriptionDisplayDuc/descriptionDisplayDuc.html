@@ -1,0 +1,12 @@
+<template>
+	<div class={divClass}>
+		<p class="clr-light slds-p-right_x-small">{displayedDescription}
+			<a style="color:#757575; text-decoration: none; font-weight: 600;" lwc:if={showMoreLink} href="javascript:void(0);"
+				onclick={handleMoreInfo} >Show more
+			</a>
+			<a style="color:#757575; text-decoration: none;font-weight: 600;" lwc:if={showLessLink} href="javascript:void(0);"
+				onclick={handleLessInfo} class="slds-p-left_xx-small">Show less
+			</a>
+		</p>
+	</div>
+</template>
