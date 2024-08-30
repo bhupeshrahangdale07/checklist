@@ -207,15 +207,22 @@
                                 <!--  -->
                             </div>
 
-                            <div lwc:else class="">
-                                <button class="btn-cancel slds-button slds-button_brand" onclick={handleAddItem} disabled={CheckL.kt_checklist__Is_Checklist_Locked__c}
-                                    data-checklistid={CheckL.Id} style="color: #ffffff; background: #1b96ff;">
-                                    <lightning-icon icon-name="utility:add" alternative-text="Add Item" title="Add Item"
-                                        size="xx-small" variant="inverse"></lightning-icon>
-                                    <span class="slds-m-left_x-small" style=" font-size: smaller;">
-                                        Add Item
-                                    </span>
-                                </button>
+                            <div lwc:else class="content-container">
+                                <div class="button-container">
+                                    <button class="btn-cancel slds-button slds-button_brand" onclick={handleAddItem} disabled={CheckL.kt_checklist__Is_Checklist_Locked__c}
+                                        data-checklistid={CheckL.Id} style="color: #ffffff; background: #1b96ff;">
+                                        <lightning-icon icon-name="utility:add" alternative-text="Add Item" title="Add Item"
+                                            size="xx-small" variant="inverse"></lightning-icon>
+                                        <span class="slds-m-left_x-small" style=" font-size: smaller;">
+                                            Add Item
+                                        </span>
+                                    </button>
+
+                                    <div class="delete-icon">
+                                        <lightning-icon data-checklistid={CheckL.Id} data-title={CheckL.kt_checklist__Checklist_Title__c} icon-name="utility:delete" class="icon-clickable" size="medium" alternative-text="Delete Checklist" title="Delete Checklist" onclick={handleDeleteChecklist}></lightning-icon>
+                                        <!-- <lightning-button-icon icon-name="utility:delete" variant="bare" alternative-text="Delete Checklist" title="Delete Checklist"></lightning-button-icon> -->
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </section>

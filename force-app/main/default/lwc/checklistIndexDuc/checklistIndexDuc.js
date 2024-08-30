@@ -252,6 +252,7 @@ export default class ChecklistIndex extends NavigationMixin(LightningElement) {
   }
 
 	handlecompletedchecklist(event){
+		debugger;
 		// this.CheckList = [];
 		// this.fetchRecords();
 		let rec = event.detail.checklist;
@@ -259,6 +260,7 @@ export default class ChecklistIndex extends NavigationMixin(LightningElement) {
 	}
 
 	handleuncompletedchecklist(event){
+		debugger;
 		// this.CheckList = [];
 		// this.fetchRecords();
 		let rec = event.detail.checklist;
@@ -266,7 +268,10 @@ export default class ChecklistIndex extends NavigationMixin(LightningElement) {
 	}
 
 	replaceChecklist(rec){
+		console.log('Rec- '+JSON.stringify(rec));
+		debugger;
 		this.CheckList = this.CheckList.map(element => {
+			console.log('test- '+rec.Id);
 			if(element.Id == rec.Id){
 				return rec;
 			}else{
@@ -291,7 +296,7 @@ export default class ChecklistIndex extends NavigationMixin(LightningElement) {
   		   console.log("inside handleCreateChecklist");
   		   //event.preventDefault();
   		   let componentDef = {
-  		     componentDef: "c:createChecklistDialog",
+  		     componentDef: "c:createChecklistDialogDuc",
   		     attributes: {
   		       recordIdOfAcc: this.recordId,
   	       		ShowAsPopUp: false
@@ -413,6 +418,12 @@ export default class ChecklistIndex extends NavigationMixin(LightningElement) {
   	// 	}
   	// });
   	this.CheckList = JSON.parse(JSON.stringify(lst));
+  }
+
+  handleRemoveChecklist(event){
+	let recId = event.detail.checklistid;
+	// Filter the CheckList array to remove the object with the matching recId
+	this.CheckList = this.CheckList.filter(item => item.Id !== recId);
   }
 
   /*

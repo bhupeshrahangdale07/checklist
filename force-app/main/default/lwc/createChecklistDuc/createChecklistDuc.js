@@ -130,6 +130,7 @@ export default class CreateChecklist extends NavigationMixin(LightningElement) {
   // 	primaryField: 'User.Name',
   // 	additionalFields: ['Profile.Name'],
   // };
+
   
   @track assignToOptions = {'values' : undefined, 'defaultValue' : {'value' : ''}};
   //$fieldApiName added for mobile view
@@ -169,6 +170,7 @@ export default class CreateChecklist extends NavigationMixin(LightningElement) {
 	this.divStyle = `min-height: ${height}px;`;
 }
   connectedCallback() {
+	this.disablePullToRefresh();
   	//window.addEventListener("keydown", this.handleKeyDown);
   	this.showChecklistFields =
       this.templateType === 'With Template' ? false : true;
@@ -184,6 +186,19 @@ export default class CreateChecklist extends NavigationMixin(LightningElement) {
   	// Remove event listener when the component is removed from the DOM
   	window.removeEventListener('keydown', this.handleKeyDown);
   }
+
+  disablePullToRefresh () {
+	// CustomEvent is standard JavaScript. See:
+	// https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent
+	const disable_ptr_event = new CustomEvent("updateScrollSettings", {
+		detail: {
+			isPullToRefreshEnabled: false
+		},
+		bubbles: true,
+		composed: true
+	});
+	this.dispatchEvent(disable_ptr_event);
+}
 
   handleKeyDown(event) {
   	// Check if the key pressed is the Enter key
@@ -750,35 +765,10 @@ export default class CreateChecklist extends NavigationMixin(LightningElement) {
 		label: 'Change Create Checklist Type',
 	});
 	if(result){
-		this.templateType = changeType;
-		this.showChecklistFields = this.templateType === 'With Template' ? false : true;
-		
-		this.resetForm();
-		this.removeItems();
-		// this.tempChecklistItems = [];
-		// this.formData['kt_checklist__Checklist_Title__c'] = '';
-		// this.formData['kt_checklist__Description__c'] = '';
-		// this.formData['kt_checklist__Due_Days__c'] = '';
-		// this.formData['kt_checklist__Assign_To__c'] = '';
-
-		// this.addChecklistDueDate = undefined;
-		// this.selectedAssignTo = '';
-
-	}
-  }
-
-  async handleChangeChecklistType1(event){
-	let changeType = this.templateType === 'With Template' ? 'Without Template' : 'With Template';
-	const result = await LightningConfirm.open({
-		message: `You are about to change the checklist type from '${this.templateType}' to '${changeType}'.`,
-		theme: 'warning',
-		label: 'Change Create Checklist Type',
-	});
-	if(result){
 
 		if(this.isMobile){
 			let componentDef = {
-				componentDef: "c:createChecklistDialog",
+				componentDef: "c:createChecklistDialogDuc",
 				attributes: {
 					recordIdOfAcc: this.recordId,
 						ShowAsPopUp: false
@@ -806,24 +796,24 @@ export default class CreateChecklist extends NavigationMixin(LightningElement) {
 	}
   }
 
-  resetForm(){
-	this.tempChecklistItems = [];
-	this.formData['kt_checklist__Checklist_Title__c'] = '';
-	this.formData['kt_checklist__Description__c'] = '';
-	this.formData['kt_checklist__Due_Days__c'] = '';
-	this.formData['kt_checklist__Assign_To__c'] = '';
+//   resetForm(){
+// 	this.tempChecklistItems = [];
+// 	this.formData['kt_checklist__Checklist_Title__c'] = '';
+// 	this.formData['kt_checklist__Description__c'] = '';
+// 	this.formData['kt_checklist__Due_Days__c'] = '';
+// 	this.formData['kt_checklist__Assign_To__c'] = '';
 
-	this.addChecklistDueDate = undefined;
-	this.selectedAssignTo = '';
-  }
+// 	this.addChecklistDueDate = undefined;
+// 	this.selectedAssignTo = '';
+//   }
 
-  removeItems(){
-	if(this.templateType === 'With Template'){
-		this.tempChecklistItems = this.tempChecklistItems && this.tempChecklistItems.length > 0 ? this.tempChecklistItems.filter(currentItem => currentItem.isTemplateItem ) : [];
-	}else{
-		this.tempChecklistItems = [];
-	}
-  }
+//   removeItems(){
+// 	if(this.templateType === 'With Template'){
+// 		this.tempChecklistItems = this.tempChecklistItems && this.tempChecklistItems.length > 0 ? this.tempChecklistItems.filter(currentItem => currentItem.isTemplateItem ) : [];
+// 	}else{
+// 		this.tempChecklistItems = [];
+// 	}
+//   }
 
   handleChecklistItemChange(event) {
 	this.tempChecklistItems = event.detail.value;

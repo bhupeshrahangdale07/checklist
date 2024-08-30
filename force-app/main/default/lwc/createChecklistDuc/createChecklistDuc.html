@@ -161,7 +161,6 @@
                             </template>
 
                             <div class="btn-save  slds-m-top_medium slds-align_absolute-center">
-                                <button class="slds-button slds-button_text-destructive" onclick={handleChangeChecklistType1}>Back 1</button>
                                 <button class="slds-button slds-button_text-destructive" onclick={handleChangeChecklistType}>Back</button>
                                 <template lwc:if={showChecklistFields}>
                                     <button class="slds-button slds-button_destructive" onclick={closeModal}>Cancel</button>
@@ -190,8 +189,8 @@
                     <div class="slds-grid">
                         <span class="owner-name slds-truncate slds-grow">
                             {templateType} 
-                            <lightning-button-icon class="slds-shrink-none change-owner-trigger slds-p-left_xx-small" icon-name="utility:replace" 
-                                onclick={handleChangeChecklistType} variant="bare" alternative-text="Change Checklist Type" title="Change Checklist Type"></lightning-button-icon>
+                            <!-- <lightning-button-icon class="slds-shrink-none change-owner-trigger slds-p-left_xx-small" icon-name="utility:replace" 
+                                onclick={handleChangeChecklistType} variant="bare" alternative-text="Change Checklist Type" title="Change Checklist Type"></lightning-button-icon> -->
                         </span>
                     </div>
                 </div>
@@ -367,7 +366,6 @@
 
                                         
                                             <div class="btn-save  slds-m-top_medium slds-align_absolute-center">
-                                                <button class="slds-button slds-button_text-destructive" onclick={handleChangeChecklistType1}>Back 1</button>
                                                 <button class="slds-button slds-button_text-destructive" onclick={handleChangeChecklistType}>Back</button>
                                                 <template lwc:if={showChecklistFields}>
                                                     <button class="slds-button slds-button_destructive" onclick={closeModal}>Cancel</button>

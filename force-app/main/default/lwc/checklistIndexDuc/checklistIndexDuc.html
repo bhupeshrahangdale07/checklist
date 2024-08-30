@@ -51,7 +51,7 @@
                                     alternative-text="Checklist Genius Icon"></lightning-icon>
                             </div>
                             <div class="slds-col slds-m-left_small"> 
-                                <div class="checklist-title slds-page-header__title">Checklist Genius Duc</div>
+                                <div class="checklist-title slds-page-header__title">Checklist Genius</div>
                             </div>
                         </div>
                     </div>
@@ -122,7 +122,7 @@
                     -->
 
                     <div lwc:if={_CheckList}>
-                    <c-checklist-details-duc check-list={_CheckList} onhandlecompletedchecklist={handlecompletedchecklist} onhandleuncompletedchecklist={handleuncompletedchecklist}
+                    <c-checklist-details-duc check-list={_CheckList} ondeletechecklist={handleRemoveChecklist} onhandlecompletedchecklist={handlecompletedchecklist} onhandleuncompletedchecklist={handleuncompletedchecklist}
                         flexipage-region-width={flexipageRegionWidth}></c-checklist-details-duc>
                     </div>
                     

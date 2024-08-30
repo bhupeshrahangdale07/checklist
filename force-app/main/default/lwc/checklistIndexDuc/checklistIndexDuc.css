@@ -1,12 +1,7 @@
 .test{
     
 }
-@media only screen and (max-width: 768px) {
-    .blockDiv{
-        display: block;
-        margin: 14px 0px;
-    }
-}
+
 
 .my-icon {
     /* --slds-c-icon-color-foreground: orange;

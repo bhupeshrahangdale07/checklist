@@ -101,6 +101,7 @@ export default class NavItemCmp extends LightningElement {
 
         // Fetch records only if the iconInfo wire is ready
         if(this.relationFieldIconMap) {
+            alert('Inside Nav cmp');
             this.fetchRecords();
         }
         if(FORM_FACTOR === 'Large'){

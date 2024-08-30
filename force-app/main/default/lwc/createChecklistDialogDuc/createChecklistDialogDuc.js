@@ -12,14 +12,24 @@ export default class CreateChecklistDialog extends NavigationMixin(LightningElem
     		this.isMobile =true;
     	}
     }
-
+    renderedCallback(){
+		if(FORM_FACTOR === 'Small'){
+			const style = document.createElement('style');
+				style.innerText = `div {
+					background-color: #fff !Important;
+					}
+			`;
+			this.template.querySelector('div')?.appendChild(style);
+		}
+		
+	}
     handleButton(event) {
     	var btnName = event.currentTarget.name;
     	if(FORM_FACTOR === 'Small'){
 			/* Uncomment this when Mobile version is to be released.*/
     		event.preventDefault();
     		let componentDef = {
-    			componentDef: 'c:createChecklist',
+    			componentDef: 'c:createChecklistDuc',
     			attributes: {
     				recordId: this.recordIdOfAcc,
     				templateType: btnName

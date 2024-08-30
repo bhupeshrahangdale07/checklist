@@ -1,6 +1,8 @@
 import { LightningElement, api, track } from 'lwc';
 import saveCheckListItems from '@salesforce/apex/CheckListManager.saveCheckListItems';
 import createChecklistItem from '@salesforce/apex/CheckListManager.createChecklistItem';
+import deleteChecklist from '@salesforce/apex/CheckListManagerDuc.deleteChecklist';
+import LightningConfirm from 'lightning/confirm';
 
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
@@ -366,6 +368,30 @@ export default class ChecklistDetailsMob extends LightningElement {
 
     	this.reCalculateProgressBar(updatedChecklist.Id, '', '');
     }
+
+	async handleDeleteChecklist(event){
+		let title = event.target.dataset.title;
+		let checklistId = event.target.dataset.checklistid;
+
+		const result = await LightningConfirm.open({
+			message: 'Are you sure you want to Delete '+ title,
+			theme: 'warning',
+			label: 'Delete Checklist',
+		});
+		
+		if(result){
+			deleteChecklist({checklistId : checklistId})
+			.then((result) => {
+				this.dispatchEvent(new CustomEvent('deletechecklist', {
+					detail: { checklistid: checklistId }
+				}));
+				
+				this.showToast('Successfully', 'success', 'Successfully Deleted Checklist '+title );
+			}).catch((err) => {
+				this.showToast('Failed while deleting Checklist.', 'error', err?.body?.message  );
+			});
+		}
+	}
 
     showToast(title, variant, message ){
     	const event = new ShowToastEvent({

@@ -3,7 +3,7 @@ import Id from '@salesforce/user/Id';
 import { getRecord } from 'lightning/uiRecordApi';
 import UserNameFIELD from '@salesforce/schema/User.Name';
 import USER_SMALL_PHOTOURLFIELD from '@salesforce/schema/User.SmallPhotoUrl';
-import Resource from '@salesforce/resourceUrl/ChecklistGeniusDuc';
+import Resource from '@salesforce/resourceUrl/ChecklistGenius';
 import { loadStyle } from 'lightning/platformResourceLoader';
 //import customCSS from '@salesforce/resourceUrl/customChecklistCSS';
 
@@ -46,6 +46,7 @@ export default class MyChecklistsPageMobCD extends LightningElement {
     @track userId = Id;
     @track currentUserName;
     @track userPhoto;
+    @track filterName;
 
     customCSS = Resource + '/css/style.css';
     
@@ -64,9 +65,9 @@ export default class MyChecklistsPageMobCD extends LightningElement {
             this.currentUserName = data.fields.Name.value.split(' ')[0];
             console.log('User details:', this.currentUserName);
             if(this.currentUserName.toLowerCase().endsWith('s')){
-                this.mychecklist = this.currentUserName + '\' Checklists';
+                this.mychecklist = this.currentUserName + '\' Checklists Duc';
             }else{
-                this.mychecklist = this.currentUserName + '\'s Checklists';
+                this.mychecklist = this.currentUserName + '\'s Checklists Duc';
             }
             
         } else if (error) {
@@ -75,6 +76,7 @@ export default class MyChecklistsPageMobCD extends LightningElement {
     }
 
     connectedCallback(){
+        //alert();
         console.log(' window.innerHeight in connected callback:: ' +window.innerHeight);
         this.loadCss();
         this.calculateHeight();
@@ -91,6 +93,7 @@ export default class MyChecklistsPageMobCD extends LightningElement {
     }
 
     renderedCallback(){
+        this.filterName = "Today's\n Checklist"+"("+this.todayCount+")";
         this.loadCss();
     }
 
@@ -141,54 +144,62 @@ export default class MyChecklistsPageMobCD extends LightningElement {
             this.newTab = {};
             this.newTab.today = true;
             this.filter = 'today';
+            this.filterName = "Today's\n Checklist"+"("+this.todayCount+")";
         } else if (event.currentTarget.dataset.name === 'overdue') {
             this.newTab = {};
             this.newTab.overdue = true;
             this.newTab.today = false;
             this.filter = 'overdue';
+            this.filterName = 'Overdues'+"("+this.overdueCount+")";
         } else if (event.currentTarget.dataset.name === 'next_7_days') {
             this.newTab = {};
             this.newTab.next_7_days = true;
             this.newTab.today = false;
             this.filter = 'next_7_days';
+            this.filterName = 'Next 7 days'+"("+this.next7DaysCount+")";
         } else if (event.currentTarget.dataset.name === 'next_14_days') {
             this.newTab = {};
             this.newTab.next_14_days = true;
             this.newTab.today = false;
             this.filter = 'next_14_days';
+            this.filterName = 'Next 14 days'+"("+this.next14DaysCount+")";
         } else if (event.currentTarget.dataset.name === 'next_30_days') {
             this.newTab = {};
             this.newTab.next_30_days = true;
             this.newTab.today = false;
             this.filter = 'next_30_days';
+            this.filterName = 'Next 30 days'+"("+this.next30DaysCount+")";
         } else if (event.currentTarget.dataset.name === 'all_open') {
             this.newTab = {};
             this.newTab.all_open = true;
             this.newTab.today = false;
             this.filter = 'all_open';
+            this.filterName = 'All Open';
         } else if (event.currentTarget.dataset.name === 'completed') {
             this.newTab = {};
             this.newTab.completed = true;
             this.newTab.today = false;
             this.filter = 'completed';
+            this.filterName = 'Completed'+"("+this.completedCount+")";
         }
         this.calculateHeight();
         this.togglePanel();
     }
 
-    filterCounts;
-    todayCount;
-    overdueCount;
-    next7DaysCount;
-    next14DaysCount;
-    next30DaysCount;
-    completedCount;
+    @track filterCounts;
+    @track todayCount;
+    @track overdueCount;
+    @track next7DaysCount;
+    @track next14DaysCount;
+    @track next30DaysCount;
+    @track completedCount;
     
     handleFilterCountsChange(event) {
         console.log('Inside handleFilterCountsChange');
-
+        //alert('In handleFiltercountschange Function');
         // Retrieve the filterCounts Obj from the event detail
         const filterCountsObj = event.detail.filterCounts;
+        this.todayCount = filterCountsObj.today;
         console.log('Inside handleFilterCountsChange filterCountsObj:',filterCountsObj);
         console.log('Inside handleFilterCountsChange filterCountsObj[\'overdue\']:',filterCountsObj.overdue);
 

@@ -166,16 +166,24 @@
                                     </div>
                                     <!--  -->
                                 </div>
-                                <div lwc:else class="">
-                                    <button class="btn-primary1 slds-button slds-button_brand slds-m-top_xx-small"
-                                        onclick={handleAddItem} data-checklistid={CheckL.Id}
-                                        disabled={CheckL.kt_checklist__Is_Checklist_Locked__c}>
-                                        <lightning-icon icon-name="utility:add" alternative-text="Add Item" title="Add Item"
-                                            size="xx-small" variant="inverse"></lightning-icon>
-                                        <span class="slds-m-left_x-small">
-                                            Add Item
-                                        </span>
-                                    </button>
+                                <div lwc:else class="content-container">
+                                    <div class="button-container">
+                                        <button class="btn-primary1 slds-button slds-button_brand slds-m-top_xx-small"
+                                            onclick={handleAddItem} data-checklistid={CheckL.Id}
+                                            disabled={CheckL.kt_checklist__Is_Checklist_Locked__c}>
+                                            <lightning-icon icon-name="utility:add" alternative-text="Add Item" title="Add Item"
+                                                size="xx-small" variant="inverse"></lightning-icon>
+                                            <span class="slds-m-left_x-small">
+                                                Add Item
+                                            </span>
+                                        </button>
+                                    </div>
+
+                                    <div class="delete-icon">
+                                        <lightning-icon data-checklistid={CheckL.Id} data-title={CheckL.kt_checklist__Checklist_Title__c} icon-name="utility:delete" class="icon-clickable" size="medium" alternative-text="Delete Checklist" title="Delete Checklist" onclick={handleDeleteChecklist}></lightning-icon>
+                                        <!-- <lightning-button-icon icon-name="utility:delete" variant="bare" alternative-text="Delete Checklist" title="Delete Checklist"></lightning-button-icon> -->
+                                    </div>
+                                    
                                 </div>
                             </div>
                         </section>

@@ -1,6 +1,8 @@
 import { LightningElement, api, track } from 'lwc';
 import saveCheckListItems from '@salesforce/apex/CheckListManager.saveCheckListItems';
 import createChecklistItem from '@salesforce/apex/CheckListManager.createChecklistItem';
+import deleteChecklist from '@salesforce/apex/CheckListManagerDuc.deleteChecklist';
+import LightningConfirm from 'lightning/confirm';
 
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
@@ -325,8 +327,8 @@ export default class ChecklistDetails extends LightningElement {
 
     				this.processDueDate(item);
 					
-    				item.ProgressbarPercentage = Math.floor(p)+'%'; //'width:'+p+'%';
-
+    				//item.ProgressbarPercentage = Math.floor(p)+'%'; //'width:'+p+'%';
+					console.log('percent '+ percent +' p- '+p);
     				if(percent !== Math.floor(p)){
     					if(percent <= 100 && p === 100){
     						// this.processSorting();
@@ -342,6 +344,7 @@ export default class ChecklistDetails extends LightningElement {
     						}));
     					}
     				}
+					item.ProgressbarPercentage = Math.floor(p)+'%'; //'width:'+p+'%';
 
     			}
     		});
@@ -401,6 +404,7 @@ export default class ChecklistDetails extends LightningElement {
 	 * createChecklistItem is the apex method will create a checklist Item and return the specific Parent with childs Which means Checklist with Checklist Items.
 	*/
 	async handleSubmitAddItemForm(event){
+		debugger;
 		let element = event.target;
 		element.disabled = true;
     	let isValid = await this.validateForm();
@@ -501,11 +505,35 @@ export default class ChecklistDetails extends LightningElement {
     	});
 
 		this.dispatchEvent(new CustomEvent('handleuncompletedchecklist', {
-			detail: { checklistid: updatedChecklist.Id }
+			detail: { checklistid: updatedChecklist.Id, checkList: item }
 		}));
 
     	this.reCalculateProgressBar(updatedChecklist.Id, '', '');
 		// this.processSorting();
+	}
+
+	async handleDeleteChecklist(event){
+		let title = event.target.dataset.title;
+		let checklistId = event.target.dataset.checklistid;
+
+		const result = await LightningConfirm.open({
+			message: 'Are you sure you want to Delete '+ title,
+			theme: 'warning',
+			label: 'Delete Checklist',
+		});
+		
+		if(result){
+			deleteChecklist({checklistId : checklistId})
+			.then((result) => {
+				this.dispatchEvent(new CustomEvent('deletechecklist', {
+					detail: { checklistid: checklistId }
+				}));
+				
+				this.showToast('Successfully', 'success', 'Successfully Deleted Checklist '+title );
+			}).catch((err) => {
+				this.showToast('Failed while deleting Checklist.', 'error', err?.body?.message  );
+			});
+		}
 	}
 
 	/*

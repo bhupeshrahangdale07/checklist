@@ -135,6 +135,9 @@
                         </div>
                     </div>
                     </div>
+                    <div style="background-color: #f4f4f4; border: 1px solid #ccc; padding: 10px; margin-top: 10px; border-radius: 5px;">
+                      {filterName}
+                  </div>
                     <div class="slds-m-top_medium" style="border-radius: 8px; display: flex; flex-direction: column; flex-grow: 1; margin-bottom: 0;">
                         <template if:true={newTab.overdue}>
                             <c-nav-item-cmp-c-d-duc filter={filter} filter-counts={filterCounts} onfiltercountschange={handleFilterCountsChange}></c-nav-item-cmp-c-d-duc>

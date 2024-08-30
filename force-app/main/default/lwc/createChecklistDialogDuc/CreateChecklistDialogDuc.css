@@ -27,3 +27,13 @@
     font-weight: 500;
     font-size: 22px;
   }
+  @media only screen and (max-width: 768px) {
+  .centerdiv{
+        margin: 100px 0px;
+    }
+  }
+  @media only screen and (max-width: 768px) {
+    .selectchecklist{
+      width: 85%;;
+      }
+    }

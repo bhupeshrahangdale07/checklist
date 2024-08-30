@@ -12,7 +12,7 @@ public with sharing class TemplateManager {
     @AuraEnabled
     public static Checklist_Template__c getTemplateItems(String recordId){
         try {
-            return [Select Id, Name, Due_Days__c, Active__c, IsLocked__c, CreatedById, LastModifiedById, CreatedDate, LastModifiedDate, (Select Id, Item_Order__c, Item__c, Description__c From Checklist_Template_Items__r order by Item_Order__c ASC ) From Checklist_Template__c Where Id =: recordId WITH USER_MODE];
+            return [Select Id, Name, Due_Days__c, Active__c, IsLocked__c, CreatedById, LastModifiedById, CreatedDate, LastModifiedDate,kt_checklist__Description__c, (Select Id, Item_Order__c, Item__c, Description__c From Checklist_Template_Items__r order by Item_Order__c ASC ) From Checklist_Template__c Where Id =: recordId WITH USER_MODE];
         } catch(QueryException  e){
             system.debug('test Exception '+e.getmessage());
             throw new AuraHandledException('Fetching Checklist Template Or Template Items Failed : '+e.getmessage());
@@ -28,6 +28,7 @@ public with sharing class TemplateManager {
     */
     @AuraEnabled
     public static Map<String, Object> saveTemplateAndItems(String Template, List<Checklist_Template_Item__c> TemplateItems, List<Checklist_Template_Item__c> DeletedTemplateItems){
+        system.debug('Template*- '+Template);
         Map<String, Object> response = new Map<String, Object>();
         Savepoint sp = Database.setSavepoint();
         try {
@@ -36,6 +37,7 @@ public with sharing class TemplateManager {
             
             List<Checklist_Template__c> lstTemplateRecord = new List<Checklist_Template__c>{TemplateRecord};
             if(lstTemplateRecord != null){
+                system.debug('lstTemplateRecord- '+lstTemplateRecord);
                 /*FLSChecker.FLSCheckWrapper fl = new FLSChecker.FLSCheckWrapper();
                 fl = FLSChecker.dmlUpsert(lstTemplateRecord); 
                 if(!fl.isSuccess){
