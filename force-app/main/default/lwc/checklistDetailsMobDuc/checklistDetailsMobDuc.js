@@ -23,7 +23,7 @@ export default class ChecklistDetailsMob extends LightningElement {
 	unlinked_ICON = Resource+'/style/icons/utility-sprite/svg/symbols.svg#unlinked';
 	linked_ICON = Resource+'/style/icons/utility-sprite/svg/symbols.svg#linked';
 	accordion_ICON = Resource+'/style/icons/utility-sprite/svg/symbols.svg#switch';
-
+	customCSS = Resource + '/css/style.css';
     @track checkListData;
 
     objectApiName = CHECKLIST_ITEM_OBJECT;
@@ -52,16 +52,16 @@ export default class ChecklistDetailsMob extends LightningElement {
     renderedCallback(){
     	this.populateCheckValues();
 
-    	// Promise.all([
-    	//     loadStyle( this, customCSS )
-    	//     // ,
-    	//     // loadStyle( this, this.customStyle )            
-    	//     ]).then(() => {
-    	//         console.log( 'Files loaded' );
-    	//     })
-    	//     .catch(error => {
-    	//         console.log( error.body.message );
-    	// });
+    	Promise.all([
+    	    loadStyle( this, customCSS )
+    	    // ,
+    	    // loadStyle( this, this.customStyle )            
+    	    ]).then(() => {
+    	        console.log( 'Files loaded' );
+    	    })
+    	    .catch(error => {
+    	        console.log( error.body.message );
+    	});
 
     }
 
@@ -374,7 +374,7 @@ export default class ChecklistDetailsMob extends LightningElement {
 		let checklistId = event.target.dataset.checklistid;
 
 		const result = await LightningConfirm.open({
-			message: 'Are you sure you want to Delete '+ title,
+			message: 'Are you sure you want to delete '+ '"'+title+'"?',
 			theme: 'warning',
 			label: 'Delete Checklist',
 		});
