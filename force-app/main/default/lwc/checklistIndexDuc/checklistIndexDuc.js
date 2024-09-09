@@ -1,7 +1,9 @@
 import { LightningElement, track, api } from 'lwc';
 import getRelatedFieldNameByRecordId from '@salesforce/apex/CheckListManager.getRelatedFieldNameByRecordId';
-import fetchCheckLists from '@salesforce/apex/CheckListManager.fetchCheckLists';
+import fetchCheckLists from '@salesforce/apex/CheckListManagerDuc.fetchCheckLists';
 // import Checklist_Relation_Validation from "@salesforce/label/c.Checklist_Relation_Validation";
+
+import loggedInUserId from '@salesforce/user/Id';
 
  import FORM_FACTOR from "@salesforce/client/formFactor";
 import { loadStyle } from 'lightning/platformResourceLoader';
@@ -67,7 +69,8 @@ export default class ChecklistIndex extends NavigationMixin(LightningElement) {
 						{label: "Today's", name: "Today's", value:'Today'},
 						{label:'Open', name:'Open', value:'Open'},
 						{label:'Overdues', name:'Overdues', value:'Overdues'},
-						{label:'Completed', name:'Completed', value:'Completed'}
+						{label:'Completed', name:'Completed', value:'Completed'},
+						{label: "My Checklist's", name: "My Checklist's", value:'My_Checklist'},
 					];
 	
 	get showSelectedFilters(){
@@ -113,6 +116,10 @@ export default class ChecklistIndex extends NavigationMixin(LightningElement) {
 				data = this.filterOverduesChecklist(records);
 				break;
 
+			case 'My_Checklist':
+				data = this.filterMyChecklist(records);
+				break;
+
 			default:
 				data = records;
 				break;
@@ -131,6 +138,10 @@ export default class ChecklistIndex extends NavigationMixin(LightningElement) {
 	// 	const today = new Date();
 	// 	return records.filter((item) => new Date(item.kt_checklist__Due_Date__c) == today);
 	// }
+
+	filterMyChecklist(records){
+		return records.filter((item) => item.OwnerId === loggedInUserId);
+	}
 
 	filterTodaysChecklist(records) {
 		const today = new Date();
@@ -250,6 +261,17 @@ export default class ChecklistIndex extends NavigationMixin(LightningElement) {
   			});
   	}
   }
+	
+	handleRemoveChecklist(event){
+		let recId = event.detail.checklistid;
+		// Filter the CheckList array to remove the object with the matching recId
+		this.CheckList = this.CheckList.filter(item => item.Id !== recId);
+	}
+
+	handleupdatechecklist(event){
+		let rec = event.detail.checklist;
+		this.replaceChecklist(rec)
+	}
 
 	handlecompletedchecklist(event){
 		debugger;
@@ -420,11 +442,7 @@ export default class ChecklistIndex extends NavigationMixin(LightningElement) {
   	this.CheckList = JSON.parse(JSON.stringify(lst));
   }
 
-  handleRemoveChecklist(event){
-	let recId = event.detail.checklistid;
-	// Filter the CheckList array to remove the object with the matching recId
-	this.CheckList = this.CheckList.filter(item => item.Id !== recId);
-  }
+  
 
   /*
    * This is a handler method used to show the message to User.
