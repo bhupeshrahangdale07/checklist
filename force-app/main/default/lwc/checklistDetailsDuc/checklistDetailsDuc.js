@@ -2,11 +2,17 @@ import { LightningElement, api, track } from 'lwc';
 import saveCheckListItems from '@salesforce/apex/CheckListManager.saveCheckListItems';
 import createChecklistItem from '@salesforce/apex/CheckListManager.createChecklistItem';
 import deleteChecklist from '@salesforce/apex/CheckListManagerDuc.deleteChecklist';
-import LightningConfirm from 'lightning/confirm';
 
+// commented because their might be a case where the owner can be a Queue
+// import hasPermission_Owner_Can_Delete_Checklist from '@salesforce/customPermission/Owner_Can_Delete_Checklist';
+import hasPermission_Created_User_Can_Delete_Checklist from '@salesforce/customPermission/Created_User_Can_Delete_Checklist';
+import hasPermission_Delete_Checklist from '@salesforce/customPermission/Delete_Checklist';
+import loggedInUserId from '@salesforce/user/Id';
+
+import LightningConfirm from 'lightning/confirm';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
-// import { loadStyle } from 'lightning/platformResourceLoader';
+import { loadStyle } from 'lightning/platformResourceLoader';
 import Resource from '@salesforce/resourceUrl/ChecklistGeniusDuc';
 // import customCSS from '@salesforce/resourceUrl/customChecklistCSS';
 
@@ -26,6 +32,7 @@ export default class ChecklistDetails extends LightningElement {
 	accordion_ICON = Resource+'/style/icons/utility-sprite/svg/symbols.svg#switch';
 	
 	noCLIcon = Resource + '/style/icons/action/Empty-state.svg';
+	customCSS = Resource + '/css/style.css';
 
     @track checkListData;
 
@@ -46,7 +53,7 @@ export default class ChecklistDetails extends LightningElement {
     }
     get checkList(){
     	// this.processData();
-    	this.processSorting();
+    	// this.processSorting();
     	return this.checkListData;
     }
     
@@ -58,6 +65,17 @@ export default class ChecklistDetails extends LightningElement {
 
     renderedCallback(){
     	this.populateCheckValues();
+		this.loadCss();
+    }
+	loadCss(){
+        Promise.all([
+            // loadStyle( this, this.customStyle )            
+            loadStyle( this, this.customCSS )            
+        ]).then(() => {
+            //console.log( 'Css File loaded' );
+        }).catch(error => {
+            //console.log( error.body.message );
+        });
     }
 
 	/*
@@ -91,9 +109,23 @@ export default class ChecklistDetails extends LightningElement {
 
     	if (this.checkListData && this.checkListData.length > 0) {
     		this.checkListData.forEach(item => {
+				
+				item.isDeletable = hasPermission_Delete_Checklist;
+				if(!hasPermission_Delete_Checklist){
+					if(hasPermission_Created_User_Can_Delete_Checklist && item.CreatedById === loggedInUserId){
+						item.isDeletable = true;
+					}
+
+					// commented because their might be a case where the owner can be a Queue
+					// else if(hasPermission_Owner_Can_Delete_Checklist && item.OwnerId === loggedInUserId){
+					// 	item.isDeletable = true;
+					// }
+				}
+
     			item.isActiveAddItem = false;
     			item.accordionClass = 'slds-accordion__section slds-is-open slds-var-m-bottom_small';
     			item.ProgressbarPercentage = item.kt_checklist__Percentage_Completion__c+'%'; //'width:'+item.kt_checklist__Percentage_Completion__c+'%';
+				alert('ring Value- '+item.kt_checklist__Percentage_Completion__c);
     			this.processDueDate(item);
 
     			if (item.kt_checklist__Checklist_Items__r) {
@@ -248,6 +280,10 @@ export default class ChecklistDetails extends LightningElement {
     		});
 	}
 
+	updateToParent(checkListId, checkListItemId, CheckVal){
+		checkListId, checkListItemId, CheckVal
+	}
+
 	/*
 	 * This method is used Save the Item is Not Applicable. 
 	 * saveCheckListItems is the apex method used to save item and if any exception occurs then we are reverting the Checkbox back and showing the Error message. 
@@ -324,6 +360,7 @@ export default class ChecklistDetails extends LightningElement {
     				p = item.kt_checklist__Checklist_Items__r ? ( checked / item.kt_checklist__Checklist_Items__r?.length )* 100 : 100;
 
 					item.kt_checklist__Percentage_Completion__c = Math.floor(p);
+					alert('bar value- '+item.kt_checklist__Percentage_Completion__c);
 
     				this.processDueDate(item);
 					
@@ -346,11 +383,19 @@ export default class ChecklistDetails extends LightningElement {
     				}
 					item.ProgressbarPercentage = Math.floor(p)+'%'; //'width:'+p+'%';
 
+					this.sendUpdatedChecklistToParent(item);
+
     			}
     		});
 
     		this.checkListData = [...dt];
     	}
+	}
+
+	sendUpdatedChecklistToParent(checklist){
+		this.dispatchEvent(new CustomEvent('handleupdatechecklist', {
+			detail: { checklist: checklist }
+		}));
 	}
 
 	/*
@@ -505,7 +550,7 @@ export default class ChecklistDetails extends LightningElement {
     	});
 
 		this.dispatchEvent(new CustomEvent('handleuncompletedchecklist', {
-			detail: { checklistid: updatedChecklist.Id, checkList: item }
+			detail: { checklistid: updatedChecklist.Id, checklist: updatedChecklist }
 		}));
 
     	this.reCalculateProgressBar(updatedChecklist.Id, '', '');
@@ -517,7 +562,7 @@ export default class ChecklistDetails extends LightningElement {
 		let checklistId = event.target.dataset.checklistid;
 
 		const result = await LightningConfirm.open({
-			message: 'Are you sure you want to Delete '+ title,
+			message: 'Are you sure you want to delete '+ title,
 			theme: 'warning',
 			label: 'Delete Checklist',
 		});
