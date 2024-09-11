@@ -93,7 +93,7 @@ global with sharing class CheckListManagerDuc {
         
         // system.debug('recordId : '+recordId);
         List<Checklist__c> checklistRecords = new List<Checklist__c>();
-        String query = 'Select Id, Name, Is_Checklist_Template_Locked__c, Checklist_Title__c, Is_Checklist_Locked__c, Percentage_Completion__c, Description__c,Due_Days__c, CreatedDate, Due_Date__c, Checklist_Template__c, Checklist_Template__r.IsLocked__c,   (Select Id, Item__c, Item_Order__c, Checked__c,Description__c From CheckList_Items__r order by Item_Order__c ASC )  From Checklist__c Where ';
+        String query = 'Select Id, Name, CreatedById, OwnerId, Is_Checklist_Template_Locked__c, Checklist_Title__c, Is_Checklist_Locked__c, Percentage_Completion__c, Description__c,Due_Days__c, CreatedDate, Due_Date__c, Checklist_Template__c, Checklist_Template__r.IsLocked__c,   (Select Id, Item__c, Item_Order__c, Checked__c,Description__c From CheckList_Items__r order by Item_Order__c ASC )  From Checklist__c Where ';
         String fieldName = getRelatedFieldApiNameByRecordId(recordId);//'Account__c'; 
         query += String.escapeSingleQuotes(fieldName) + ' = :recordId Order By Due_Date__c NULLS LAST';
         
@@ -411,7 +411,9 @@ global with sharing class CheckListManagerDuc {
         }catch(AuraHandledException  e){
             throw e;
         }catch(Exception e){
-            throw new AuraHandledException(e.getmessage());
+            if(!e.getmessage().contains('ENTITY_IS_DELETED')){
+               throw new AuraHandledException(e.getmessage()); 
+            }
         }
     }
 }

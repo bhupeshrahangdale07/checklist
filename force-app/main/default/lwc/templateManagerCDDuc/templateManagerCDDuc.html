@@ -30,7 +30,7 @@
                                         <!--  <lightning-input-field field-name="kt_checklist__Due_Days__c" required min="0" style="font-weight: normal;"> </lightning-input-field> -->
                                     </lightning-layout-item>
                                     <lightning-layout-item flexibility="auto" size="12"  class="slds-align_absolute-center slds-form-element__label">
-                                        <lightning-input-field onchange={handleInputChange} field-name="kt_checklist__Description__c" data-name="kt_checklist__Description__c" style="font-weight: normal;"> </lightning-input-field>
+                                        <lightning-input-field value={descriptionValue} onchange={handleInputChange} field-name="kt_checklist__Description__c" data-name="kt_checklist__Description__c" style="font-weight: normal;"> </lightning-input-field>
                                     </lightning-layout-item>
                                     <div class="slds-grid slds-wrap  slds-p-right_small" style="padding-left: 6px; width:max-content; align-items: center; justify-content: left;">
                                         <lightning-layout-item flexibility="auto" size="7"  class="slds-col slds-size_7-of-12  slds-text-align_left slds-form-element__label notinclude" style="justify-content: left;">
@@ -116,7 +116,7 @@
                                             </lightning-layout-item>
                                         </template>
                                         <div class="slds-text-align_center slds-align_absolute-center slds-m-top_medium " if:true={isMobile}>
-                                        <lightning-button label="Add Item" name="Next" variant="brand" onclick={onNextClick}></lightning-button>
+                                        <lightning-button label="Manage Items" name="Next" variant="brand" onclick={onNextClick}></lightning-button>
                                         <lightning-button class="slds-m-left_medium button-cancel-widthhook button-heighthook paddingClass" variant="neutral" onclick={hideModalBox} label="Cancel">
                                         </lightning-button>
                                     </div>

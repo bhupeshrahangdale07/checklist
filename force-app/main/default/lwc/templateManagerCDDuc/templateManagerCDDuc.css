@@ -97,9 +97,13 @@
       border-right: none !important;
   }
   .slds-col.slds-size_1-of-2:last-child {
-      margin-top: 40px;
+      /*margin-top: 40px;
       padding-top: 40px;
+      border-top: 1px solid #dddddd;*/
+      margin-top: 10px;
+      padding-top: 20px;
       border-top: 1px solid #dddddd;
+
   }
   .marginTop{
     margin-top: 10px;

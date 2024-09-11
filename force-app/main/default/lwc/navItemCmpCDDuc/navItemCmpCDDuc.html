@@ -34,7 +34,8 @@
                         
                         <div key={mapCheckL.dUrl} id={index} class="collapse-divs active" style="">
                             <div if:true={isDesktop}>
-                              <c-checklist-details-duc flexipage-region-width='large' onhandlecompletedchecklist={handlecompletedchecklist} onhandleuncompletedchecklist={handleuncompletedchecklist} check-list={mapCheckL.records}></c-checklist-details-duc>
+                              <c-checklist-details-duc flexipage-region-width='large' ondeletechecklist={handleRemoveChecklist} 
+                              onhandlecompletedchecklist={handlecompletedchecklist} onhandleuncompletedchecklist={handleuncompletedchecklist} check-list={mapCheckL.records}></c-checklist-details-duc>
                             </div>
                             <!-- Uncomment this when Mobile designs are continued development
                             <div if:true={isMobile}>

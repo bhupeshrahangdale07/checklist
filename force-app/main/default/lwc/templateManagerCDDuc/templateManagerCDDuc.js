@@ -33,7 +33,7 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
     editForm = true;
     nameValue = '';
     dueDaysValue = '';
-    descriptionValue = '';
+    descriptionValue;
 
     customCSS = Resource + '/css/style.css';
 
@@ -152,10 +152,19 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
             this.template.querySelector('div').appendChild(style);
 
         }
+        if(FORM_FACTOR === 'Small'){
+			const style = document.createElement('style');
+				style.innerText = `div {
+					background-color: #fff !Important;
+					}
+			`;
+			this.template.querySelector('div')?.appendChild(style);
+		}
 
         this.loadCss();
 
     }
+    
 
     async onNextClick() {
 
@@ -205,7 +214,7 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
             this.isActive = true;
             this.isLocked = false;
             this.editForm = false;
-            this.headerTitle = 'Create Checklist Template Duc';
+            this.headerTitle = 'Create Checklist Template';
             let row = { 'kt_checklist__Item__c': '', 'kt_checklist__Item_Order__c': this.templateItems.length + 1, 'kt_checklist__Description__c': '' };
             this.templateItems.push(row);
             return;
@@ -239,7 +248,7 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
                 this.descriptionValue = data['kt_checklist__Description__c'];
 
                 this.editForm = true;
-                this.headerTitle = 'Edit Checklist Template Duc';
+                this.headerTitle = 'Edit Checklist Template';
 
                 // this.createdBy = data['CreatedById'];
                 // this.lastModBy = data['LastModifiedById'];
@@ -427,7 +436,7 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
     handleOnLoad() {
 
     }
-
+ 
     prepareObject(event) {
         let fields = this.templateRecord;
         const inputFields = this.template.querySelectorAll(
@@ -468,9 +477,9 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
             this.dueDaysValue = checklistDueDaysElement.value;
         }
 
+        this.templateRecord = undefined;
         this.templateRecord = fields;
 
-        alert('fields : '+fields);
     }
 
     async handleSubmit(event) {
@@ -560,9 +569,19 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
             });
 
 
+            const propertiesToDelete = [
+                'kt_checklist__Checklist_Template_Items__r',
+                'LastModifiedById',
+                'CreatedDate',
+                'LastModifiedDate',
+                'CreatedById'
+            ];
+            
+            // Deleting properties using a loop
+            propertiesToDelete.forEach(property => delete fields[property]);
+
             // Assign the updated templateItems back to the property
             //this.templateItems = updatedTemplateItems;
-            alert('Value*- ' + JSON.stringify(fields) + ' tempItem' + JSON.stringify(updatedTemplateItems) + ' updatedTemplateItems' + updatedTemplateItems);
             saveTemplateAndItems({ Template: JSON.stringify(fields), TemplateItems: updatedTemplateItems, DeletedTemplateItems: this.deleteItems })
                 .then((result) => {
                     this.handleShowToast('', 'Record Saved Successfully', '', '');

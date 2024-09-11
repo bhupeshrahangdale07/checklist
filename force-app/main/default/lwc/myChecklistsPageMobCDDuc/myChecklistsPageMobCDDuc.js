@@ -93,7 +93,10 @@ export default class MyChecklistsPageMobCD extends LightningElement {
     }
 
     renderedCallback(){
-        this.filterName = "Today's\n Checklist"+"("+this.todayCount+")";
+        if(this.filter === 'today'){
+            this.filterName = "Today\'s Checklist"+" ("+this.todayCount+")";
+        }
+        
         this.loadCss();
     }
 
@@ -144,31 +147,31 @@ export default class MyChecklistsPageMobCD extends LightningElement {
             this.newTab = {};
             this.newTab.today = true;
             this.filter = 'today';
-            this.filterName = "Today's\n Checklist"+"("+this.todayCount+")";
+            this.filterName = "Today's\n Checklist"+" ("+this.todayCount+")";
         } else if (event.currentTarget.dataset.name === 'overdue') {
             this.newTab = {};
             this.newTab.overdue = true;
             this.newTab.today = false;
             this.filter = 'overdue';
-            this.filterName = 'Overdues'+"("+this.overdueCount+")";
+            this.filterName = 'Overdues'+" ("+this.overdueCount+")";
         } else if (event.currentTarget.dataset.name === 'next_7_days') {
             this.newTab = {};
             this.newTab.next_7_days = true;
             this.newTab.today = false;
             this.filter = 'next_7_days';
-            this.filterName = 'Next 7 days'+"("+this.next7DaysCount+")";
+            this.filterName = 'Next 7 days'+" ("+this.next7DaysCount+")";
         } else if (event.currentTarget.dataset.name === 'next_14_days') {
             this.newTab = {};
             this.newTab.next_14_days = true;
             this.newTab.today = false;
             this.filter = 'next_14_days';
-            this.filterName = 'Next 14 days'+"("+this.next14DaysCount+")";
+            this.filterName = 'Next 14 days'+" ("+this.next14DaysCount+")";
         } else if (event.currentTarget.dataset.name === 'next_30_days') {
             this.newTab = {};
             this.newTab.next_30_days = true;
             this.newTab.today = false;
             this.filter = 'next_30_days';
-            this.filterName = 'Next 30 days'+"("+this.next30DaysCount+")";
+            this.filterName = 'Next 30 days'+" ("+this.next30DaysCount+")";
         } else if (event.currentTarget.dataset.name === 'all_open') {
             this.newTab = {};
             this.newTab.all_open = true;
@@ -180,7 +183,7 @@ export default class MyChecklistsPageMobCD extends LightningElement {
             this.newTab.completed = true;
             this.newTab.today = false;
             this.filter = 'completed';
-            this.filterName = 'Completed'+"("+this.completedCount+")";
+            this.filterName = 'Completed'+" ("+this.completedCount+")";
         }
         this.calculateHeight();
         this.togglePanel();

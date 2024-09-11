@@ -1,6 +1,6 @@
 import { LightningElement, track, api } from 'lwc';
 import getRelatedFieldNameByRecordId from '@salesforce/apex/CheckListManager.getRelatedFieldNameByRecordId';
-import fetchCheckLists from '@salesforce/apex/CheckListManagerDuc.fetchCheckLists';
+import fetchCheckLists from '@salesforce/apex/CheckListManager.fetchCheckLists';
 // import Checklist_Relation_Validation from "@salesforce/label/c.Checklist_Relation_Validation";
 
 import loggedInUserId from '@salesforce/user/Id';

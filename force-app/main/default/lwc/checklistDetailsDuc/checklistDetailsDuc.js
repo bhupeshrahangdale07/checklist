@@ -1,7 +1,7 @@
 import { LightningElement, api, track } from 'lwc';
 import saveCheckListItems from '@salesforce/apex/CheckListManager.saveCheckListItems';
 import createChecklistItem from '@salesforce/apex/CheckListManager.createChecklistItem';
-import deleteChecklist from '@salesforce/apex/CheckListManagerDuc.deleteChecklist';
+import deleteChecklist from '@salesforce/apex/CheckListManager.deleteChecklist';
 
 // commented because their might be a case where the owner can be a Queue
 // import hasPermission_Owner_Can_Delete_Checklist from '@salesforce/customPermission/Owner_Can_Delete_Checklist';
@@ -125,7 +125,7 @@ export default class ChecklistDetails extends LightningElement {
     			item.isActiveAddItem = false;
     			item.accordionClass = 'slds-accordion__section slds-is-open slds-var-m-bottom_small';
     			item.ProgressbarPercentage = item.kt_checklist__Percentage_Completion__c+'%'; //'width:'+item.kt_checklist__Percentage_Completion__c+'%';
-				alert('ring Value- '+item.kt_checklist__Percentage_Completion__c);
+				//alert('ring Value- '+item.kt_checklist__Percentage_Completion__c);
     			this.processDueDate(item);
 
     			if (item.kt_checklist__Checklist_Items__r) {
@@ -360,7 +360,7 @@ export default class ChecklistDetails extends LightningElement {
     				p = item.kt_checklist__Checklist_Items__r ? ( checked / item.kt_checklist__Checklist_Items__r?.length )* 100 : 100;
 
 					item.kt_checklist__Percentage_Completion__c = Math.floor(p);
-					alert('bar value- '+item.kt_checklist__Percentage_Completion__c);
+					//alert('bar value- '+item.kt_checklist__Percentage_Completion__c);
 
     				this.processDueDate(item);
 					

@@ -306,35 +306,59 @@ export default class CreateChecklist extends NavigationMixin(LightningElement) {
   		await fetchTemplate({ recordId: templateId })
   			.then((result) => {
   				this.selectedTemplate = result;
-
+				alert('Result- '+JSON.stringify(result));
+				console.log('Result-*- '+JSON.stringify(result));
   				this.processTempItems();
   				this.formData[this.checklistTemplate_Field?.fieldApiName] = this.CheckListTemplateId;
   				this.formData[this.checklistTitle_Field?.fieldApiName] = result.Name ? result.Name : '';
   				
-				if(this.isMobile){
-					let descriptionField = this.templateDescription_Field?.fieldApiName;
-					let dueDaysField = this.templateDueDays_Field?.fieldApiName;
-					if ((descriptionField && !descriptionField.startsWith('kt_checklist__')) ||
-					(dueDaysField && !dueDaysField.startsWith('kt_checklist__'))) {
-						descriptionField = 'kt_checklist__' + descriptionField;
-						dueDaysField = 'kt_checklist__' + dueDaysField;
+				  if(this.isMobile){
+
+					let isLockedField = this.templateIsLocked_Field?.fieldApiName;
+
+					if(isLockedField && !isLockedField.startsWith('kt_checklist__')){
+
+						isLockedField = 'kt_checklist__' + isLockedField;
+
 					}
-					this.formData[this.description_Field?.fieldApiName] = result[descriptionField] 
-					? result[descriptionField] 
-					: '';
-					this.formData[this.dueDays_Field?.fieldApiName] = result[dueDaysField] 
-					? result[dueDaysField] 
-					: '';
+
+					this.formData[this.is_Checklist_Locked_Field?.fieldApiName] = result[isLockedField] ? result[isLockedField] : false;
+
+					let descriptionField = this.templateDescription_Field?.fieldApiName;
+
+					let dueDaysField = this.templateDueDays_Field?.fieldApiName;
+
+					if ((descriptionField && !descriptionField.startsWith('kt_checklist__')) ||
+
+					(dueDaysField && !dueDaysField.startsWith('kt_checklist__'))) {
+
+						descriptionField = 'kt_checklist__' + descriptionField;
+
+						dueDaysField = 'kt_checklist__' + dueDaysField;
+
+					}
+
+					this.formData[this.description_Field?.fieldApiName] = result[descriptionField] ? result[descriptionField] : '';
+
+					this.formData[this.dueDays_Field?.fieldApiName] = result[dueDaysField] ? result[dueDaysField] : '';
+
 					this.pupulateDueDate(result[dueDaysField]);
+
 				}else{
+
+					this.formData[this.is_Checklist_Locked_Field?.fieldApiName] = result[this.templateIsLocked_Field?.fieldApiName] ? result[this.templateIsLocked_Field?.fieldApiName] : false;
+
 					this.formData[this.description_Field?.fieldApiName] = result[this.templateDescription_Field?.fieldApiName] ? result[this.templateDescription_Field?.fieldApiName] : '';
+
 					this.formData[this.dueDays_Field?.fieldApiName] = result[this.templateDueDays_Field?.fieldApiName] || result[this.templateDueDays_Field?.fieldApiName] === 0 ? result[this.templateDueDays_Field?.fieldApiName] : '';
+
 					this.pupulateDueDate(result[this.templateDueDays_Field?.fieldApiName]);
+
 				}
 
 				//this.formData[this.description_Field?.fieldApiName] = result[this.templateDescription_Field?.fieldApiName] ? result[this.templateDescription_Field?.fieldApiName] : '';
   				//this.formData[this.dueDays_Field?.fieldApiName] = result[this.templateDueDays_Field?.fieldApiName] || result[this.templateDueDays_Field?.fieldApiName] === 0 ? result[this.templateDueDays_Field?.fieldApiName] : '';
-  				this.formData[this.is_Checklist_Locked_Field?.fieldApiName] = result[this.templateIsLocked_Field?.fieldApiName] ? result[this.templateIsLocked_Field?.fieldApiName] : false;
+  				//this.formData[this.is_Checklist_Locked_Field?.fieldApiName] = result[this.templateIsLocked_Field?.fieldApiName] ? result[this.templateIsLocked_Field?.fieldApiName] : false;
           
   				//this.pupulateDueDate(result[this.templateDueDays_Field?.fieldApiName]);
   				this.showSpinner = false;
@@ -423,7 +447,9 @@ export default class CreateChecklist extends NavigationMixin(LightningElement) {
   	}
 
   	if(this.CheckListOwnerId && this.CheckListOwnerId !== ''){
+		alert('Owner Id- '+this.CheckListOwnerId);
   		this.formData.OwnerId = this.CheckListOwnerId;
+		  alert('form data- '+JSON.stringify(this.formData));
   	}
   	this.checklistTemporaryData = this.formData;
   	this.saveAddedItems();
@@ -702,11 +728,14 @@ export default class CreateChecklist extends NavigationMixin(LightningElement) {
 		Object.keys(this.checklistTemporaryData).forEach(key => {
             if (key.startsWith(prefix)) {
                 newChecklistData[key] = this.checklistTemporaryData[key];
-            } else {
+            } else if(key != 'OwnerId'){
                 newChecklistData[prefix + key] = this.checklistTemporaryData[key];
-            }
+            } else {
+				newChecklistData[key] = this.checklistTemporaryData[key];
+			}
         });
 		this.checklistTemporaryData = newChecklistData;
+		
 	}
 
   	saveChecklistAndItems({
@@ -726,7 +755,7 @@ export default class CreateChecklist extends NavigationMixin(LightningElement) {
   				});
   			} else {
   				const selectedEvent = new CustomEvent('addnewchecklistsuccess', {
-  					detail: result
+					detail: {checklist : result, title : this.checklistTemporaryData[this.checklistTitle_Field?.fieldApiName]}
   				});
   				this.dispatchEvent(selectedEvent);
   			}
@@ -759,16 +788,34 @@ export default class CreateChecklist extends NavigationMixin(LightningElement) {
 
   async handleChangeChecklistType(event){
 	let changeType = this.templateType === 'With Template' ? 'Without Template' : 'With Template';
-	const result = await LightningConfirm.open({
-		message: `You are about to change the checklist type from '${this.templateType}' to '${changeType}'.`,
-		theme: 'warning',
-		label: 'Change Create Checklist Type',
-	});
-	if(result){
+	
+	
+	if(this.showChecklistFields){
+		const result = await LightningConfirm.open({
+			message: 'Any unsaved data will be lost. Are you sure you want to go back?', // `You are about to change the checklist type from '${this.templateType}' to '${changeType}'.`,
+			theme: 'warning',
+			label: 'Change Create Checklist Type',
+		});
+		if(result){
 
+			
+			this.navigateToChecklistTypeSelectionScreen();
+			// this.templateType = changeType;
+			// this.showChecklistFields = this.templateType === 'With Template' ? false : true;
+			
+			// this.resetForm();
+			// this.removeItems();
+
+		}
+	}else{
+		this.navigateToChecklistTypeSelectionScreen();
+	}
+  }
+
+	navigateToChecklistTypeSelectionScreen(){
 		if(this.isMobile){
 			let componentDef = {
-				componentDef: "c:createChecklistDialogDuc",
+				componentDef: "c:createChecklistDialog",
 				attributes: {
 					recordIdOfAcc: this.recordId,
 						ShowAsPopUp: false
@@ -786,15 +833,7 @@ export default class CreateChecklist extends NavigationMixin(LightningElement) {
 		}
 		const selectedEvent = new CustomEvent('back', { detail: true });
 		this.dispatchEvent(selectedEvent);
-
-		// this.templateType = changeType;
-		// this.showChecklistFields = this.templateType === 'With Template' ? false : true;
-		
-		// this.resetForm();
-		// this.removeItems();
-
 	}
-  }
 
 //   resetForm(){
 // 	this.tempChecklistItems = [];

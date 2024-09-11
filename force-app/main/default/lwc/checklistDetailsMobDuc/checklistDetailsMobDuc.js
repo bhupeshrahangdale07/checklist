@@ -1,7 +1,7 @@
 import { LightningElement, api, track } from 'lwc';
 import saveCheckListItems from '@salesforce/apex/CheckListManager.saveCheckListItems';
 import createChecklistItem from '@salesforce/apex/CheckListManager.createChecklistItem';
-import deleteChecklist from '@salesforce/apex/CheckListManagerDuc.deleteChecklist';
+import deleteChecklist from '@salesforce/apex/CheckListManager.deleteChecklist';
 import LightningConfirm from 'lightning/confirm';
 
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';

@@ -13,14 +13,14 @@ export default class CreateChecklistDialog extends NavigationMixin(LightningElem
     	}
     }
     renderedCallback(){
-		if(FORM_FACTOR === 'Small'){
-			const style = document.createElement('style');
-				style.innerText = `div {
-					background-color: #fff !Important;
-					}
-			`;
-			this.template.querySelector('div')?.appendChild(style);
-		}
+		// if(FORM_FACTOR === 'Small'){
+		// 	const style = document.createElement('style');
+		// 		style.innerText = `div {
+		// 			background-color: #fff !Important;
+		// 			}
+		// 	`;
+		// 	this.template.querySelector('div')?.appendChild(style);
+		// }
 		
 	}
     handleButton(event) {
