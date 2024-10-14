@@ -5,6 +5,7 @@
     <targets>
         <target>lightning__RecordAction</target>
         <target>lightning__RecordPage</target>
+        <target>lightningCommunity__Page</target>
     </targets>
     <targetConfigs>
         <targetConfig targets="lightning__RecordAction">

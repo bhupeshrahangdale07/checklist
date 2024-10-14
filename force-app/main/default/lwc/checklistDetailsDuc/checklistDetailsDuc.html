@@ -127,7 +127,7 @@
                                 
                                     </template>
                                 </template>
-
+                                {CheckL.isActiveAddItem}
                                 <!-- Items loop End -->
                                 <!-- Add Item -->
                                 <div lwc:if={CheckL.isActiveAddItem}
@@ -178,7 +178,7 @@
                                             </span>
                                         </button>
                                     </div>
-
+                                    {CheckL.isDeletable}
                                     <div lwc:if={CheckL.isDeletable} class="delete-icon">
                                         <lightning-icon data-checklistid={CheckL.Id} data-title={CheckL.kt_checklist__Checklist_Title__c} icon-name="utility:delete" class="icon-clickable" size="medium" alternative-text="Delete Checklist" title="Delete Checklist" onclick={handleDeleteChecklist}></lightning-icon>
                                         <!-- <lightning-button-icon icon-name="utility:delete" variant="bare" alternative-text="Delete Checklist" title="Delete Checklist"></lightning-button-icon> -->

@@ -7,7 +7,6 @@
     flex-direction: row;
     justify-content: space-between;
     height: 100%;
-    /* padding: 20px; */
 }
 
 .button-container {
@@ -20,28 +19,18 @@
     margin-top: auto;
 }
 
-/* .delete-icon:hover lightning-button-icon {
-    filter: brightness(1.5) saturate(2) hue-rotate(330deg);
-} */
-
-/* .delete-icon:hover lightning-button-icon {
-    color: red;
-    filter: drop-shadow(1px 1px 1px red);
-} */
 
 .icon-clickable {
     transition: background-color 0.2s ease, color 0.2s ease;
-    /* padding: 0.5rem; */
     border-radius: 0.25rem;
 }
 
-/* Hover effect similar to SLDS button */
+
 .icon-clickable:hover {
-    background-color: #d8d8d8; /* Light gray background on hover */
-    color: #ba0517; /* Change icon color on hover */
+    background-color: #d8d8d8; 
+    color: #ba0517; 
 }
 
-/* Active (onclick) effect similar to SLDS button */
 .icon-clickable:active {
-    background-color: #c5c5c5; /* Darker gray when clicked */
+    background-color: #c5c5c5; 
 }

@@ -7,6 +7,7 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 import Is_Locked_FIELD from '@salesforce/schema/Checklist_Template__c.IsLocked__c';
 import Active_FIELD from '@salesforce/schema/Checklist_Template__c.Active__c';
+import Sequential_FIELD from '@salesforce/schema/Checklist_Template__c.Sequential__c';
 import Name_FIELD from '@salesforce/schema/Checklist_Template__c.Name';
 import DueDays_FIELD from '@salesforce/schema/Checklist_Template__c.Due_Days__c';
 import { loadStyle } from 'lightning/platformResourceLoader';
@@ -30,6 +31,7 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
 
     isActive = false;
     isLocked = false;
+    isSequential = false;
     editForm = true;
     nameValue = '';
     dueDaysValue = '';
@@ -41,10 +43,13 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
     * Assigns the current value of the toggle to the local variables when any of the two toggles Active and Locked is clicked upon.
     */
     handleToggle(event) {
-        if (event.target.name === 'togglevalue2') {
-            this.isActive = event.target.checked;
-        } else {
+        if (event.target.name === 'togglevalue1') {
             this.isLocked = event.target.checked;
+        } else if (event.target.name === 'togglevalue2'){
+            this.isActive = event.target.checked;
+        } else{
+            this.isSequential = event.target.checked;
+            console.log('this.isSequential:'+this.isSequential);
         }
     }
     handleInputChange(event) {
@@ -74,7 +79,7 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
     connectedCallback() {
         this.disablePullToRefresh();
         /* Uncomment this code when Mobile designs are continued developing*/
-        if (FORM_FACTOR == 'Small') {
+        if (FORM_FACTOR == 'Small' || FORM_FACTOR == 'Medium' ) {
             this.isMobile = true;
             this.showSecondCmp = false;
         }
@@ -83,7 +88,7 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
 
     renderedCallback() {
         /*Uncomment this code when Mobile designs are continued developing  */
-        if (FORM_FACTOR == 'Small') {
+        if (FORM_FACTOR == 'Small' || FORM_FACTOR == 'Medium') {
             let layoutItems = this.template.querySelectorAll('lightning-layout-item:not(.notinclude)');
             if (layoutItems) {
                 layoutItems.forEach(item => {
@@ -152,19 +157,25 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
             this.template.querySelector('div').appendChild(style);
 
         }
-        if(FORM_FACTOR === 'Small'){
-			const style = document.createElement('style');
-				style.innerText = `div {
-					background-color: #fff !Important;
-					}
-			`;
-			this.template.querySelector('div')?.appendChild(style);
-		}
+        // if(FORM_FACTOR === 'Small' || FORM_FACTOR === 'Medium'){
+		// 	const style = document.createElement('style');
+		// 		style.innerText = `div {
+		// 			background-color: #fff !Important;
+		// 			}
+		// 	`;
+		// 	this.template.querySelector('div')?.appendChild(style);
+		// }
 
         this.loadCss();
 
     }
-    
+    get dynamicStyle() {
+        return this.isMobile ? '' : 'border-right: 1px solid #ccc;';
+    }
+    get dynamicClasses() {
+        return this.isMobile ? 'slds-col' : 'slds-col slds-size_1-of-2';
+    }
+
 
     async onNextClick() {
 
@@ -196,7 +207,7 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
             loadStyle(this, this.customCSS)
         ]).then(() => {
         }).catch(error => {
-            //console.log('loadCss error:',error);
+            console.log('loadCss error:',error);
         });
     }
 
@@ -213,6 +224,7 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
         if (!this.recordId) {
             this.isActive = true;
             this.isLocked = false;
+            this.isSequential = false;
             this.editForm = false;
             this.headerTitle = 'Create Checklist Template';
             let row = { 'kt_checklist__Item__c': '', 'kt_checklist__Item_Order__c': this.templateItems.length + 1, 'kt_checklist__Description__c': '' };
@@ -222,7 +234,7 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
 
         await getTemplateItems({ recordId: this.recordId })
             .then((data) => {
-                console.log('Data*- '+JSON.stringify(data));
+                //console.log('Data*- '+JSON.stringify(data));
                 this.templateRecord = data;
 
                 let checklistTemplateTitleElement = this.template.querySelector(
@@ -244,6 +256,9 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
                 }
                 if (data[Is_Locked_FIELD.fieldApiName]) {
                     this.isLocked = data[Is_Locked_FIELD.fieldApiName];
+                }
+                if (data[Sequential_FIELD.fieldApiName]) {
+                    this.isSequential = data[Sequential_FIELD.fieldApiName];
                 }
                 this.descriptionValue = data['kt_checklist__Description__c'];
 
@@ -445,18 +460,19 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
 
         if (inputFields) {
             inputFields.forEach(field => {
-                console.log('field' + JSON.stringify(field));
+                //console.log('field' + JSON.stringify(field));
 
                 fields[field.fieldName] = field.value;
             });
         }
 
 
-        console.log('Fields- ' + JSON.stringify(fields));
+        //console.log('Fields- ' + JSON.stringify(fields));
         fields.Id = this.recordId;
 
         fields[Is_Locked_FIELD.fieldApiName] = this.isLocked;
         fields[Active_FIELD.fieldApiName] = this.isActive;
+        fields[Sequential_FIELD.fieldApiName] = this.isSequential;
         // if (this.isMobile = true) {
         //     fields["kt_checklist_Description_c"] = this.descriptionValue;
         //     alert('Fields- ' + JSON.stringify(fields));
@@ -491,12 +507,12 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
         } else {
             fields = event.detail.fields;
 
-
-            console.log('Fields- ' + JSON.stringify(fields));
+            //console.log('Fields- ' + JSON.stringify(fields));
             fields.Id = this.recordId;
 
             fields[Is_Locked_FIELD.fieldApiName] = this.isLocked;
             fields[Active_FIELD.fieldApiName] = this.isActive;
+            fields[Sequential_FIELD.fieldApiName] = this.isSequential;
             // if(this.isMobile = true){
             //     fields["kt_checklist_Description_c"] = this.descriptionValue;
             //     alert('Fields- '+JSON.stringify(fields));

@@ -36,4 +36,8 @@
     .selectchecklist{
       width: 85%;;
       }
+      .checklist-container {
+        background-color: #fff !important;
+        padding: 12px;
+    }
     }

@@ -11,8 +11,6 @@ export default class CreateChecklistDialog extends NavigationMixin(LightningElem
     	if(FORM_FACTOR === 'Small'){
     		this.isMobile =true;
     	}
-    }
-    renderedCallback(){
 		// if(FORM_FACTOR === 'Small'){
 		// 	const style = document.createElement('style');
 		// 		style.innerText = `div {
@@ -21,8 +19,25 @@ export default class CreateChecklistDialog extends NavigationMixin(LightningElem
 		// 	`;
 		// 	this.template.querySelector('div')?.appendChild(style);
 		// }
+    }
+	
+    // renderedCallback(){
+	// 	if(FORM_FACTOR === 'Small'){
+	// 		const style = document.createElement('style');
+        
+    //     // Define the CSS inside the style element
+    //     style.innerText = `
+    //         .checklist-container {
+    //             background-color: #fff !important;
+    //             padding: 10px;
+    //         }
+    //     `;
+
+    //     // Append the style element to the component's shadow DOM
+    //     this.template.querySelector('div.checklist-container')?.appendChild(style);
+	// 	}
 		
-	}
+	// }
     handleButton(event) {
     	var btnName = event.currentTarget.name;
     	if(FORM_FACTOR === 'Small'){

@@ -735,7 +735,7 @@ export default class CreateChecklist extends NavigationMixin(LightningElement) {
 			}
         });
 		this.checklistTemporaryData = newChecklistData;
-		
+		alert('checklistTemporaryData- '+JSON.stringify(this.checklistTemporaryData));
 	}
 
   	saveChecklistAndItems({
@@ -815,7 +815,7 @@ export default class CreateChecklist extends NavigationMixin(LightningElement) {
 	navigateToChecklistTypeSelectionScreen(){
 		if(this.isMobile){
 			let componentDef = {
-				componentDef: "c:createChecklistDialog",
+				componentDef: "c:createChecklistDialogDuc",
 				attributes: {
 					recordIdOfAcc: this.recordId,
 						ShowAsPopUp: false
