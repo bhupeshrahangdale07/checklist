@@ -8,7 +8,7 @@ export default class CreateChecklistDialog extends NavigationMixin(LightningElem
     @api recordIdOfAcc;
     
     connectedCallback() {
-    	if(FORM_FACTOR === 'Small'){
+    	if(FORM_FACTOR === 'Small' || FORM_FACTOR === 'Medium'){
     		this.isMobile =true;
     	}
 		// if(FORM_FACTOR === 'Small'){
@@ -38,9 +38,10 @@ export default class CreateChecklistDialog extends NavigationMixin(LightningElem
 	// 	}
 		
 	// }
+	
     handleButton(event) {
     	var btnName = event.currentTarget.name;
-    	if(FORM_FACTOR === 'Small'){
+    	if(FORM_FACTOR === 'Small' || FORM_FACTOR === 'Medium'){
 			/* Uncomment this when Mobile version is to be released.*/
     		event.preventDefault();
     		let componentDef = {

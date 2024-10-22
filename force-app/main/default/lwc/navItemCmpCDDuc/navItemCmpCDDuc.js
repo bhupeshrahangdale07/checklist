@@ -2,6 +2,8 @@ import { LightningElement, track, wire, api } from 'lwc';
 import fetchCheckLists from '@salesforce/apex/MyChecklistsPageManager.fetchCheckLists';
 import FORM_FACTOR from '@salesforce/client/formFactor';
 import getRelationObjectIconFieldMap from '@salesforce/apex/MyChecklistsPageManager.getRelationObjectIconFieldMap';
+import getAssignedPermissions from '@salesforce/apex/CheckListManager.assignedPermissions';
+
 
 import { getRecord } from 'lightning/uiRecordApi';
 import uId from '@salesforce/user/Id';
@@ -60,6 +62,25 @@ export default class NavItemCmp extends LightningElement {
     @track isDivVisible = true;
     @track isDesktop = false;
     @track isMobile = false;
+    
+    @track hasAdminStandardPermission = false;
+	@track hasAdminPermission = false;
+
+    @wire(getAssignedPermissions)
+    wiredData({ error, data }) {
+        if (data) {
+            this.hasAdminStandardPermission = data.isStandard ? data.isStandard : false;
+            this.hasAdminPermission = data.isAdmin ? data.isAdmin : false;
+
+            if(!this.hasAdminStandardPermission && !this.hasAdminPermission ){
+                this.showToast('Error', 'Please Add respective PermissionSet to Use Checklist Genius', 'error');
+            }
+
+        } else if (error) {
+        this.showToast('Error', err?.body?.message, 'error');
+        }
+    }
+    
 
     @wire(getRecord, { recordId: uId, fields: [UserNameFIELD, userAliasFIELD ]}) 
     currentUserInfo({error, data}) {
@@ -108,7 +129,7 @@ export default class NavItemCmp extends LightningElement {
             this.isDesktop =true;
             //console.log('this.isDesktop :: ' +this.isDesktop);
         }
-        if(FORM_FACTOR === 'Small'){
+        if(FORM_FACTOR === 'Small' || FORM_FACTOR === 'Medium'){
             this.isDesktop =true; // Remove this line, and uncomment the following when Mobile designs are continued development
             // this.isMobile =true;
             // console.log('this.isMobile :: ' +this.isMobile);
@@ -187,7 +208,9 @@ export default class NavItemCmp extends LightningElement {
                         //console.log('parentField:', parentField);
 
                         if(parentField){
-                            item.displayUrl = item[parentField].Name; //item[parentSObjField]
+                            // item.displayUrl = item[parentField].Name; //item[parentSObjField]
+			                let relatedrec = this.getOtherFieldValue(item[parentField]);
+                            item.displayUrl = relatedrec ? relatedrec.fieldValue : null;
                             item.parentId = item[parentField].Id;
                             //console.log('item.displayUrl:', item.displayUrl);
 
@@ -339,6 +362,18 @@ export default class NavItemCmp extends LightningElement {
             });
     }
 
+    getOtherFieldValue(record) {
+        // Ensure the record is an object and has more than one property
+        if (record && typeof record === 'object' && Object.keys(record).length > 1) {
+            // Iterate through the properties of the object
+            for (let key in record) {
+                if (key !== 'Id' && record.hasOwnProperty(key)) {
+                    return { fieldName: key, fieldValue: record[key] };
+                }
+            }
+        }
+        return null; // Return null if no other field is found
+    }
     /*
      * Helper method to convert Map to Array of Objects. Also, calls the sorting method before returning the array.
     */

@@ -9,7 +9,7 @@ export default class ModalPopUp extends LightningElement {
     @track isMobile = false;
 
     connectedCallback() {
-    	if(FORM_FACTOR === "Small"){
+    	if(FORM_FACTOR === "Small" || FORM_FACTOR === "Medium"){
     		this.isMobile =true;
     	}
     }

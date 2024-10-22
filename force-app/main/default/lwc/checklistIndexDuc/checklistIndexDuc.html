@@ -41,7 +41,7 @@
                             </div> 
                     </div>
                 </div> -->
-
+                
                 <div class="slds-grid slds-m-bottom_small blockDiv">
                     <div class="slds-align-bottom slds-col">
                         <div class="slds-grid slds-grid_vertical-align-center">
@@ -50,12 +50,13 @@
                                     icon-name="utility:edit_form"
                                     alternative-text="Checklist Genius Icon"></lightning-icon>
                             </div>
-                            <div class="slds-col slds-m-left_small"> 
-                                <div class="checklist-title slds-page-header__title">Checklist Genius</div>
+                            <div class="slds-col slds-m-horizontal_x-small"> 
+                                <div class="checklist-title slds-page-header__title">Checklist Genius D</div>
                             </div>
                         </div>
                     </div>
-                    <div class="slds-col slds-no-flex slds-grid slds-align-bottom slds-shrink">
+
+                    <div lwc:if={isAccessibleActions} class="slds-col slds-no-flex slds-grid slds-align-bottom slds-shrink">
                         <!--<lightning-button-icon-stateful icon-name="utility:filterList" selected={openFiltersList}
                             onclick={handleOpenFiltersList} alternative-text="Filters" 
                             class="slds-align-middle slds-m-right_xx-small"></lightning-button-icon-stateful> -->
@@ -64,6 +65,7 @@
                             onclick={handleOpenFiltersList} alternative-text="Filters" 
                             class="slds-align-middle slds-m-right_xx-small" size="medium"></lightning-button-icon-stateful>
                             
+                        <template lwc:if={enableEditMode} >
                         <button style={checklistBtnStyle} class="btn-primary slds-button slds-button_brand slds-p-vertical_xx-small slds-p-horizontal_x-small"
                             onclick={handleCreateChecklist}>
                             <svg class="form-button slds-button__icon slds-button__icon_left" aria-hidden="true">
@@ -71,6 +73,7 @@
                             </svg>
                             Create Checklist
                         </button>
+                        </template>
                     </div>
                 </div>
 
@@ -122,13 +125,16 @@
                     -->
 
                     <div lwc:if={_CheckList}>
-                    <c-checklist-details-duc check-list={_CheckList} onhandleupdatechecklist={handleupdatechecklist} ondeletechecklist={handleRemoveChecklist} onhandlecompletedchecklist={handlecompletedchecklist} onhandleuncompletedchecklist={handleuncompletedchecklist}
+                    <c-checklist-details-duc enable-edit-mode={enableEditMode} has-admin-permission={hasAdminPermission}
+                        has-admin-standard-permission={hasAdminStandardPermission}
+                        check-list={_CheckList} onhandleitemchange={handleupdatechecklist}
+                        onhandleupdatechecklist={handleupdatechecklist} ondeletechecklist={handleRemoveChecklist} onhandlecompletedchecklist={handlecompletedchecklist} onhandleuncompletedchecklist={handleuncompletedchecklist}
                         flexipage-region-width={flexipageRegionWidth}></c-checklist-details-duc>
                     </div>
                     
-                        <template lwc:if={isLoadingChecklistDetails}>
+                        <!-- <template lwc:if={isLoadingChecklistDetails}>
                             <lightning-spinner alternative-text="Loading" size="x-small" variant="brand"></lightning-spinner>
-                        </template>
+                        </template> -->
                     <!-- Commented the mobile view  </div> -->
                 </div>
 

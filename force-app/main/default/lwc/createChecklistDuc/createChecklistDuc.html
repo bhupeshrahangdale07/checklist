@@ -89,6 +89,13 @@
                                         </lightning-record-picker>
                                     </template>
                                 </div>
+                                <div class="" style="display: flex; align-items: center;">
+                                    <label for="togglevalue2" class="centerAlighment"  style="min-width: 70px;">Sequential
+                                        <lightning-helptext class="helptext-icon" slot="start" content="When the Checklist is sequential, it's items must be completed in order. This option is set in the Template." style="position: relative; top: -4px; right: -2px;">
+                                        </lightning-helptext>
+                                    </label>
+                                    <lightning-input type="toggle" message-toggle-active="" name="togglevalue2" checked={formData.Sequential__c} message-toggle-inactive="" title="" disabled={showTemplateField} data-fieldname={is_Checklist_Sequential_Field.fieldApiName} onchange={handleInputChange}></lightning-input>
+                                </div>
 
 
                                 <div class="add-item-form">
@@ -255,7 +262,7 @@
                                                     style="width: 100%;padding-bottom: 5px;"></lightning-input>
 
                                                 <lightning-combobox class="picklist" name="field"
-                                                    field-level-help="If Others is selected, you can assign the Checklist to any particular user."
+                                                    field-level-help="If you wish, you can assign the Checklist to any particular user or a queue."
                                                     label="Assign To" placeholder="--None--"
                                                     value={assignToOptions.defaultValue.value}
                                                     options={assignToOptions.values}
@@ -289,6 +296,13 @@
                                                 </template>
                                             </div>
 
+                                            <div class="" style="display: flex; align-items: center;">
+                                                <label for="togglevalue1" class="centerAlighment"  style="min-width: 70px;">Sequential
+                                                    <lightning-helptext class="helptext-icon" slot="start" content="When the Checklist is sequential, it's items must be completed in order. This option is set in the Template." style="position: relative; top: -4px; right: -2px;">
+                                                    </lightning-helptext>
+                                                </label>
+                                                <lightning-input type="toggle" message-toggle-active="" name="togglevalue1" checked={formData.kt_checklist__Sequential__c} message-toggle-inactive="" title="" disabled={showTemplateField} data-fieldname={is_Checklist_Sequential_Field.fieldApiName} onchange={handleInputChange}></lightning-input>
+                                            </div>
 
                                             <div class="add-item-form">
                                                 <template lwc:if={showAddItems}>

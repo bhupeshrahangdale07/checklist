@@ -33,7 +33,7 @@ export default class MyChecklistsPageMobCD extends LightningElement {
               rightPanel.classList.remove('expand-panel');
               rightPanel.classList.add('collapse-panel');
           }
-          console.log('to check windows ::');
+          //console.log('to check windows ::');
           const checklistDiv = this.template.querySelector('.my-checklist');
           if (checklistDiv) {
               checklistDiv.scrollTop = 0;
@@ -61,9 +61,9 @@ export default class MyChecklistsPageMobCD extends LightningElement {
     currentUserInfo({error, data}) {
         if (data) {
             this.userPhoto = data.fields.SmallPhotoUrl.value;
-            console.log('userPhoto:', this.userPhoto);
+            //console.log('userPhoto:', this.userPhoto);
             this.currentUserName = data.fields.Name.value.split(' ')[0];
-            console.log('User details:', this.currentUserName);
+            //console.log('User details:', this.currentUserName);
             if(this.currentUserName.toLowerCase().endsWith('s')){
                 this.mychecklist = this.currentUserName + '\' Checklists Duc';
             }else{
@@ -77,24 +77,24 @@ export default class MyChecklistsPageMobCD extends LightningElement {
 
     connectedCallback(){
         //alert();
-        console.log(' window.innerHeight in connected callback:: ' +window.innerHeight);
+        //console.log(' window.innerHeight in connected callback:: ' +window.innerHeight);
         this.loadCss();
         this.calculateHeight();
     }
 
     calculateHeight() {
-        console.log(' window.innerHeight :: ' +window.innerHeight);
+        //console.log(' window.innerHeight :: ' +window.innerHeight);
         const divElement = this.template.querySelector('.empty-state-vrtl');
         if (divElement) {
             const contentHeight = divElement.scrollHeight;
-            console.log('contentHeight :: ' +contentHeight);
+            //console.log('contentHeight :: ' +contentHeight);
         }
         this.dynamicHeight = 'border: none; flex: 0 1 auto; padding-right: -5px; background-color: white; height: '+window.innerHeight+'px;';
     }
 
     renderedCallback(){
         if(this.filter === 'today'){
-            this.filterName = "Today\'s Checklist"+" ("+this.todayCount+")";
+            this.filterName = "Today\'s Checklists"+" ("+this.todayCount+")";
         }
         
         this.loadCss();
@@ -105,10 +105,10 @@ export default class MyChecklistsPageMobCD extends LightningElement {
             // loadStyle( this, this.customStyle )            
             loadStyle( this, this.customCSS )            
         ]).then(() => {
-            console.log( 'Css File loaded' );
+            //console.log( 'Css File loaded' );
         })
             .catch(error => {
-                console.log( error.body.message );
+                //console.log( error.body.message );
             });
     }
 
@@ -123,8 +123,8 @@ export default class MyChecklistsPageMobCD extends LightningElement {
     };
 
     handleSelect (event) {
-        console.log('onclick inside handleSelect.');
-        console.log('event.currentTarget.dataset.name:',event.currentTarget.dataset.name);
+        //console.log('onclick inside handleSelect.');
+        //console.log('event.currentTarget.dataset.name:',event.currentTarget.dataset.name);
 
         const tabs = this.template.querySelectorAll('.slds-vertical-tabs__nav-item');
         // Remove the 'slds-is-active' class from all tabs
@@ -147,7 +147,7 @@ export default class MyChecklistsPageMobCD extends LightningElement {
             this.newTab = {};
             this.newTab.today = true;
             this.filter = 'today';
-            this.filterName = "Today's\n Checklist"+" ("+this.todayCount+")";
+            this.filterName = "Today's\n Checklists"+" ("+this.todayCount+")";
         } else if (event.currentTarget.dataset.name === 'overdue') {
             this.newTab = {};
             this.newTab.overdue = true;
@@ -198,13 +198,13 @@ export default class MyChecklistsPageMobCD extends LightningElement {
     @track completedCount;
     
     handleFilterCountsChange(event) {
-        console.log('Inside handleFilterCountsChange');
+        //console.log('Inside handleFilterCountsChange');
         //alert('In handleFiltercountschange Function');
         // Retrieve the filterCounts Obj from the event detail
         const filterCountsObj = event.detail.filterCounts;
         this.todayCount = filterCountsObj.today;
-        console.log('Inside handleFilterCountsChange filterCountsObj:',filterCountsObj);
-        console.log('Inside handleFilterCountsChange filterCountsObj[\'overdue\']:',filterCountsObj.overdue);
+        //console.log('Inside handleFilterCountsChange filterCountsObj:',filterCountsObj);
+        //console.log('Inside handleFilterCountsChange filterCountsObj[\'overdue\']:',filterCountsObj.overdue);
 
         ({
             today: this.todayCount,
@@ -215,11 +215,11 @@ export default class MyChecklistsPageMobCD extends LightningElement {
             completed: this.completedCount
         } = filterCountsObj);
 
-        console.log('After destructuring the filterCountsObj object', this.todayCount, this.overdueCount,);
+        //console.log('After destructuring the filterCountsObj object', this.todayCount, this.overdueCount,);
 
         // Retrieve the filterCounts map from filterCountsObj
         this.filterCounts = new Map(Object.entries(filterCountsObj));
-        console.log('Inside handleFilterCountsChange this.filterCounts:',this.filterCounts);
+        //console.log('Inside handleFilterCountsChange this.filterCounts:',this.filterCounts);
     }
 
     /*

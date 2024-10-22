@@ -1,6 +1,14 @@
-import { LightningElement, track, api } from 'lwc';
+import { LightningElement, track, api, wire } from 'lwc';
+import ToastContainer from 'lightning/toastContainer';
+
+// import readOnlyPage from './readOnlyChecklist.html';
+import DefaultPage from './checklistIndexDuc.html';
+
 import getRelatedFieldNameByRecordId from '@salesforce/apex/CheckListManager.getRelatedFieldNameByRecordId';
-import fetchCheckLists from '@salesforce/apex/CheckListManager.fetchCheckLists';
+import getAssignedPermissions from '@salesforce/apex/CheckListManager.assignedPermissions';
+
+import fetchCheckLists from '@salesforce/apex/CheckListManagerDuc.fetchCheckLists';  // we need to update it before packaging******************************************************
+
 // import Checklist_Relation_Validation from "@salesforce/label/c.Checklist_Relation_Validation";
 
 import loggedInUserId from '@salesforce/user/Id';
@@ -19,16 +27,24 @@ import CHECKLIST_TITLE_FIELD from '@salesforce/schema/Checklist__c.Checklist_Tit
 
 export default class ChecklistIndex extends NavigationMixin(LightningElement) {
   @api flexipageRegionWidth;
-
+	@api readOnlyMode;
+	@api ShowDetails;
+	
 	customCSS = Resource + '/css/style.css';
-  
 
+	// render() {
+	// 	debugger;
+    //     return this.readOnlyMode ? DefaultPage : DefaultPage; //readOnlyPage : DefaultPage;
+    // }
+	
   icon1 =
   	Resource +
     '/style/icons/utility-sprite/svg/symbols.svg#edit_form';
   icon2 =
   	Resource +
     '/style/icons/utility-sprite/svg/symbols.svg#add';
+
+	noCLIcon = Resource + '/style/icons/action/Empty-state.svg';
 
   checklistTitle_Field = CHECKLIST_TITLE_FIELD;
   // label = {Checklist_Relation_Validation};
@@ -37,6 +53,7 @@ export default class ChecklistIndex extends NavigationMixin(LightningElement) {
   @track CheckList;
 //   @track _CheckList;
 
+	isAccessibleActions = false;
   @track openCreateChecklistDialog = false;
   @track openCreateChecklist = false;
   @track showCreateChecklistFooter = true;
@@ -55,8 +72,15 @@ export default class ChecklistIndex extends NavigationMixin(LightningElement) {
   @track checklistBtnStyle;
 	@track isLoadingChecklistDetails = false;
 
+	@track hasAdminStandardPermission = false;
+	@track hasAdminPermission = false;
+
   get isNotMobile() {
     return !this.isMobile;
+  }
+
+  get enableEditMode(){
+	return this.readOnlyMode == undefined ? true : !this.readOnlyMode;
   }
 
 	@track openFiltersList = false;
@@ -70,7 +94,7 @@ export default class ChecklistIndex extends NavigationMixin(LightningElement) {
 						{label:'Open', name:'Open', value:'Open'},
 						{label:'Overdues', name:'Overdues', value:'Overdues'},
 						{label:'Completed', name:'Completed', value:'Completed'},
-						{label: "My Checklist's", name: "My Checklist's", value:'My_Checklist'},
+						{label: "My Checklists", name: "My Checklists", value:'My_Checklist'},
 					];
 	
 	get showSelectedFilters(){
@@ -170,8 +194,10 @@ export default class ChecklistIndex extends NavigationMixin(LightningElement) {
 		tomorrow.setDate(today.getDate() + 1); // Next day
 	
 		return records.filter((item) => {
-			const dueDate = new Date(item.kt_checklist__Due_Date__c);
-			return today > dueDate;
+			if(item.kt_checklist__Percentage_Completion__c != 100){
+				const dueDate = new Date(item.kt_checklist__Due_Date__c);
+				return today > dueDate;
+			}
 		});
 	}
 
@@ -194,12 +220,36 @@ export default class ChecklistIndex extends NavigationMixin(LightningElement) {
   //   }
   // }
 
+  @wire(getAssignedPermissions)
+  wiredData({ error, data }) {
+    if (data) {
+      	this.hasAdminStandardPermission = data.isStandard ? data.isStandard : false;
+		this.hasAdminPermission = data.isAdmin ? data.isAdmin : false;
+
+		if(!this.hasAdminStandardPermission && !this.hasAdminPermission ){
+			this.showToast('Error', 'Please Add respective PermissionSet to Use Checklist Genius', 'error');
+		}else{
+			this.isAccessibleActions = true;
+		}
+
+    } else if (error) {
+      this.showToast('Error', err?.body?.message, 'error');
+    }
+  }
+
   connectedCallback() {
+	const toastContainer = ToastContainer.instance();
+	toastContainer.maxToasts = 5;
+	toastContainer.toastPosition = 'top-center';
+
   	// Commented the mobile view 
-  	if (FORM_FACTOR === "Small") {
+  	if (FORM_FACTOR === "Small"  || FORM_FACTOR === "Medium") {
   	  this.isMobile1 = true;
-	  this.checklistBtnStyle = 'font-size: 12px;padding: 0px 5px;';
-  	}
+	  this.checklistBtnStyle = 'white-space: nowrap; font-size: 10px;padding: 0px 5px; display: inline;';
+  	}else{
+		this.checklistBtnStyle = 'white-space: nowrap;';
+	}
+
   	this.checkValidity();
   }
 
@@ -227,9 +277,10 @@ export default class ChecklistIndex extends NavigationMixin(LightningElement) {
   				this.checklistLookupField = result;
   				if (!this.checklistLookupField || this.checklistLookupField === '' || this.checklistLookupField.fieldApiName === '' ) {
   					this.showInstructions = true;
+					this.isAccessibleActions = false;
   				} else {
   					this.showInstructions = false;
-  					this.showCreateChecklist = true;
+  					// this.showCreateChecklist = true;
   					this.fetchRecords();
   				}
   			})
@@ -237,7 +288,9 @@ export default class ChecklistIndex extends NavigationMixin(LightningElement) {
   				this.showToast('Error While Checking Checklist Relationship', err?.body?.message, 'error');
   				// console.log(JSON.stringify(error));
   			});
-  	}
+  	}else{
+		this.isAccessibleActions = false;
+	}
   }
 
   /*
@@ -274,7 +327,6 @@ export default class ChecklistIndex extends NavigationMixin(LightningElement) {
 	}
 
 	handlecompletedchecklist(event){
-		debugger;
 		// this.CheckList = [];
 		// this.fetchRecords();
 		let rec = event.detail.checklist;
@@ -282,7 +334,6 @@ export default class ChecklistIndex extends NavigationMixin(LightningElement) {
 	}
 
 	handleuncompletedchecklist(event){
-		debugger;
 		// this.CheckList = [];
 		// this.fetchRecords();
 		let rec = event.detail.checklist;
@@ -290,10 +341,9 @@ export default class ChecklistIndex extends NavigationMixin(LightningElement) {
 	}
 
 	replaceChecklist(rec){
-		console.log('Rec- '+JSON.stringify(rec));
-		debugger;
+		//console.log('Rec- '+JSON.stringify(rec));
 		this.CheckList = this.CheckList.map(element => {
-			console.log('test- '+rec.Id);
+			//console.log('test- '+rec.Id);
 			if(element.Id == rec.Id){
 				return rec;
 			}else{
@@ -313,7 +363,7 @@ export default class ChecklistIndex extends NavigationMixin(LightningElement) {
   	const isValid = this.template.querySelector('c-checklist-details-duc') ? this.template.querySelector('c-checklist-details-duc').checkIsActiveAddItemOpened() : true;
   	if (isValid) {
   		// Commented the mobile view
-  		 if (FORM_FACTOR === "Small") {
+  		 if (FORM_FACTOR === "Small"  || FORM_FACTOR === "Medium") {
   		   //this.isMobile =true;
   		   console.log("inside handleCreateChecklist");
   		   //event.preventDefault();
@@ -324,9 +374,9 @@ export default class ChecklistIndex extends NavigationMixin(LightningElement) {
   	       		ShowAsPopUp: false
   		    }
   		   };
-  		  console.log("inside handleCreateChecklist :: " + componentDef);
+  		  //console.log("inside handleCreateChecklist :: " + componentDef);
   		   let encodedComponentDef = btoa(JSON.stringify(componentDef));
-  		   console.log("encodedComponentDef :: " + encodedComponentDef);
+  		   //console.log("encodedComponentDef :: " + encodedComponentDef);
   		   this[NavigationMixin.Navigate]({
   		     type: "standard__webPage",
   		     attributes: {
@@ -344,7 +394,7 @@ export default class ChecklistIndex extends NavigationMixin(LightningElement) {
   */ 
   closeDialogModal() {
   	// Commented the mobile view 
-  	if (FORM_FACTOR === "Small") {
+  	if (FORM_FACTOR === "Small"  || FORM_FACTOR === "Medium") {
   	  this.isMobile = false;
   	}
   	this.openCreateChecklistDialog = false;
@@ -369,7 +419,7 @@ export default class ChecklistIndex extends NavigationMixin(LightningElement) {
   */ 
   handleCloseCreateChecklist() {
   	// Commented the mobile view  
-  	if (FORM_FACTOR === "Small") {
+  	if (FORM_FACTOR === "Small"  || FORM_FACTOR === "Medium") {
   	  this.isMobile = false;
   	}
   	this.openCreateChecklist = false;
@@ -386,31 +436,40 @@ export default class ChecklistIndex extends NavigationMixin(LightningElement) {
    * We are also showing a success message to the user.
   */ 
   handleOnAddNewChecklistSuccess(event) {
-  	const newChecklist = event.detail;
+	const checklistTitle = event.detail.title;
+  	const newChecklist = event.detail.checklist;
   	this.showToast(
   		'Success',
   		'New Checklist Added ' +
-        newChecklist[this.checklistTitle_Field.fieldApiName],
+		 checklistTitle,
   		'success',
   		''
   	);
   	// this.showToast("Success", 'New Checklist Added {0}', "success", [{url : '/'+newChecklist?.Id, label :newChecklist[this.checklistTitle_Field.fieldApiName] }]);
 
   	// Commented the mobile view 
-  	if (FORM_FACTOR === "Small") {
+  	if (FORM_FACTOR === "Small" || FORM_FACTOR === "Medium") {
   	  this.isMobile = false;
   	}
 
   	this.openCreateChecklist = false;
-  	let lst = JSON.parse(JSON.stringify(this.CheckList));
-  	if (lst) {
-  		lst.push(JSON.parse(JSON.stringify(newChecklist)));
-  	} else {
-  		lst = [JSON.parse(JSON.stringify(newChecklist))];
-  	}
 
-  	// this.sortData();
-  	this.CheckList = JSON.parse(JSON.stringify(lst));
+
+	  if (newChecklist !== null && typeof newChecklist === 'object') {
+		  if (Object.keys(newChecklist).length >= 1) {
+			  let lst = JSON.parse(JSON.stringify(this.CheckList));
+			  if (lst) {
+				  lst.push(JSON.parse(JSON.stringify(newChecklist)));
+			  } else {
+				  lst = [JSON.parse(JSON.stringify(newChecklist))];
+			  }
+
+			  // this.sortData();
+			  this.CheckList = JSON.parse(JSON.stringify(lst));
+		  }
+	  }
+
+  	
   }
 
   /*

@@ -1,17 +1,15 @@
 <template>
     <!-- Accordion -->
-    <div class="checklist-detail Accordion-index">  
-        
+    <div class="checklist-detail Accordion-index">
         <div lwc:if={ischeckListDataAvailable}>
-        
             <ul lwc:if={checkListData} class="slds-accordion">
                 <template for:each={checkListData} for:item="CheckL" for:index="checklistIndex">
                     <li class="slds-accordion__list-item" key={CheckL.Id}>
                         <section class={CheckL.accordionClass} data-checklistid={CheckL.Id} style="
-                        border-radius: 5.927px;
-                        border: 0.741px solid rgba(0, 0, 0, 0.1);
-                        background: #fafafa; margin-bottom:15px;
-                    ">
+                            border-radius: 5.927px;
+                            border: 0.741px solid rgba(0, 0, 0, 0.1);
+                            background: #fafafa; margin-bottom:15px;
+                            ">
                             <div class="slds-accordion__summary slds-grid_align-spread">
                                 <h2 class="slds-accordion__summary-heading">
                                     <div style="display: flex; width: 100%; justify-content: space-between;">
@@ -27,7 +25,7 @@
                                                 <!-- Due Date-08-09-2023 -->
                                                 <!-- Due: {CheckL.finalDueDate} -->
                                                 <span lwc:if={CheckL.kt_checklist__Due_Date__c} class={CheckL.dueColour}>
-                                                    Due: {CheckL.finalDueDate}
+                                                Due: {CheckL.finalDueDate}
                                                 </span>
                                             </span>
                                             &nbsp;&nbsp;&nbsp;
@@ -50,92 +48,186 @@
                                     </div>
                                 </h2>
                             </div>
-                            
                             <!-- progress-bar -->
                             <!-- 
-                                            <div class="progress-bar">
-                                                <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center"
-                                                    id="progress-bar-label-id-3">
-                                            
-                                            
-                                                    <div class="slds-progress-bar slds-progress-bar_medium slds-progress-bar_circular"
-                                                        aria-valuemin="0" aria-valuemax="70" aria-valuenow="25"
-                                                        aria-labelledby="progress-bar-label-id-3"
-                                                        aria-label="Placeholder for description of progress bar" role="progressbar">
-                                            
-                                                        <span class="slds-progress-bar__value slds-progress-bar__value_success"
-                                                            style={CheckL.ProgressbarPercentage}>
-                                                        </span>
-                                            
-                                            
-                                                    </div>
-                                                    <span aria-hidden="true" class="g-txt">
-                                                        <strong>
-                                                             75% 
-                                                            {CheckL.Percentage_Completion__c}%
-                                                        </strong>
-                                                    </span>
-                                            
-                                                </div>
-                                            </div> -->
-                            <!-- bar end -->
-
-                            <div class="slds-accordion__content ">
+                                <div class="progress-bar">
+                                    <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center"
+                                        id="progress-bar-label-id-3">
                                 
-                                    <!-- {CheckL.Description__c}  -->
-                                    <template lwc:if={CheckL.kt_checklist__Description__c}>
-                                        <p class="slds-p-bottom_x-small" style="font-size: 14px;">
-                                            <c-Description-display description={CheckL.kt_checklist__Description__c}
+                                
+                                        <div class="slds-progress-bar slds-progress-bar_medium slds-progress-bar_circular"
+                                            aria-valuemin="0" aria-valuemax="70" aria-valuenow="25"
+                                            aria-labelledby="progress-bar-label-id-3"
+                                            aria-label="Placeholder for description of progress bar" role="progressbar">
+                                
+                                            <span class="slds-progress-bar__value slds-progress-bar__value_success"
+                                                style={CheckL.ProgressbarPercentage}>
+                                            </span>
+                                
+                                
+                                        </div>
+                                        <span aria-hidden="true" class="g-txt">
+                                            <strong>
+                                                 75% 
+                                                {CheckL.Percentage_Completion__c}%
+                                            </strong>
+                                        </span>
+                                
+                                    </div>
+                                </div> -->
+                            <!-- bar end -->
+                            <div class="slds-accordion__content ">
+                                <!-- {CheckL.Description__c}  -->
+                                <template lwc:if={CheckL.kt_checklist__Description__c}>
+                                    <p class="slds-p-bottom_x-small" style="font-size: 14px;">
+                                        <c-Description-display description={CheckL.kt_checklist__Description__c}
                                             flexipage-region-width={flexipageRegionWidth}></c-Description-display>
-                                        </p>
-                                    </template>
-                                    
+                                    </p>
+                                </template>
+                                <!-- Checklist Items start here -->
                                 <template lwc:if={CheckL.kt_checklist__Checklist_Items__r}>
-                                    <template iterator:item={CheckL.kt_checklist__Checklist_Items__r}>
-                                        <div key={item.value.Id} class="slds-var-m-bottom_xx-small">
-                                            <div lwc:if={item.first} class="slds-border_top slds-p-bottom_xx-small"></div>
-                                            
-                                            <div class="container">
-                                                <div>
-                                                    <input class="rounded-checkbox" type="checkbox" name="ChecklistItem" id={item.value.Id}
-                                                        value={item.value.Checked} disabled={item.value.CheckboxDisabled} onchange={handleCheckbox}
-                                                        data-itemid={item.value.Id} data-checklistid={CheckL.Id} />
-                                                    <label class="slds-m-left_x-small slds-p-right_x-small" style="font-weight: 500;font-size: 16px;"> <!-- for={Item.Id} -->
-                                                        {item.value.kt_checklist__Item__c}
-                                                    </label>
-                                                    <span class="description slds-p-bottom_x-small">
-                                                        <template lwc:if={item.value.kt_checklist__Description__c}>
-                                                            <c-description-display description={item.value.kt_checklist__Description__c}
-                                                                flexipage-region-width={flexipageRegionWidth}></c-description-display>
+                                    <template lwc:if={CheckL.kt_checklist__Sequential__c}>
+                                        <template iterator:item={CheckL.kt_checklist__Checklist_Items__r}>
+                                            <ul key={item.value.Id} class=" slds-timeline">
+                                                <div lwc:if={item.first} class="slds-border_top slds-p-bottom_xx-small"></div>
+                                                <li>
+                                                    <div class=" ">
+                                                        <div class="slds-media slds-timeline__item_expandable slds-timeline__item_task slds-is-open" style={dynamicStyle}>
+                                                            <div class="slds-media__figure " style="">
+                                                                
+                                                                <div class=" slds-icon_container" style="border: 4px solid #fafafa; background-color:#fafafa;">
+                                                                    <input class="rounded-checkbox" type="checkbox" name="ChecklistItem" id={item.value.Id}
+                                                                                value={item.value.Checked} disabled={item.value.CheckboxDisabled} onchange={handleCheckbox}
+                                                                                data-itemid={item.value.Id} data-checklistid={CheckL.Id} />
+                                                                </div>
+                                                            </div>
+                                                            <div class="slds-media__body">
+                                                                <div class=" slds-timeline__trigger">
+                                                                    <div class="container">
+                                                                        <div>
+                                                                            
+                                                                            <label class=" slds-p-right_x-small" style="font-weight: 500;font-size: 16px;">
+                                                                                <!-- for={Item.Id} -->
+                                                                                {item.value.kt_checklist__Item__c}
+                                                                            </label>
+                                                                            <span class=" slds-p-bottom_x-small">
+                                                                                <template lwc:if={item.value.kt_checklist__Description__c}>
+                                                                                    <c-description-display description={item.value.kt_checklist__Description__c}
+                                                                                        flexipage-region-width={flexipageRegionWidth}></c-description-display>
+                                                                                </template>
+                                                                            </span>
+                                                                        </div>
+                                                                        <div class="right-label">
+                                                                            <lightning-icon icon-name="utility:error" size="x-small" class={item.value.iconClass}
+                                                                                variant={item.value.iconVariant} alternative-text="Not Applicable!" title="Not Applicable"
+                                                                                onclick={handleNotApplicable} data-checked={item.value.Checked}
+                                                                                data-checkedvalue={item.value.kt_checklist__Checked__c} data-itemid={item.value.Id}
+                                                                                data-checklistid={CheckL.Id}  style="margin:auto;display: block;padding-top: 5px;padding-left: 2px;"></lightning-icon>
+                                                                        </div>
+                                                                    </div>
+                        
+                                                                    <template lwc:if={viewChecklistItemActivity}>
+                                                                        <div lwc:if={item.value.showDetails} class="item-details slds-p-horizontal_small">
+                                                                            <div lwc:if={item.value.CompletedBy}>
+                                                                                <a href={item.value.CompletedByLink}>
+                                                                                    {item.value.CompletedBy}
+                                                                                </a>
+                                                                            </div>
+                                                                            <!-- <div>
+                                                                                                                        <lightning-formatted-date-time value={item.value.LastModifiedDate} year="2-digit" month="short" day="2-digit"
+                                                                                                                            hour="numeric" weekday="short" era="short"></lightning-formatted-date-time>
+                                                                                                                    </div> -->
+                                                                            <div>
+                                                                                <!-- {item.value.LastModifiedDate} -->
+                                                                                <lightning-formatted-text value={item.value.CompletedDate}></lightning-formatted-text>
+                                                                            </div>
+                                                                        </div>
+                                                                    </template>
+                                                                
+
+                                                                    <template lwc:if={item.last}></template>
+                                                                    <template lwc:else>
+                                                                        <div class="slds-border_bottom"></div>
+                                                                    </template>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </template>
+                                    </template>
+                                    <template lwc:else>
+                                      <div >
+                                        <template iterator:item={CheckL.kt_checklist__Checklist_Items__r}>
+                                            <div key={item.value.Id} class="slds-var-m-bottom_x-small connecting-line">
+                                                <div class="container">
+                                                    <div class="slds-grid " style="height: 100%; width: 100%;">
+                                                        <!-- First vertical space: Input Checkbox -->
+                                                        <template lwc:if={enableEditMode}>
+                                                        <div class="slds-col slds-size_1-of-12 slds-grid_vertical-align-center slds-p-bottom_xxx-small slds-p-top_xxx-small " style="border-style: solid; border-color: #d5d5d5; border-width: 1px; border-radius: 6px; background-color: #d5d5d5;  display: flex; flex-direction: column; justify-content: center; align-items: center; ">
+                                                            <input style="margin:auto;display: block;"  class="rounded-checkbox" type="checkbox" name="ChecklistItem" id={item.value.Id}
+                                                                value={item.value.Checked} disabled={item.value.CheckboxDisabled} onchange={handleCheckbox}
+                                                                data-itemid={item.value.Id} data-checklistid={CheckL.Id} />
+                                                            <lightning-icon icon-name="utility:error" size="x-small" class={item.value.iconClass}
+                                                                variant={item.value.iconVariant} alternative-text="Not Applicable!" title="Not Applicable"
+                                                                onclick={handleNotApplicable} data-checked={item.value.Checked}
+                                                                data-checkedvalue={item.value.kt_checklist__Checked__c} data-itemid={item.value.Id}
+                                                                data-checklistid={CheckL.Id} style="margin:auto;display: block;padding-top: 10px;"></lightning-icon>
+                                                        </div>
                                                         </template>
-                                                    </span>
-                                                </div>
-                                                <div class="right-label">
-                                                    <lightning-icon icon-name="utility:error" size="x-small" class={item.value.iconClass}
-                                                        variant={item.value.iconVariant} alternative-text="Not Applicable!" title="Not Applicable"
-                                                        onclick={handleNotApplicable} data-checked={item.value.Checked}
-                                                        data-checkedvalue={item.value.kt_checklist__Checked__c} data-itemid={item.value.Id}
-                                                        data-checklistid={CheckL.Id}></lightning-icon>
+                                                        
+                                                        <!-- Second vertical space: Label and Description -->
+                                                        <div class="slds-col slds-size_11-of-12 slds-m-left_xx-small" style="border-radius: 6px; background-color: #f3f3f3; border-style: solid; border-color: #d5d5d5; border-width: 1px;">
+                                                            <label class="slds-m-left_x-small slds-p-right_x-small" style="font-weight: 500;font-size: 16px;">
+                                                                <!-- for={Item.Id} -->
+                                                                {item.value.kt_checklist__Item__c}
+                                                            </label>
+                                                            <span class="description slds-p-bottom_x-small">
+                                                                <template lwc:if={item.value.kt_checklist__Description__c}>
+                                                                    <c-description-display description={item.value.kt_checklist__Description__c}
+                                                                        flexipage-region-width={flexipageRegionWidth}></c-description-display>
+                                                                </template>
+                                                            </span>
+                                                            <template lwc:if={viewChecklistItemActivity}>
+                                                                <div lwc:if={item.value.showDetails} class="item-details slds-p-horizontal_small">
+                                                                    <div lwc:if={item.value.CompletedBy}>
+                                                                        <a href={item.value.CompletedByLink}>
+                                                                        {item.value.CompletedBy}
+                                                                        </a>
+                                                                    </div>
+                                                                    <!-- <div>
+                                                                        <lightning-formatted-date-time value={item.value.LastModifiedDate} year="2-digit" month="short" day="2-digit"
+                                                                            hour="numeric" weekday="short" era="short"></lightning-formatted-date-time>
+                                                                        </div> -->
+                                                                    <div>
+                                                                        <!-- {item.value.LastModifiedDate} -->
+                                                                        <lightning-formatted-text value={item.value.CompletedDate}></lightning-formatted-text>
+                                                                    </div>
+                                                                </div>
+                                                            </template>
+                                                        </div>
+                                                    </div>
+                                                    <div class="right-label">
+                                                    </div>
                                                 </div>
                                             </div>
-                                
-                                            <template lwc:if={item.last}></template>
-                                            <template lwc:else>
-                                                <div class="slds-border_bottom"></div>
-                                            </template>
-                                        </div>
-                                
+                                            
+                                        </template>
+                                      </div>
                                     </template>
                                 </template>
-                                {CheckL.isActiveAddItem}
                                 <!-- Items loop End -->
                                 <!-- Add Item -->
+
+                                
+                                <template lwc:if={enableEditMode}>
                                 <div lwc:if={CheckL.isActiveAddItem}
                                     class="slds-form-element slds-form-element_vertical slds-is-editing slds-m-top_medium">
                                     <!-- <form onsubmit={handleSubmitAddItemForm}> -->
                                     <label class="slds-form-element__label  slds-text-title_bold"
                                         for="horizontal-combobox-id-06">
-                                        Create Checklist Item
+                                    Create Checklist Item
                                     </label>
                                     <div class="slds-form-element__control">
                                         <div class="slds-combobox_container">
@@ -174,36 +266,33 @@
                                             <lightning-icon icon-name="utility:add" alternative-text="Add Item" title="Add Item"
                                                 size="xx-small" variant="inverse"></lightning-icon>
                                             <span class="slds-m-left_x-small">
-                                                Add Item
+                                            Add Item
                                             </span>
                                         </button>
                                     </div>
-                                    {CheckL.isDeletable}
                                     <div lwc:if={CheckL.isDeletable} class="delete-icon">
                                         <lightning-icon data-checklistid={CheckL.Id} data-title={CheckL.kt_checklist__Checklist_Title__c} icon-name="utility:delete" class="icon-clickable" size="medium" alternative-text="Delete Checklist" title="Delete Checklist" onclick={handleDeleteChecklist}></lightning-icon>
                                         <!-- <lightning-button-icon icon-name="utility:delete" variant="bare" alternative-text="Delete Checklist" title="Delete Checklist"></lightning-button-icon> -->
                                     </div>
-                                    
                                 </div>
+                                </template>
                             </div>
                         </section>
                     </li>
                 </template>
             </ul>
-        
         </div>
-
         <div lwc:else>
             <div class="empty-state-vrtl vrtl-state-tab slds-vertical-tabs" style="display: flex; border: 1px solid rgb(0,0,0,0.1); border-radius: 8px; flex-grow: 1;">
                 <div class="slds-vertical-tabs__content ">
-                <div class="slds-text-longform">
-                    <div class="slds-text-align_center slds-p-around_small">
-                        <img src={noCLIcon} alt="" style="width:auto; height: auto;">
-                        <div class="slds-text-heading_medium ">
-                            <p>No Checklists.</p>
+                    <div class="slds-text-longform">
+                        <div class="slds-text-align_center slds-p-around_small">
+                            <img src={noCLIcon} alt="" style="width:auto; height: auto;">
+                            <div class="slds-text-heading_medium ">
+                                <p>No Checklists.</p>
+                            </div>
                         </div>
                     </div>
-                </div>
                 </div>
             </div>
         </div>

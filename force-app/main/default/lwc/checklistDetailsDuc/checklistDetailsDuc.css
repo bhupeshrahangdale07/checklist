@@ -7,6 +7,7 @@
     flex-direction: row;
     justify-content: space-between;
     height: 100%;
+    /* padding: 20px; */
 }
 
 .button-container {
@@ -19,18 +20,104 @@
     margin-top: auto;
 }
 
+/* .delete-icon:hover lightning-button-icon {
+    filter: brightness(1.5) saturate(2) hue-rotate(330deg);
+} */
+
+/* .delete-icon:hover lightning-button-icon {
+    color: red;
+    filter: drop-shadow(1px 1px 1px red);
+} */
 
 .icon-clickable {
     transition: background-color 0.2s ease, color 0.2s ease;
+    /* padding: 0.5rem; */
     border-radius: 0.25rem;
 }
 
-
+/* Hover effect similar to SLDS button */
 .icon-clickable:hover {
-    background-color: #d8d8d8; 
-    color: #ba0517; 
+    background-color: #d8d8d8; /* Light gray background on hover */
+    color: #ba0517; /* Change icon color on hover */
 }
 
+/* Active (onclick) effect similar to SLDS button */
 .icon-clickable:active {
-    background-color: #c5c5c5; 
+    background-color: #c5c5c5; /* Darker gray when clicked */
+}
+
+.item-details{
+    display: flex;
+    flex-wrap: wrap;
+    /* justify-content: space-between; */
+    justify-content: flex-end;
+    gap: 0.1rem 1rem;    
+}
+
+/* .item-details > div{
+    display: grid;
+    
+} */
+
+
+.connecting-line {
+    position: relative;
+}
+
+.connecting-line:after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 4%; 
+    width: 3px;
+    height: 20px;
+    background-color: #d5d5d5; 
+}
+
+.connecting-line:last-child:after {
+    display: none; 
+}
+
+.line-wrapper {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%; /* Ensures full height */
+}
+
+.line {
+    width: 2px; /* Line thickness */
+    background-color: #dddbda; /* Line color */
+    flex-grow: 1; /* This makes the line stretch to take up available space */
+}
+
+.line:last-child {
+    display: none; /* Hide the line after the last checkbox */
+}
+
+.slds-timeline__item_expandable:before {
+    --lwc-squareIconMediumBoundaryAlt: 0.78rem;
+    --timeline-background-color: #1B96FF; /* Default blue */
+    background-color: var(--timeline-background-color);
+}
+@media (min-width: 768px) and (max-width: 1024px){
+    .slds-timeline__item_expandable:before {
+    --lwc-squareIconMediumBoundaryAlt: 0.90rem;
+    }
+}
+.slds-timeline__item_expandable {
+    padding-bottom: 0;
+}
+ul.slds-timeline li:last-of-type .slds-timeline__item_expandable {
+    border: none;
+}
+
+.rounded-checkbox {
+    transform: scale(1.4);
+    margin: 5px;
+}
+
+.slds-timeline__trigger {
+    padding: 0.12rem;
 }

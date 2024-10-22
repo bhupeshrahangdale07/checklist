@@ -5,13 +5,22 @@
     <masterLabel>Checklist Genius Duc</masterLabel>
     <targets>
         <target>lightning__RecordPage</target>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
     </targets>
     <targetConfigs>
         <targetConfig targets="lightning__RecordPage">
+            <property name="ShowDetails" label="Show Checklist Item Activity" type="Boolean" default="false" description="View Checklist Item Completed by and Date." />
             <supportedFormFactors>
                 <supportedFormFactor type="Small" /> 
                 <supportedFormFactor type="Large" />
             </supportedFormFactors>
+
+        </targetConfig>
+    
+        <targetConfig targets="lightningCommunity__Default">
+            <property name="readOnlyMode" type="Boolean" default="true"  label="Read Only Mode" description="read Only Mode"></property>
+            <property name="recordId" type="String" default="{!recordId}"  required="true" label="Record Id" description="Record Id of checklist's linked to"></property>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>
