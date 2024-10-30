@@ -25,7 +25,7 @@
                                         <lightning-input type="text" label="Name" value={nameValue} data-fieldname="Name" max-length='255' required="true" onchange={handleInputChange} onkeypress={handleKeyPress} style="font-weight: normal; width: 100%;"></lightning-input>
                                     </lightning-layout-item>
                                     <lightning-layout-item flexibility="auto" size="12"  class="slds-align_absolute-center slds-form-element__label">
-                                        <lightning-input type="Number" label="Due Days" value={dueDaysValue} onchange={handleInputChange} field-level-help="Number of days a checklist of this template is due from the date of creation." data-fieldname={dueDaysField.fieldApiName} min="0" max="9999" required="true" onkeypress={handleKeyPress} style="font-weight: normal; width: 100%; ">
+                                        <lightning-input type="Number" label="Due Days" value={dueDaysValue} onchange={handleInputChange} field-level-help="Number of days a checklist of this template is due from the date of creation." data-fieldname={dueDaysField.fieldApiName} min="0" max="9999" required="true" onkeypress={handleKeyPress} style="font-weight: normal; width: 100%; " class="help-icon">
                                         
                                         </lightning-input>
                                         <!--  <lightning-input-field field-name="kt_checklist__Due_Days__c" required min="0" style="font-weight: normal;"> </lightning-input-field> -->
@@ -61,7 +61,7 @@
                                             </div>
                                         </lightning-layout-item>
                                         <lightning-layout-item flexibility="auto" size="7"  class="slds-col slds-size_7-of-12 slds-text-align_left slds-p-left_large slds-form-element__label notinclude">
-                                            <div class="toggle-container toggle-colourhook" style="display: flex; align-items: center;">
+                                            <div class="toggle-container toggle-colourhook" style="display: flex; white-space: nowrap; align-items: center;">
                                                 <label for="togglevalue3" class="centerAlighment"  style="min-width: 70px;">Sequential
                                                     <lightning-helptext class="helptext-icon" slot="assistive-text" content="When you make a Checklist Template sequential, it's checklists' items must be completed in order.">
                                                     </lightning-helptext>

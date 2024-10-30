@@ -84,8 +84,20 @@
 
 .helptext-icon {
   position: relative;
-  top: -4px;
+  /* top: -4px; */
   right: -2px;
+}
+.help-icon lightning-helptext {
+  position: relative;
+  right: 10px;
+}
+@media only screen and (max-width: 768px) {  
+  .helptext-icon {
+    position: relative;
+    /* top: -4px; */
+    right: 10px;
+  }
+  
 }
 
 @media only screen and (max-width: 768px) {
@@ -116,4 +128,3 @@
     padding: 40px;
 }
 }
-

@@ -141,6 +141,7 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
                     label.style.paddingBottom = '8px';
                 });
             }
+           
             const style = document.createElement('style');
             style.innerText = `.outputField, .outputField lightning-formatted-lookup.slds-form-element__static, .outputField lightning-formatted-text.slds-form-element__static {
                     font-size: 12px;
@@ -153,10 +154,18 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
                     font-weight: 400;
                 }button.slds-button.slds-button_brand {
                    padding: 0px 24px;
+                }.help-icon label.slds-form-element__label.slds-no-flex {
+                    padding-right:-10px;
                 }`;
             this.template.querySelector('div').appendChild(style);
 
         }
+       
+         const style1 = document.createElement('style');
+        style1.innerText = `.help-icon label.slds-form-element__label.slds-no-flex {
+                padding-right:0px;
+            }`;
+        this.template.querySelector('label').appendChild(style1);
         // if(FORM_FACTOR === 'Small' || FORM_FACTOR === 'Medium'){
 		// 	const style = document.createElement('style');
 		// 		style.innerText = `div {
