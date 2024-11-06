@@ -53,6 +53,7 @@ export default class ChecklistDetails extends LightningElement {
 	@api
 	set checkList(value) {
 		this.checkListData = JSON.parse(JSON.stringify(value));
+		console.log('***this.checkListData:',this.checkListData);
 		this.processSorting();
 		this.processData();
 	}
@@ -210,38 +211,51 @@ export default class ChecklistDetails extends LightningElement {
 			const today = new Date();
 			const todayNoHours = today.setHours(0, 0, 0, 0);
 			const dueDateNoHours = dueDate.setHours(0, 0, 0, 0);
+			item.clTimelineClasses = 'slds-media slds-timeline__item_expandable slds-timeline__item_task slds-is-open';
+
+			//let timelineColour = '#1B96FF'; // Default blue
 			if (dueDateNoHours < todayNoHours && item.kt_checklist__Percentage_Completion__c < 100) {
 				item.dueColour = 'clr-red';
 				item.progressRingVariant = 'expired';
+				item.clTimelineClasses = item.clTimelineClasses + ' timelineIncomplete';
+				//item.timelineColour2 = 'background-color: #1B96FF;';
+				//timelineColour = '#FFA500'; // Orange
 			} else if (dueDateNoHours === todayNoHours && item.kt_checklist__Percentage_Completion__c < 100) {
 				item.dueColour = 'clr-orange';
 				item.progressRingVariant = 'warning';
+				item.clTimelineClasses = item.clTimelineClasses + ' timelineIncomplete';
+				//item.timelineColour2 = 'background-color: #1B96FF;';
+				//timelineColour = '#FF0000'; // Red
 			} else {
 				item.dueColour = 'clr-green';
 				item.progressRingVariant = 'base-autocomplete';
+				item.clTimelineClasses = item.clTimelineClasses + ' timelineCompleted';
+				//item.timelineColour2 = 'background-color: #ff671b;';
+				//timelineColour = '#28a745'; // Green
 			}
 			
-			this.timelineColour = item.progressRingVariant;
-			console.log('this.timelineColour:'+this.timelineColour);
+			// this.timelineColour = item.progressRingVariant;
+			// console.log('this.timelineColour:'+this.timelineColour);
+			// item.timelineStyle = `--timeline-background-color: ${timelineColour};`;
 		}
 	}
 	
-	@track timelineColour;
+	// @track timelineColour;
 
-	/*
-	 * This get method....
-	*/
-	get dynamicStyle() {
-		const style = {};
-		if (this.timelineColour === 'base-autocomplete') {
-			console.log('***in if');
-			style['--timeline-background-color'] = '#28a745'; // Green
-		} else {
-			console.log('***in else');
-			style['--timeline-background-color'] = '#1B96FF'; // Default blue
-		}
-		return style;
-    }
+	// /*
+	//  * This get method....
+	// */
+	// get dynamicStyle() {
+	// 	const style = {};
+	// 	if (this.timelineColour === 'base-autocomplete') {
+	// 		console.log('***in if');
+	// 		style['--timeline-background-color'] = '#28a745'; // Green
+	// 	} else {
+	// 		console.log('***in else');
+	// 		style['--timeline-background-color'] = '#1B96FF'; // Default blue
+	// 	}
+	// 	return style;
+    // }
 
 	/*
 	 * This method is used to sort the all checklists in to order of DueDate Assending.

@@ -163,7 +163,7 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
        
          const style1 = document.createElement('style');
         style1.innerText = `.help-icon label.slds-form-element__label.slds-no-flex {
-                padding-right:0px;
+                padding-right:2px;
             }`;
         this.template.querySelector('label').appendChild(style1);
         // if(FORM_FACTOR === 'Small' || FORM_FACTOR === 'Medium'){

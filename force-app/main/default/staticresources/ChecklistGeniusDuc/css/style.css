@@ -23,13 +23,6 @@
     color: white;
 }
 
-html {
-  /* background-color: var(--bg-clr); */
-}
-
-body {
-  background: rgba(1, 1, 1, 0.4);
-}
 
 .sldc-color-background-alt {
   background-color: var(--bg-clr);
@@ -262,6 +255,10 @@ button {
   font-weight: var(--fw-500);
 }
 
+.kt_checklist .slds-form-element__label .slds-form-element__icon {
+  vertical-align: text-bottom;
+}
+
 .btn-save button {
   padding: 4px 32px;
 }
@@ -381,11 +378,11 @@ button {
 
 /**************************************checklist template/Empty State***/
 .empty-state-vrtl .slds-vertical-tabs__nav,
-.slds-vertical-tabs__content {
+.empty-state-vrtl .slds-vertical-tabs__content {
   border-radius: 8px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   background: #fafafa;
-  width: 18rem;
+  width: 18rem;  
 }
 
 .empty-state {
@@ -530,7 +527,7 @@ button {
   }
 
   .my-checklist .slds-vertical-tabs__content,
-  .slds-vertical-tabs__content {
+  .my-checklist .slds-vertical-tabs__content {
       margin-left: 0;
       padding: 24px 16px;
   }
@@ -718,3 +715,170 @@ button {
   appearance: auto;
   clip-path: circle(50% at 50% 50%);
 } */
+
+
+
+
+
+
+/* Read only template Css start */
+.kt_checklist__timeline .slds-timeline__item_expandable.kt_checklist__success-class::before {
+  background: #2e844a;
+}
+
+.kt_checklist__timeline .slds-timeline__item_expandable.kt_checklist__error-class::before {
+  background: #ea001e;
+}
+
+.kt_checklist__custom-result-icon {
+  background-color: white;
+  padding-top: 5px;   
+}
+
+.kt_checklist__timeline .kt_checklist__icons .kt_checklist__custom-result-icon {
+  background-color: white;
+  padding-top: 5px;
+}
+.kt_checklist__timeline .kt_checklist__icons {
+  margin-left: 16px;
+}
+
+.kt_checklist__timeline .kt_checklist__icons .kt_checklist__collapsible-button {
+  min-width: 5px;
+  display: inline-block;
+}
+
+.kt_checklist__timeline .kt_checklist__icons .kt_checklist__custom-result-icon {
+  background-color: white;
+  padding-top: 5px;
+}
+
+.kt_checklist__timeline .slds-media__body.kt_checklist__wrapper {
+  padding-left: 0;
+}
+
+.kt_checklist__timeline .slds-media__body.kt_checklist__wrapper .slds-timeline__trigger:hover {
+  background-color: #fff;
+}
+
+.kt_checklist__timeline .slds-media__body.kt_checklist__wrapper .kt_checklist__job-step {
+  background-color: #fff;
+  z-index: 10;
+  padding: 5px 0;
+  transform: scale(1);
+  transition: 1.5s all ease;
+}
+
+/*
+.kt_checklist__timeline .slds-media__body.kt_checklist__wrapper .kt_checklist__info {
+  transform: scale(1);
+  transition: 1.5s all ease;
+}
+
+.kt_checklist__timeline .slds-media__body.kt_checklist__wrapper .options-menu {
+  width: 20px;
+} */
+
+.kt_checklist__timeline .slds-media__body.kt_checklist__wrapper .kt_checklist__activity-data {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: end;
+  gap: 0.1rem 1rem;
+  min-height: 30px;
+  margin-top: 0.5rem;
+  margin-left: 0.25rem;
+}
+
+.kt_checklist__timeline .slds-media__body.kt_checklist__wrapper .kt_checklist__activity-data .kt_checklist__Completedby {
+  width: auto;
+  /* margin: 0 0.25rem; */
+  align-self: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-right: 5px;
+}
+
+.kt_checklist__clickable{
+  color: #025fb2;
+  cursor: pointer;
+}
+
+.kt_checklist__timeline .slds-media__body.kt_checklist__wrapper .kt_checklist__activity-data .kt_checklist__Completed-date {
+  width: auto;
+  align-self: center;
+  margin-right: 5px;
+}
+
+/*
+.kt_checklist__custom-skipped-icon {
+  --sds-c-icon-color-foreground-default: #025fb2;
+  -ms-transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+  transform: rotate(135deg);
+}
+
+.kt_checklist__timeline .kt_checklist__icons .kt_checklist__custom-result-spinner {
+  margin-left: 22px;
+}
+
+.kt_checklist__timeline .kt_checklist__icons .kt_checklist__custom-result-spinner .loading {
+  position: absolute;
+  top: -2px;
+  left: 31px;
+  background-color: #fff;
+  height: 27px;
+  width: 27px;
+} */
+
+
+
+.kt_checklist__timeline-container {
+  position: relative;
+}
+
+.kt_checklist__timeline-container ul {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: auto;
+  max-height: 350px;
+}
+
+.kt_checklist__timeline-container .kt_checklist__gradient-mask {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: white;
+  height: 1.1rem;
+  width: calc(100% - 15px);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+}
+
+.kt_checklist__timeline-container ul {
+  scrollbar-width: thin;
+  scrollbar-color: #c1c1c1 transparent;
+}
+
+.kt_checklist__timeline-container ul::-webkit-scrollbar {
+  width: 6px;
+}
+
+.kt_checklist__timeline-container ul::-webkit-scrollbar-thumb {
+  background-color: #c1c1c1;
+  border-radius: 9999px;
+}
+
+.kt_checklist__timeline-container ul::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.kt_checklist__content-overflow {
+  overflow-wrap: break-word;
+}
+
+.kt_checklist__job-summary-padding {
+  padding-left: 36px;
+}
+
+/* Read only template Css end */

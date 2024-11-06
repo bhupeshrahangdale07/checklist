@@ -98,13 +98,28 @@
 
 .slds-timeline__item_expandable:before {
     --lwc-squareIconMediumBoundaryAlt: 0.78rem;
-    --timeline-background-color: #1B96FF; /* Default blue */
     background-color: var(--timeline-background-color);
 }
-@media (min-width: 768px) and (max-width: 1024px){
+
+.timelineDefault {
+    --timeline-background-color: #b6b6b6;
+}
+.timelineIncomplete {
+    --timeline-background-color: #b6b6b6;
+}
+.timelineCompleted {
+    --timeline-background-color: #2E844A;
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
     .slds-timeline__item_expandable:before {
     --lwc-squareIconMediumBoundaryAlt: 0.90rem;
     }
+}
+@media only screen and (max-width: 768px) {
+    .slds-timeline__item_expandable:before {
+        --lwc-squareIconMediumBoundaryAlt: 0.90rem;
+        }
 }
 .slds-timeline__item_expandable {
     padding-bottom: 0;
