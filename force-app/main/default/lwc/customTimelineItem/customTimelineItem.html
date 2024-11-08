@@ -1,0 +1,57 @@
+<template>
+    <div class={timelineTypeProperties.timelinecss}>
+        <div class="kt_checklist__icons slds-media">
+            <div class="slds-media__figure">
+                <div class="kt_checklist__collapsible-button"></div>
+
+                <div class="slds-icon_container slds-timeline__icon" title="task">
+                    <lightning-icon class="kt_checklist__custom-result-icon slds-icon-utility-success slds-icon_container"
+                        variant={timelineTypeProperties.iconVariant} icon-name={timelineTypeProperties.iconName}>
+                    </lightning-icon>
+                </div>
+            </div>
+
+            <div class="slds-media__body kt_checklist__wrapper">
+                <div class="slds-grid slds-grid_align-spread slds-timeline__trigger">
+                    <div class="slds-grid slds-grid_vertical-align-center slds-no-space kt_checklist__job-step">
+                        <span class="kt_checklist__job-label" title="Create Read Aloud Record with below script">
+                            <strong>
+                                <slot name="header">
+                                    <!-- Checklist Success Item -->
+                                </slot>
+                            </strong>
+                        </span>
+                    </div>
+                </div>
+                <div class="kt_checklist__info">
+
+                    <slot name="body">
+                        <!-- Below Code is for Reference -->
+                        <!-- <div class="slds-var-m-horizontal_xx-small">Description</div>
+
+                        <div class="slds-form-element__control slds-input-has-fixed-addon kt_checklist__job-data">
+                            <div class="step-type">
+                                <span class="label">
+                                    Completed By :
+                                </span>
+                                <span>
+                                    UserName
+                                </span>
+                            </div>
+                            <div class="kt_checklist__result">
+                                <span class="kt_checklist__result-label">
+                                    Completed On:
+                                </span>
+                                <span class="kt_checklist__job-label slds-truncate kt_checklist__clickable">
+                                    Completed Date
+                                </span>
+                            </div>
+                        </div> -->
+                    </slot>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</template>

@@ -23,6 +23,10 @@ import CHECK_POINT_ORDER_FIELD from '@salesforce/schema/Checklist_Item__c.Item_O
 import CHECKLIST_FIELD from '@salesforce/schema/Checklist_Item__c.Checklist__c';
 import DUEDATE_FIELD from '@salesforce/schema/Checklist__c.Due_Date__c';
 
+import readOnlyPage from './checklistDetailsReadOnly.html';
+import defaultPage from './checklistDetailsDuc.html';
+
+
 export default class ChecklistDetails extends LightningElement {
 	@api flexipageRegionWidth;
 	viewChecklistItemActivity = true;
@@ -65,6 +69,12 @@ export default class ChecklistDetails extends LightningElement {
 
 	get ischeckListDataAvailable() {
 		return this.checkListData && this.checkListData.length > 0;
+	}
+
+	render(){
+		return this.enableEditMode ? defaultPage : readOnlyPage;
+		// return readOnlyPage;
+
 	}
 
 	connectedCallback() { }
@@ -162,30 +172,9 @@ export default class ChecklistDetails extends LightningElement {
 					});
 
     				console.log('item.kt_checklist__Sequential__c:',item.kt_checklist__Sequential__c);
-					if (item.kt_checklist__Sequential__c){
-						item.kt_checklist__Checklist_Items__r.sort((a, b) => a.kt_checklist__Item_Order__c - b.kt_checklist__Item_Order__c);
-						
-						// Handle enabling/disabling based on checked state
-						item.kt_checklist__Checklist_Items__r.forEach((each, index) => {
-							if (each.Checked ) {	//Need a condition to handle 'Not Applicable'
-								// Keep this item enabled and enable the next item
-								each.CheckboxDisabled = false;
-								if (index + 1 < item.kt_checklist__Checklist_Items__r.length) {
-									item.kt_checklist__Checklist_Items__r[index + 1].CheckboxDisabled = false;
-								}
-								// Disable the previous item
-								if (index - 1 > -1) {
-									item.kt_checklist__Checklist_Items__r[index - 1].CheckboxDisabled = true;
-								}
-							} else {
-								// If not checked, disable all items after this one
-								for (let i = index + 1; i < item.kt_checklist__Checklist_Items__r.length; i++) {
-									item.kt_checklist__Checklist_Items__r[i].CheckboxDisabled = true;
-								}
-							}
-						});
-
-					}
+					//Call Sequential method here
+					this.handleSequential(item);
+					
 					
 			}
     		});
@@ -218,44 +207,26 @@ export default class ChecklistDetails extends LightningElement {
 				item.dueColour = 'clr-red';
 				item.progressRingVariant = 'expired';
 				item.clTimelineClasses = item.clTimelineClasses + ' timelineIncomplete';
-				//item.timelineColour2 = 'background-color: #1B96FF;';
-				//timelineColour = '#FFA500'; // Orange
+				
 			} else if (dueDateNoHours === todayNoHours && item.kt_checklist__Percentage_Completion__c < 100) {
 				item.dueColour = 'clr-orange';
 				item.progressRingVariant = 'warning';
 				item.clTimelineClasses = item.clTimelineClasses + ' timelineIncomplete';
-				//item.timelineColour2 = 'background-color: #1B96FF;';
-				//timelineColour = '#FF0000'; // Red
+				
 			} else {
 				item.dueColour = 'clr-green';
 				item.progressRingVariant = 'base-autocomplete';
-				item.clTimelineClasses = item.clTimelineClasses + ' timelineCompleted';
-				//item.timelineColour2 = 'background-color: #ff671b;';
-				//timelineColour = '#28a745'; // Green
+				if(item.kt_checklist__Percentage_Completion__c < 100){
+					item.clTimelineClasses = item.clTimelineClasses + ' timelineIncomplete';
+				} else{
+					item.clTimelineClasses = item.clTimelineClasses + ' timelineCompleted';
+				}
+				
 			}
 			
-			// this.timelineColour = item.progressRingVariant;
-			// console.log('this.timelineColour:'+this.timelineColour);
-			// item.timelineStyle = `--timeline-background-color: ${timelineColour};`;
 		}
 	}
 	
-	// @track timelineColour;
-
-	// /*
-	//  * This get method....
-	// */
-	// get dynamicStyle() {
-	// 	const style = {};
-	// 	if (this.timelineColour === 'base-autocomplete') {
-	// 		console.log('***in if');
-	// 		style['--timeline-background-color'] = '#28a745'; // Green
-	// 	} else {
-	// 		console.log('***in else');
-	// 		style['--timeline-background-color'] = '#1B96FF'; // Default blue
-	// 	}
-	// 	return style;
-    // }
 
 	/*
 	 * This method is used to sort the all checklists in to order of DueDate Assending.
@@ -361,6 +332,10 @@ export default class ChecklistDetails extends LightningElement {
 	handleNotApplicable(event) {
 		let Checked = event.currentTarget.dataset.checked;
 		let checkedvalue = event.currentTarget.dataset.checkedvalue;
+
+		console.log('***Checked:',Checked);
+		console.log('***checkedvalue:',checkedvalue);
+
 		if (Checked === 'true' || checkedvalue === 'Yes') {
 			return;
 		}
@@ -368,6 +343,10 @@ export default class ChecklistDetails extends LightningElement {
 		const checkListItemId = event.currentTarget.dataset.itemid;
 		const checkListId = event.currentTarget.dataset.checklistid;
 		const CheckVal = checkedvalue === undefined || checkedvalue === 'No' || checkedvalue === '' ? 'Not Applicable' : 'No';
+
+		console.log('***checkListItemId:',checkListItemId);
+		console.log('***checkListId:',checkListId);
+		console.log('***CheckVal:',CheckVal);
 
 		saveCheckListItems({ recordId: checkListItemId, isChecked: CheckVal })
 			.then((result) => {
@@ -410,7 +389,7 @@ export default class ChecklistDetails extends LightningElement {
 				detail: { checklistid: updatedChecklist.Id, checklist: updatedChecklist }
 			}));
 		}
-
+		console.log('***In replaceChecklistItemFromMainList, befr this.reCalculateP...');
 		this.reCalculateProgressBar(updatedChecklist.Id, updatedChecklistItem.Id, updatedChecklistItem.kt_checklist__Checked__c);
 	}
 
@@ -469,6 +448,8 @@ export default class ChecklistDetails extends LightningElement {
 								each.iconClass = 'cursorPointer';
 							}
 						});
+
+						this.handleSequential(item);
 					}
 					p = item.kt_checklist__Checklist_Items__r ? (checked / item.kt_checklist__Checklist_Items__r?.length) * 100 : 100;
 
@@ -702,5 +683,50 @@ export default class ChecklistDetails extends LightningElement {
 			message: message && message !== '' ? message : 'Something went wrong.',
 		});
 		this.dispatchEvent(event);
+	}
+
+	/* 
+	* This method handles Sequential completion of checklist items
+	*/
+	handleSequential(checkL){
+		if (checkL.kt_checklist__Sequential__c) {
+			// Sort the checklist items by order field
+			checkL.kt_checklist__Checklist_Items__r.sort(
+				(a, b) => a.kt_checklist__Item_Order__c - b.kt_checklist__Item_Order__c
+			);
+			
+			let previousChecked = true;  // Track if the previous item is checked
+			let lastCheckedIndex = -1;   // Track the last checked item for reverse unchecking
+			
+			// First pass- Identify last checked item
+			checkL.kt_checklist__Checklist_Items__r.forEach((each, index) => {
+				if (each.Checked && each.kt_checklist__Checked__c !== 'Not Applicable') {
+					lastCheckedIndex = index;
+				}
+			});
+		
+			// Second pass- Handle enabling and disabling checkboxes
+			checkL.kt_checklist__Checklist_Items__r.forEach((each, index) => {
+				// Disable all items by default
+				each.CheckboxDisabled = true;
+		
+				// Always disable Not Applicable items
+				if (each.kt_checklist__Checked__c === 'Not Applicable') {
+					each.CheckboxDisabled = true;
+					return;  // Skip to the next item
+						}
+		
+				// Enable the first unmarked item if the previous valid one is checked (valid - not Not Applicable)
+				if (!each.Checked && previousChecked) {
+					each.CheckboxDisabled = false;
+					previousChecked = false;  // Only the first unchecked item should be enabled
+					}
+		
+				// Enable only the last checked item for unchecking
+				if (index === lastCheckedIndex) {
+					each.CheckboxDisabled = false;
+				}
+			});
+		}
 	}
 }

@@ -17,7 +17,7 @@ public with sharing class MyChecklistsPageManager {
             
             List<FieldNamesWrapper> fields = getFieldMap('kt_checklist__Checklist__c');
             //System.debug('**fields:'+fields);
-            String query = 'Select Id, Name, Is_Checklist_Locked__c, Checklist_Title__c, Description__c, Percentage_Completion__c, Due_Days__c, Due_Date__c, CreatedDate, OwnerId, Is_Checklist_Template_Locked__c,  '; //Template_Locked__c is removed.
+            String query = 'Select Id, Name, Is_Checklist_Locked__c, Checklist_Title__c, Description__c, Percentage_Completion__c, Due_Days__c, Due_Date__c, CreatedById, CreatedDate, OwnerId, Is_Checklist_Template_Locked__c, Sequential__c,  '; //Template_Locked__c is removed.
             
             for(FieldNamesWrapper field: fields){
                 if(!field.value.contains('Checklist_Template__c')){  // Remove "&& !field.value.contains('Assign_To_User__c')" condition after deleting fAssign_To_User__c field.
@@ -35,7 +35,7 @@ public with sharing class MyChecklistsPageManager {
                 }
             }
             
-            query += '(Select Id, Item__c, Item_Order__c, Checked__c, Description__c From CheckList_Items__r order by Item_Order__c ASC) '
+            query += '(Select Id, Item__c, Item_Order__c, Checked__c, Description__c, format(LastModifiedDate), Checklist__c, LastModifiedById, LastModifiedBy.Name From CheckList_Items__r order by Item_Order__c ASC) '
                 + 'From Checklist__c WHERE OwnerId = :ownerId Order By Due_Date__c Asc';
             
             // System.debug('**Query:'+query);
@@ -116,6 +116,7 @@ public with sharing class MyChecklistsPageManager {
      * @return: String
      * @param: sobjectApiName
     */
+    /*
     @AuraEnabled
     public static String getIconName(String sobjectApiName){
         String iconName;
@@ -140,6 +141,43 @@ public with sharing class MyChecklistsPageManager {
             if (ir.getContentType() == 'image/svg+xml'){
                 iconName = 'custom:' + ir.getUrl().substringBetween('custom/','.svg').substringBefore('_');
                 break;
+            }
+        }
+        return iconName;
+    }
+*/
+  // Updated to below 
+    @AuraEnabled 
+    public static String getIconName(String sobjectApiName){
+        String iconName;
+        Boolean isCustomObject = false;
+        List<Schema.DescribeTabSetResult> tabSetDesc = Schema.DescribeTabs();
+        List<Schema.DescribeTabResult> tabDesc = new List<Schema.DescribeTabResult>();
+        List<Schema.DescribeIconResult> iconDesc = new List<Schema.DescribeIconResult>();
+        
+        for(Schema.DescribeTabSetResult tsr : tabSetDesc) { 
+            tabDesc.addAll(tsr.getTabs()); 
+        }
+        
+        for(Schema.DescribeTabResult tr : tabDesc) {
+            if( sobjectApiName == tr.getSobjectName() ) {
+                isCustomObject = tr.isCustom();
+                iconDesc.addAll(tr.getIcons());
+            }
+        }
+        for (Schema.DescribeIconResult ir : iconDesc) {
+            system.debug('ir..getUrl()'+ir.getUrl());
+            system.debug('ir.getContentType()'+ir.getContentType());
+            if (ir.getContentType() == 'image/svg+xml'){
+                system.debug('ir.getUrl()'+ir.getUrl());
+                if(isCustomObject){
+                    iconName = 'custom:' + ir.getUrl().substringBetween('custom/','.svg').substringBefore('_');
+                    break;
+                }else{
+                    iconName = 'standard:' + ir.getUrl().substringBetween('standard/','.svg').substringBefore('_');
+                    break;
+                }
+                
             }
         }
         return iconName;

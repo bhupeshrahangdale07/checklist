@@ -1,0 +1,158 @@
+.test {}
+
+
+/*  as we moved all below css to Static resource
+kt_checklist__timeline .slds-kt_checklist__timeline__item_expandable.kt_checklist__timelinesuccess-class::before {
+  background: #2e844a;
+}
+
+.kt_checklist__timeline .slds-kt_checklist__timeline__item_expandable.kt_checklist__timelineerror-class::before {
+  background: #ea001e;
+}
+
+.kt_checklist__custom-result-icon {
+  background-color: white;
+  padding-top: 5px;   
+}
+
+.kt_checklist__timeline .kt_checklist__icons .kt_checklist__custom-result-icon {
+  background-color: white;
+  padding-top: 5px;
+}
+.kt_checklist__timeline .kt_checklist__icons {
+  margin-left: 16px;
+}
+
+.kt_checklist__timeline .kt_checklist__icons .kt_checklist__collapsible-button {
+  min-width: 5px;
+  display: inline-block;
+}
+
+.kt_checklist__timeline .kt_checklist__icons .kt_checklist__custom-result-icon {
+  background-color: white;
+  padding-top: 5px;
+}
+
+.kt_checklist__timeline .slds-media__body.kt_checklist__wrapper {
+  padding-left: 0;
+}
+
+.kt_checklist__timeline .slds-media__body.kt_checklist__wrapper .slds-timeline__trigger:hover {
+  background-color: #fff;
+}
+
+.kt_checklist__timeline .slds-media__body.kt_checklist__wrapper .kt_checklist__job-step {
+  background-color: #fff;
+  z-index: 10;
+  padding: 5px 0;
+  transform: scale(1);
+  transition: 1.5s all ease;
+}
+
+.kt_checklist__timeline .slds-media__body.kt_checklist__wrapper .kt_checklist__info {
+  transform: scale(1);
+  transition: 1.5s all ease;
+}
+
+.kt_checklist__timeline .slds-media__body.kt_checklist__wrapper .kt_checklist__job-data {
+    display: flex;
+    min-height: 30px;
+  }
+  
+  .kt_checklist__timeline .slds-media__body.kt_checklist__wrapper .kt_checklist__job-data .kt_checklist__step-type {
+    width: 170px;
+    margin: 0 0.25rem;
+    align-self: center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  
+  .kt_checklist__timeline .slds-media__body.kt_checklist__wrapper .kt_checklist__job-data .kt_checklist__step-type span.label {
+    margin-right: 5px;
+  }
+  
+  .kt_checklist__timeline .slds-media__body.kt_checklist__wrapper .kt_checklist__job-data .kt_checklist__result {
+    width: auto;
+    align-self: center;
+  }
+  
+  .kt_checklist__timeline .slds-media__body.kt_checklist__wrapper .kt_checklist__job-data .kt_checklist__result .kt_checklist__result-label {
+    align-self: center;
+    margin-right: 5px;
+  }
+
+  .kt_checklist__timeline-container {
+    position: relative;
+  }
+  
+  .kt_checklist__timeline-container ul {
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: auto;
+    max-height: 350px;
+  }
+  
+  .kt_checklist__timeline-container .kt_checklist__gradient-mask {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: white;
+    height: 1.1rem;
+    width: calc(100% - 15px);
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+  }
+  
+  .kt_checklist__timeline-container ul {
+    scrollbar-width: thin;
+    scrollbar-color: #c1c1c1 transparent;
+  }
+  
+  .kt_checklist__timeline-container ul::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .kt_checklist__timeline-container ul::-webkit-scrollbar-thumb {
+    background-color: #c1c1c1;
+    border-radius: 9999px;
+  }
+  
+  .kt_checklist__timeline-container ul::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+  
+  .kt_checklist__content-overflow {
+    overflow-wrap: break-word;
+  }
+  
+  .kt_checklist__job-summary-padding {
+    padding-left: 36px;
+  }
+
+  Used css as we moved to static resource
+  */
+
+/* .kt_checklist__timeline .slds-media__body.kt_checklist__wrapper .options-menu {
+  width: 20px;
+} 
+  
+  .kt_checklist__custom-skipped-icon {
+    --sds-c-icon-color-foreground-default: #025fb2;
+    -ms-transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+    transform: rotate(135deg);
+  }
+  
+  .kt_checklist__timeline .kt_checklist__icons .kt_checklist__custom-result-spinner {
+    margin-left: 22px;
+  }
+  
+  .kt_checklist__timeline .kt_checklist__icons .kt_checklist__custom-result-spinner .loading {
+    position: absolute;
+    top: -2px;
+    left: 31px;
+    background-color: #fff;
+    height: 27px;
+    width: 27px;
+  } */

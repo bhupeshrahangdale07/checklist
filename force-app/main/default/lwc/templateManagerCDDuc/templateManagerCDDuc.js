@@ -154,18 +154,16 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
                     font-weight: 400;
                 }button.slds-button.slds-button_brand {
                    padding: 0px 24px;
-                }.help-icon label.slds-form-element__label.slds-no-flex {
-                    padding-right:-10px;
                 }`;
             this.template.querySelector('div').appendChild(style);
 
         }
        
-         const style1 = document.createElement('style');
-        style1.innerText = `.help-icon label.slds-form-element__label.slds-no-flex {
-                padding-right:2px;
-            }`;
-        this.template.querySelector('label').appendChild(style1);
+        //  const style1 = document.createElement('style');
+        // style1.innerText = `.help-icon label.slds-form-element__label.slds-no-flex {
+        //         padding-right:2px;
+        //     }`;
+        // this.template.querySelector('label').appendChild(style1);
         // if(FORM_FACTOR === 'Small' || FORM_FACTOR === 'Medium'){
 		// 	const style = document.createElement('style');
 		// 		style.innerText = `div {
@@ -213,7 +211,7 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
     loadCss() {
         Promise.all([
             // loadStyle( this, this.customStyle )            
-            loadStyle(this, this.customCSS)
+            // loadStyle(this, this.customCSS)
         ]).then(() => {
         }).catch(error => {
             console.log('loadCss error:',error);

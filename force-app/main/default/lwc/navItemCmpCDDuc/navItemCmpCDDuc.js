@@ -27,6 +27,8 @@ export default class NavItemCmp extends LightningElement {
     checklistField = CHECKLIST_FIELD;
     noCLIcon = Resource + '/style/icons/action/Empty-state.svg';
 
+    checklistIcon = Resource + '/style/icons/checklist-genius/checklist.svg';
+
     @api filter;
     
     @track filteredCheckList = [];
@@ -392,7 +394,7 @@ export default class NavItemCmp extends LightningElement {
             
             //console.log('firstRecordIcon:',firstRecordIcon);
 
-            groupedCheckListsArray.push({ dUrl: key, parentId : parentId, firstRecordFullUrl: firstRecordFullUrl, firstRecordIcon:firstRecordIcon, records: value });
+            groupedCheckListsArray.push({ dUrl: key, parentId : parentId, firstRecordFullUrl: firstRecordFullUrl, firstRecordIcon:firstRecordIcon, records: value, defaultIcon : this.checklistIcon });
             //groupedCheckListsArray.push({ dUrl: key, firstRecordFullUrl: firstRecordFullUrl, records: value });
         }
 

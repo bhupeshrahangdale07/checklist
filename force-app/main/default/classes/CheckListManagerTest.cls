@@ -41,6 +41,18 @@ public class CheckListManagerTest {
         checkLI.Checklist__c = checkL.Id;
         insert checkLI;
         
+        Checklist__c checkLDel = new Checklist__c();
+        checkLDel.Checklist_Template__c = checkTemplate.Id;
+        checkLDel.Checklist_Title__c = checkTemplate.Name + ' Del';
+        checkLDel.Account__c = acc.Id;
+        insert checkLDel;
+        
+        Checklist_Item__c checkLIDel = new Checklist_Item__c();
+        checkLIDel.Item__c = 'Test item 01 Del';
+        checkLIDel.Item_Order__c = 1;
+        checkLIDel.Checklist__c = checkLDel.Id;
+        insert checkLIDel;
+        
     }
     
     @isTest
@@ -156,7 +168,7 @@ public class CheckListManagerTest {
     @isTest
     public static void testNoAccess(){
         // This code runs as the system user
-        Profile p = [SELECT Id FROM Profile WHERE Name = 'Minimum Access - Salesforce'];
+        Profile p = [SELECT Id FROM Profile WHERE Name = 'Standard Platform User'];
         User u = new User(Alias = 'standt', Email='minmumAcc@testorg.com', 
             EmailEncodingKey='UTF-8', LastName='Testing', LanguageLocaleKey='en_US', 
             LocaleSidKey='en_US', ProfileId = p.Id, 
@@ -178,5 +190,44 @@ public class CheckListManagerTest {
                 System.assertEquals('Script-thrown exception', e.getMessage());                
             }
         }
+    }
+    
+    @isTest
+    public static void deleteChecklist_Test(){
+        Checklist__c checkL = [Select id, Checklist_Title__c, Checklist_Template__c From Checklist__c Where Checklist_Title__c Like '%Del%' limit 1];
+        System.debug(checkL);
+        
+        //CheckListTriggerHandler.runDMLInSystemMode = true;
+        CheckListManager.deleteChecklist(checkL.Id);
+            
+        List<Checklist__c> checkLD = [Select id, Checklist_Title__c From Checklist__c Where Checklist_Title__c Like '%Del%' limit 1];
+        
+        System.assertEquals(true, checkLD.isEmpty(), 'Checklist was not deleted');
+        //System.assertNotEquals(null, returnedChecklist, 'Checklist was not saved');
+        //System.assertNotEquals(0, returnedChecklist.Checklist_Items__r.size(), 'Checklist item was not added');
+    }
+    
+    @isTest
+    public static void assignedPermissions_Test(){
+        
+        Map<String, Boolean> permissionsMap = CheckListManager.assignedPermissions();
+
+        System.assertNotEquals(null, permissionsMap, 'Permission set name was not fetched');
+        //System.assertNotEquals(0, returnedChecklist.Checklist_Items__r.size(), 'Checklist item was not added');
+    }
+    
+    //Testing the insertion with System mode for checklist and items
+    @isTest
+    public static void saveCheckListItemsAssignTo_Test(){
+        User usr = [Select id From User Where email='tt@ck.com' Limit 1];
+		Checklist_Template__c ct = [Select id from Checklist_Template__c limit 1];
+
+        Test.startTest();
+
+        CheckListManager.saveChecklistAndItems(new List<Checklist__c>{new Checklist__c(Checklist_Title__c='test', OwnerId=usr.id, Checklist_Template__c = ct.id)}, JSON.serialize(new List<Checklist_Item__c>{new Checklist_Item__c(Item__c='Test')}));
+        Test.stopTest();
+        
+        System.assertEquals(true, CheckListTriggerHandler.runDMLInSystemMode, 'System Mode not activated');
+        
     }
 }

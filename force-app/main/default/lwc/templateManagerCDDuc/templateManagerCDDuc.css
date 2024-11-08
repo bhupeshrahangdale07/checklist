@@ -87,10 +87,10 @@
   /* top: -4px; */
   right: -2px;
 }
-.help-icon lightning-helptext {
+/* .help-icon {
   position: relative;
   right: 10px;
-}
+} */
 @media only screen and (max-width: 768px) {  
   .helptext-icon {
     position: relative;
@@ -99,7 +99,9 @@
   }
   
 }
-
+/* .help-icon label.slds-form-element__label.slds-no-flex {
+           padding-right: 2px;
+} */
 @media only screen and (max-width: 768px) {
   .mobDevice .slds-grid.slds-gutters,.slds-grid.slds-gutters.mobDevice {
       display: block;

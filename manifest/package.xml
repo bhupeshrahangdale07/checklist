@@ -108,6 +108,7 @@
 		<members>checklistDetailsDuc</members>
 		<members>checklistIndexDuc</members>
 		<members>createChecklistDuc</members>
+		<members>customTimelineItem</members>
 		<members>createChecklistDialogDuc</members>
 		<members>descriptionDisplayDuc</members>
 		<members>modalPopUpDuc</members>

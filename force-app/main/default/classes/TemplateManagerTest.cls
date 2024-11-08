@@ -71,7 +71,7 @@ public class TemplateManagerTest {
     @isTest
     public static void testNoAccess(){
         // This code runs as the system user
-        Profile p = [SELECT Id FROM Profile WHERE Name = 'Minimum Access - Salesforce'];
+        Profile p = [SELECT Id FROM Profile WHERE Name = 'Standard Platform User'];
         User u = new User(Alias = 'standt', Email='minmumAcc@testorg.com', 
             EmailEncodingKey='UTF-8', LastName='Testing', LanguageLocaleKey='en_US', 
             LocaleSidKey='en_US', ProfileId = p.Id, 

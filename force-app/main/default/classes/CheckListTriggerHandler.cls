@@ -5,6 +5,9 @@
 */
 
 public with sharing class CheckListTriggerHandler {
+    
+    public static Boolean runDMLInSystemMode = false;
+    
     public static void createChecklistItems(List<Checklist__c> lstNewChecklists){
         Set<Id> templateIds = new Set<Id>();
         for(Checklist__c check: lstNewChecklists){
@@ -13,7 +16,7 @@ public with sharing class CheckListTriggerHandler {
             }
         }
         
-        Map<Id, Checklist_Template__c> checkListTemplates = new Map<Id, Checklist_Template__c>([Select id, Name, Active__c, isLocked__c, Description__c, 
+        Map<Id, Checklist_Template__c> checkListTemplates = new Map<Id, Checklist_Template__c>([Select id, Name, Active__c, isLocked__c, Description__c, Sequential__c,
                                                                                                 (Select id, Item__c, Item_Order__c, Checklist_Template__c, Description__c from Checklist_Template_Items__r) 
                                                                                                 From Checklist_Template__c Where Id IN: templateIds WITH USER_MODE]);
         
@@ -44,7 +47,11 @@ public with sharing class CheckListTriggerHandler {
                 throw d;
             }*/
             
-            insert as user items;
+            if(runDMLInSystemMode){
+                CheckListTriggerHelper.createChecklistItemsInSystemMode(items);
+            }else{
+                insert as user items;
+            }
         }
     }
     
@@ -89,7 +96,14 @@ public with sharing class CheckListTriggerHandler {
                     throw d;
                 }*/
                  
-                update as user checkListTemp.values(); 
+                
+                // Commented Below DML to allow update the Template count if any user creates a Checklist using a Template
+                // update as user checkListTemp.values(); 
+                if(runDMLInSystemMode){
+                    CheckListTriggerHelper.updateChecklistTemplatesInSystemMode(checkListTemp.values());
+                }else{
+                    update as user checkListTemp.values(); 
+                }
             }
         }
     }

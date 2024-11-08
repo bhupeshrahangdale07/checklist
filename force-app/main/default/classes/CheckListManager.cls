@@ -17,7 +17,7 @@ global with sharing class CheckListManager {
         try{
             List<Id> recordIds = request[0].recordIds;
             String CheckListTemplateId = request[0].templateId;
-            Checklist_Template__c checkListTemplates = [Select id, Name, Active__c, Due_Days__c, CreatedDate, isLocked__c, Description__c,
+            Checklist_Template__c checkListTemplates = [Select id, Name, Active__c, Due_Days__c, Sequential__c, CreatedDate, isLocked__c, Description__c,
                                                         (Select id, Item__c, Item_Order__c from Checklist_Template_Items__r) 
                                                         From Checklist_Template__c Where Id = :CheckListTemplateId WITH USER_MODE];
             
@@ -30,6 +30,7 @@ global with sharing class CheckListManager {
                 CheckList.Description__c = checkListTemplates.Description__c;
                 CheckList.Due_Days__c = checkListTemplates.Due_Days__c;
                 CheckList.Is_Checklist_Locked__c = checkListTemplates.isLocked__c;
+                CheckList.Sequential__c = checkListTemplates.Sequential__c;
                 
                 Id sfId = (Id) recordId;
                 // String objName = sfId.getSObjectType().getDescribe().getName();
@@ -67,6 +68,40 @@ global with sharing class CheckListManager {
         global List<Checklist__c> checklistRecords;
     }
     
+    
+    /*
+     * Retrieves a map indicating whether the logged-in user has been assigned specific permission sets.
+     * 
+     * @return Map<String, Boolean> - A map with keys:
+     *     - 'isStandard': true if the user has 'Checklist_Genius_Standard_User_Permissions' assigned, false otherwise.
+     *     - 'isAdmin': true if the user has 'Checklist_Genius_Admin_Manager_Permissions' assigned, false otherwise.
+     * 
+     * The method checks for these permission sets based on the logged-in user's ID.
+     */
+    @AuraEnabled (cacheable = true)
+    public Static Map<String, Boolean> assignedPermissions(){
+        Map<String, Boolean> permissions = new Map<String, Boolean>{'isStandard' => false, 'isAdmin' => false };
+        for(PermissionSetAssignment psa : [
+            SELECT PermissionSet.Name 
+            FROM PermissionSetAssignment 
+            WHERE AssigneeId = :UserInfo.getUserId()
+            AND PermissionSet.Name IN ('Checklist_Genius_Standard_User_Permissions', 'Checklist_Genius_Admin_Manager_Permissions')
+        ])
+        {
+            if(psa.PermissionSet.Name == 'Checklist_Genius_Standard_User_Permissions' ){
+                permissions.put('isStandard', true);
+            }
+            
+            if(psa.PermissionSet.Name == 'Checklist_Genius_Admin_Manager_Permissions' ){
+                permissions.put('isAdmin', true);
+            }
+        
+        }
+        
+        return permissions;
+    }
+        
+    
     /*
      * @param recordId is the any sobject id
      * returns the List of checklists with Items linked with the recordId.
@@ -93,7 +128,7 @@ global with sharing class CheckListManager {
         
         // system.debug('recordId : '+recordId);
         List<Checklist__c> checklistRecords = new List<Checklist__c>();
-        String query = 'Select Id, Name, Is_Checklist_Template_Locked__c, Checklist_Title__c, Is_Checklist_Locked__c, Percentage_Completion__c, Description__c,Due_Days__c, CreatedDate, Due_Date__c, Checklist_Template__c, Checklist_Template__r.IsLocked__c,   (Select Id, Item__c, Item_Order__c, Checked__c,Description__c From CheckList_Items__r order by Item_Order__c ASC )  From Checklist__c Where ';
+        String query = 'Select Id, Name, CreatedById, OwnerId, Is_Checklist_Template_Locked__c, Checklist_Title__c, Is_Checklist_Locked__c, Percentage_Completion__c, Description__c,Due_Days__c, CreatedDate, Due_Date__c, Checklist_Template__c, Checklist_Template__r.IsLocked__c,   (Select Id, Item__c, Item_Order__c, Checked__c,Description__c From CheckList_Items__r order by Item_Order__c ASC )  From Checklist__c Where ';
         String fieldName = getRelatedFieldApiNameByRecordId(recordId);//'Account__c'; 
         query += String.escapeSingleQuotes(fieldName) + ' = :recordId Order By Due_Date__c NULLS LAST';
         
@@ -126,7 +161,7 @@ global with sharing class CheckListManager {
     @AuraEnabled
     public Static Checklist_Template__c fetchTemplate(String recordId){
         try{
-            Checklist_Template__c checkListTemplate = [Select id, Name, Active__c, Due_Days__c, CreatedDate, Description__c, IsLocked__c,
+            Checklist_Template__c checkListTemplate = [Select id, Name, Active__c, Due_Days__c, CreatedDate, Description__c, Sequential__c, IsLocked__c,
                                                     (Select id, Item__c, Item_Order__c, Description__c, Checklist_Template__c from Checklist_Template_Items__r order by Item_Order__c ) 
                                                     From Checklist_Template__c Where Id = :recordId WITH USER_MODE Limit 1 ];
             return checkListTemplate;
@@ -308,7 +343,9 @@ global with sharing class CheckListManager {
     */
     @AuraEnabled
     public Static Checklist__c saveChecklistAndItems(List<Checklist__c> ChecklistRecord, String Items){
-        try{
+        try{	
+            	
+            Boolean CreateChecklistItemsInSystemMode = false;
                 if(!ChecklistRecord.isEmpty()){
                 
                     /*FLSChecker.FLSCheckWrapper fl = new FLSChecker.FLSCheckWrapper();
@@ -317,8 +354,14 @@ global with sharing class CheckListManager {
                         throw new AuraHandledException(fl.message);
                     }*/
                    
-                    insert as user ChecklistRecord;
+                    
+                    
+                    if(ChecklistRecord[0].OwnerId != null && ChecklistRecord[0].OwnerId != Userinfo.getUserId()){
+                        CreateChecklistItemsInSystemMode = true;
+                        CheckListTriggerHandler.runDMLInSystemMode = true;
+                    }
 
+                    insert as user ChecklistRecord;
 
                     List<Checklist_Item__c>  ChecklistItemRecords = (List<Checklist_Item__c> ) JSON.deserialize(Items, List<Checklist_Item__c>.class); 
                     
@@ -333,10 +376,25 @@ global with sharing class CheckListManager {
                             throw new AuraHandledException(fl2.message);
                         }*/
                         
-                        insert as user ChecklistItemRecords;
+                        if(CreateChecklistItemsInSystemMode){
+                            CheckListTriggerHelper.createChecklistItemsInSystemMode(ChecklistItemRecords);
+                        }else{
+                            insert as user ChecklistItemRecords;
+                        }
                     }
-                    Checklist__c checklist = [Select Id, Name, Is_Checklist_Template_Locked__c, Is_Checklist_Locked__c, Checklist_Title__c, Percentage_Completion__c, Description__c,Due_Days__c, CreatedDate, Due_Date__c, Checklist_Template__c, Checklist_Template__r.IsLocked__c,   (Select Id, Item__c, Item_Order__c, Checked__c,Description__c From CheckList_Items__r order by Item_Order__c ASC )  From Checklist__c Where Id =: ChecklistRecord[0].Id WITH USER_MODE];
-                    return checklist;
+                    
+                    if(CreateChecklistItemsInSystemMode){
+                        List<Checklist__c> checklistRecords = new List<Checklist__c>([Select Id, Name, Is_Checklist_Template_Locked__c, Is_Checklist_Locked__c, Checklist_Title__c, Percentage_Completion__c, Description__c,Due_Days__c, CreatedDate, Due_Date__c, Checklist_Template__c, Checklist_Template__r.IsLocked__c, OwnerId, CreatedById,  (Select Id, Item__c, Item_Order__c, Checked__c,Description__c From CheckList_Items__r order by Item_Order__c ASC )  From Checklist__c Where Id =: ChecklistRecord[0].Id WITH USER_MODE]);
+                        if(!checklistRecords.isEmpty()){
+                            return checklistRecords[0];
+                        }else{
+                            return new Checklist__c();
+                        } 
+                    }else{
+                        Checklist__c checklist = [Select Id, Name, Is_Checklist_Template_Locked__c, Is_Checklist_Locked__c, Checklist_Title__c, Percentage_Completion__c, Description__c,Due_Days__c, CreatedDate, Due_Date__c, Checklist_Template__c, Checklist_Template__r.IsLocked__c, OwnerId, CreatedById,  (Select Id, Item__c, Item_Order__c, Checked__c,Description__c From CheckList_Items__r order by Item_Order__c ASC )  From Checklist__c Where Id =: ChecklistRecord[0].Id WITH USER_MODE];
+                        return checklist;
+                    }
+                    
                 }else{
                     throw new AuraHandledException('Checklist Not Found');
                 }
@@ -378,7 +436,7 @@ global with sharing class CheckListManager {
                 
                 insert as user checklistItems;
             }
-            Checklist__c checklist = [Select Id, Name, Is_Checklist_Template_Locked__c, Checklist_Title__c, Percentage_Completion__c, Description__c,Due_Days__c, CreatedDate, Due_Date__c, Checklist_Template__c, Checklist_Template__r.IsLocked__c,   (Select Id, Item__c, Item_Order__c, Checked__c,Description__c From CheckList_Items__r order by Item_Order__c ASC )  From Checklist__c Where Id =: checklistId WITH USER_MODE];
+            Checklist__c checklist = [Select Id, Name, Is_Checklist_Template_Locked__c, Checklist_Title__c, Percentage_Completion__c, Description__c,Due_Days__c, CreatedDate, Due_Date__c, Checklist_Template__c, Checklist_Template__r.IsLocked__c, OwnerId, CreatedById,   (Select Id, Item__c, Item_Order__c, Checked__c,Description__c From CheckList_Items__r order by Item_Order__c ASC )  From Checklist__c Where Id =: checklistId WITH USER_MODE];
             return checklist;
         }catch(AuraHandledException  e){
             throw e;
@@ -389,6 +447,31 @@ global with sharing class CheckListManager {
             // system.debug('test Exception  '+e.getmessage());
             // system.debug('test Exception  '+e.getLinenumber());
             throw new AuraHandledException(e.getmessage());
+        }
+    }
+    
+    /*
+     * @param checklistId is Checklist recordId
+     * Deleting the checklist record.
+    */
+    @AuraEnabled
+    public static void deleteChecklist(String checklistId){
+        try{
+            system.debug('1'+checklistId);
+            system.debug('1'+String.isNotBlank(checklistId));
+            system.debug('adfd '+checklistId instanceof Id);
+            
+            if(String.isNotBlank(checklistId) && checklistId instanceof Id){
+            	delete as user new Checklist__c(id=checklistId);
+            }else{
+                throw new AuraHandledException('Invalid Checklist Id '+checklistId);
+            }
+        }catch(AuraHandledException  e){
+            throw e;
+        }catch(Exception e){
+            if(!e.getmessage().contains('ENTITY_IS_DELETED')){
+               throw new AuraHandledException(e.getmessage()); 
+            }
         }
     }
 }

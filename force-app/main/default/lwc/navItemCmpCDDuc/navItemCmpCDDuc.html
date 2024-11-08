@@ -16,7 +16,10 @@
                           <div class="slds-flex slds-align-items-center" style="display: flex; justify-content: space-between">
                             <div class="inner-flex" style="display: flex;">
                               <div>
-                                <lightning-icon icon-name={mapCheckL.firstRecordIcon} size="small"></lightning-icon>
+                                <lightning-icon lwc:if={mapCheckL.firstRecordIcon} icon-name={mapCheckL.firstRecordIcon} size="small"></lightning-icon>
+
+                                <!-- <lightning-icon lwc:else src={mapCheckL.defaultIcon} size="small"></lightning-icon> -->
+                                <img lwc:else class="slds-icon slds-icon_small" src={mapCheckL.defaultIcon} alt="" >
                               </div>
                               <div>
                                 <a href={mapCheckL.firstRecordFullUrl} target="_blank">
@@ -34,7 +37,7 @@
                         
                         <div key={mapCheckL.dUrl} id={index} class="collapse-divs active" style="">
                             <div if:true={isDesktop}>
-                              <c-checklist-details-duc  has-admin-permission={hasAdminPermission}
+                              <c-checklist-details-duc  enable-edit-mode="true" has-admin-permission={hasAdminPermission}
                               has-admin-standard-permission={hasAdminStandardPermission}
                               view-checklist-item-activity="true"
                               check-list={mapCheckL.records} ondeletechecklist={handleRemoveChecklist} onhandlecompletedchecklist={handlecompletedchecklist} onhandleuncompletedchecklist={handleuncompletedchecklist} flexipage-region-width='large' ></c-checklist-details-duc>
