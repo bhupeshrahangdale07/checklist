@@ -3,7 +3,6 @@
     <fullName>Assign_To__c</fullName>
     <defaultValue>&apos;Owner of the record&apos;</defaultValue>
     <deprecated>false</deprecated>
-    <externalId>false</externalId>
     <inlineHelpText>If Others is selected, you can assign the Checklist to any particular user.</inlineHelpText>
     <label>Assign To</label>
     <required>false</required>

@@ -21,8 +21,10 @@ export default class CreateChecklistDialog extends NavigationMixin(LightningElem
 		// }
     }
 	
-    // renderedCallback(){
-	// 	if(FORM_FACTOR === 'Small'){
+     renderedCallback(){
+	 	if(FORM_FACTOR === 'Small'){
+			history.replaceState(null, '', `/lightning/r/${this.recordIdOfAcc}/view`);
+		}
 	// 		const style = document.createElement('style');
         
     //     // Define the CSS inside the style element
@@ -37,7 +39,7 @@ export default class CreateChecklistDialog extends NavigationMixin(LightningElem
     //     this.template.querySelector('div.checklist-container')?.appendChild(style);
 	// 	}
 		
-	// }
+	 }
 	
     handleButton(event) {
     	var btnName = event.currentTarget.name;
@@ -45,7 +47,7 @@ export default class CreateChecklistDialog extends NavigationMixin(LightningElem
 			/* Uncomment this when Mobile version is to be released.*/
     		event.preventDefault();
     		let componentDef = {
-    			componentDef: 'c:createChecklistDuc',
+    			componentDef: 'kt_checklist:createChecklistDuc',
     			attributes: {
     				recordId: this.recordIdOfAcc,
     				templateType: btnName

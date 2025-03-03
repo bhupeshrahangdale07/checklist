@@ -48,11 +48,21 @@ public class MyChecklistsPageManagerTest {
         
         System.assertNotEquals(0, returnedChecklists.size(), 'No checklists returned for the user');
     }
-        
+      
+    /*
     @isTest
     public static void getRelationObjectIconFieldMapMethod(){
         Test.startTest();
             Map<String, String> relationshipFields = MyChecklistsPageManager.getRelationObjectIconFieldMap('Account');
+        Test.stopTest();
+        System.assertNotEquals(0, relationshipFields.size(), 'No relationship fields found');
+    }
+    */
+    
+    @isTest
+    public static void fetchIconsMethod(){
+        Test.startTest();
+        Map<String, String> relationshipFields = MyChecklistsPageManager.fetchIcons(new List<String>{'Task'}, 'Account');
         Test.stopTest();
         System.assertNotEquals(0, relationshipFields.size(), 'No relationship fields found');
     }

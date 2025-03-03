@@ -3,8 +3,8 @@
     <flexiPageRegions>
         <itemInstances>
             <componentInstance>
-                <componentName>templateManagerCD</componentName>
-                <identifier>kt_checklist_templateManagerCD</identifier>
+                <componentName>TemplateManagerAuraCDDuc</componentName>
+                <identifier>kt_checklist_TemplateManagerAuraCDDuc</identifier>
             </componentInstance>
         </itemInstances>
         <name>main</name>

@@ -1,0 +1,176 @@
+<template>
+  <lightning-card>
+      <!-- removed max-height : 90vh ;overflow-y : scroll ; -->
+      <div class="kt_checklist__my-checklist slds-p-around_medium slds-is-relative" style="padding-top: 0px;" >
+          <div class="kt_checklist__checklist-inner ">
+              <div class="kt_checklist__empty-state">
+                  <div class="slds-flex slds-align-items-center" style="display: flex;  justify-items: start;">
+                      <div class="sidebar slds-split-view_container slds-is-closed close-panel" data-my-id="leftPanel"
+                          style=" height: 100%;">
+                          <!--lightning-button-icon onclick={togglePanel} variant="bare" icon-name="utility:left"
+                              class="slds-button slds-button_icon slds-button_icon slds-split-view__toggle-button sidebar-button"
+                              aria-controls="split-view-id" aria-expanded="true">
+                              </lightning-button-icon-->
+                          <article aria-hidden="false" id="split-view-id" class="slds-split-view slds-grid slds-grid_vertical slds-grow">
+                              <div class="kt_checklist__empty-state-vrtl kt_checklist__vrtl-state-tab slds-vertical-tabs" style={dynamicHeight}>
+                                  <ul class="slds-vertical-tabs__nav slds-var-p-around_medium" role="tablist" aria-orientation="vertical" id="tabs-nav">
+                                      <li class="slds-vertical-tabs__nav-item slds-is-active slds-var-m-bottom_small" title="Checklist" role="presentation"  onclick={handleSelect} data-name="today" aria-selected={newTab.today}>
+                                          <a class="slds-vertical-tabs__link"  role="tab" tabindex="0" aria-selected={newTab.today} aria-controls="slds-vertical-tabs-0">
+                                              <span class="slds-vertical-tabs__left-icon">
+                                                  <span class="slds-icon_container" title="Description of icon when needed">
+                                                      <svg class="kt_checklist__vrtl-icon slds-icon slds-icon_small" aria-hidden="true">
+                                                          <use xlink:href={icon1}></use>
+                                                      </svg>
+                                                  </span>
+                                              </span>
+                                              <span class="slds-truncate" title="Today's Checklists">Today's Checklist</span>
+                                              <span class="slds-vertical-tabs__left-icon">({todayCount})</span>
+                                          </a>
+                                      </li>
+                                      <li class="slds-vertical-tabs__nav-item  slds-var-m-bottom_small" title="Overdues" role="presentation" onclick={handleSelect} data-name="overdue" aria-selected={newTab.overdue}>
+                                          <a class="slds-vertical-tabs__link"  role="tab" tabindex="-1" aria-selected={newTab.overdue} aria-controls="slds-vertical-tabs-1" id="slds-vertical-tabs-1__nav">
+                                              <span class="slds-vertical-tabs__left-icon">
+                                                  <span class="slds-icon_container" title="Description of icon when needed">
+                                                      <svg class="kt_checklist__vrtl-icon slds-icon slds-icon_small" aria-hidden="true">
+                                                          <use xlink:href={icon2}></use>
+                                                      </svg>
+                                                  </span>
+                                              </span>
+                                              <span class="slds-truncate" title="Overdues">Overdues</span>
+                                              <span class="slds-vertical-tabs__left-icon">({overdueCount})</span>
+                                          </a>
+                                      </li>
+                                      <li class="slds-vertical-tabs__nav-item slds-var-m-bottom_small" title="Next 7 days" role="presentation" onclick={handleSelect} data-name="next_7_days" aria-selected={newTab.next_7_days}>
+                                          <a class="slds-vertical-tabs__link" role="tab" tabindex="-1" aria-selected={newTab.next_7_days} aria-controls="slds-vertical-tabs-2" id="slds-vertical-tabs-2__nav">
+                                              <span class="slds-vertical-tabs__left-icon">
+                                                  <span class="slds-icon_container" title="Description of icon when needed">
+                                                      <svg class="kt_checklist__vrtl-icon slds-icon slds-icon_small" aria-hidden="true">
+                                                          <use xlink:href={icon3}></use>
+                                                      </svg>
+                                                  </span>
+                                              </span>
+                                              <span class="slds-truncate" title="Next 7 days">Next 7 days</span>
+                                              <span class="slds-vertical-tabs__left-icon">({next7DaysCount})</span>
+                                          </a>
+                                      </li>
+                                      <li class="slds-vertical-tabs__nav-item slds-var-m-bottom_small" title="Next 14 days" role="presentation" onclick={handleSelect} data-name="next_14_days" aria-selected={newTab.next_14_days}>
+                                          <a class="slds-vertical-tabs__link" role="tab" tabindex="-1" aria-selected={newTab.next_14_days} aria-controls="slds-vertical-tabs-2" id="slds-vertical-tabs-3__nav">
+                                              <span class="slds-vertical-tabs__left-icon">
+                                                  <span class="slds-icon_container" title="Description of icon when needed">
+                                                      <svg class="kt_checklist__vrtl-icon slds-icon slds-icon_small" aria-hidden="true">
+                                                          <use xlink:href={icon4}></use>
+                                                      </svg>
+                                                  </span>
+                                              </span>
+                                              <span class="slds-truncate" title="Next 14 days">Next 14 days</span>
+                                              <span class="slds-vertical-tabs__left-icon">({next14DaysCount})</span>
+                                          </a>
+                                      </li>
+                                      <li class="slds-vertical-tabs__nav-item slds-var-m-bottom_small" title="Next 30 days" role="presentation" onclick={handleSelect} data-name="next_30_days" aria-selected={newTab.next_30_days}>
+                                          <a class="slds-vertical-tabs__link" role="tab" tabindex="-1" aria-selected={newTab.next_30_days} aria-controls="slds-vertical-tabs-2" id="slds-vertical-tabs-4__nav">
+                                              <span class="slds-vertical-tabs__left-icon">
+                                                  <span class="slds-icon_container" title="Description of icon when needed">
+                                                      <svg class="kt_checklist__vrtl-icon slds-icon slds-icon_small" aria-hidden="true">
+                                                          <use xlink:href={icon5}></use>
+                                                      </svg>
+                                                  </span>
+                                              </span>
+                                              <span class="slds-truncate" title="Next 30 days">Next 30 days</span>
+                                              <span class="slds-vertical-tabs__left-icon">({next30DaysCount})</span>
+                                          </a>
+                                      </li>
+                                      <li class="slds-vertical-tabs__nav-item slds-var-m-bottom_small" title="All Open" role="presentation" onclick={handleSelect} data-name="all_open" aria-selected={newTab.all_open}>
+                                          <a class="slds-vertical-tabs__link" role="tab" tabindex="-1" aria-selected={newTab.all_open} aria-controls="slds-vertical-tabs-2" id="slds-vertical-tabs-5__nav">
+                                              <span class="slds-vertical-tabs__left-icon">
+                                                  <span class="slds-icon_container" title="Description of icon when needed">
+                                                      <svg class="kt_checklist__vrtl-icon slds-icon slds-icon_small" aria-hidden="true">
+                                                          <use xlink:href={icon5}></use>
+                                                      </svg>
+                                                  </span>
+                                              </span>
+                                              <span class="slds-truncate" title="All Open">All Open</span>
+                                              <span class="slds-vertical-tabs__left-icon"></span>
+                                          </a>
+                                      </li>
+                                      <li class="slds-vertical-tabs__nav-item" title="Completed" role="presentation" onclick={handleSelect} data-name="completed" aria-selected={newTab.completed}>
+                                          <a class="slds-vertical-tabs__link" role="tab" tabindex="-1" aria-selected={newTab.completed} aria-controls="slds-vertical-tabs-2" id="slds-vertical-tabs-6__nav">
+                                              <span class="slds-vertical-tabs__left-icon">
+                                                  <span  title="Description of icon when needed">
+                                                      <svg class="kt_checklist__vrtl-icon slds-icon slds-icon_small" aria-hidden="true">
+                                                          <use xlink:href={icon6}></use>
+                                                      </svg>
+                                                  </span>
+                                              </span>
+                                              <span class="slds-truncate" title="Completed">Completed</span>
+                                              <span class="slds-vertical-tabs__left-icon">({completedCount})</span>
+                                          </a>
+                                      </li>
+                                  </ul>
+                              </div>
+                          </article>
+                      </div>
+                      <div data-my-id="rightPanel" class="expand-panel">
+                          <!--Main Right Body Section-->
+                          <div class="kt_checklist__empty-state-vrtl kt_checklist__vrtl-state-tab slds-vertical-tabs" style=" flex: 1 0 auto;  justify-items: start;">
+                              <div class="slds-vertical-tabs__content slds-show" id="slds-vertical-tabs-0" role="tabpanel" aria-labelledby="slds-vertical-tabs-0__nav" style="padding: 0 !important; background-color: transparent; min-height: min-content;" >
+                                  <div style="display: flex; flex-direction: column; flex-grow: 1; padding: 0 !important;">
+                                      <div class="mainDiv" style="display: flex;">
+                                          <button onclick={togglePanel} class="slds-button slds-button_icon slds-m-around_x-small" aria-controls="split-view-id" aria-expanded="true" 
+                                              style="padding: 0px 10px !important;border: 1px solid rgb(0, 0, 0, 0.1);margin-left: 0px;width:15%;background-color:rgb(244, 244, 244);">
+                                              <lightning-icon icon-name={iconName} size="small"></lightning-icon>
+                                          </button>
+                                          <div class="slds-size_4-of-4 slds-var-p-around_medium" 
+                                              style="padding-left: 20px; border: 1px solid rgb(0,0,0,0.1); border-radius: 8px; background: #fafafa; flex-grow: 0;width: 82%;">
+                                              <div class="slds-media slds-media_center">
+                                                  <div class="slds-media__figure">
+                                                      <span class="slds-avatar slds-avatar_medium">
+                                                      <img alt="Person name" src={userPhoto} title="User avatar" />
+                                                      </span>
+                                                  </div>
+                                                  <div class="slds-media__body slds-text-title_bold">
+                                                      <p>{mychecklist}</p>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                      <div style="background-color: #f4f4f4; border: 1px solid #ccc; padding: 10px; margin-top: 10px; border-radius: 5px;">
+                                          {filterName}
+                                      </div>
+                                      <div class="slds-m-top_medium" style="border-radius: 8px; display: flex; flex-direction: column; flex-grow: 1; margin-bottom: 0;">
+                                          <template if:true={newTab.overdue}>
+                                              <c-nav-item-cmp-c-d filter={filter} filter-counts={filterCounts} onfiltercountschange={handleFilterCountsChange}></c-nav-item-cmp-c-d>
+                                          </template>
+                                          <template if:true={newTab.today}>
+                                              <c-nav-item-cmp-c-d filter={filter} filter-counts={filterCounts} onfiltercountschange={handleFilterCountsChange}></c-nav-item-cmp-c-d>
+                                          </template>
+                                          <template if:true={newTab.next_7_days}>
+                                              <c-nav-item-cmp-c-d filter={filter} filter-counts={filterCounts} onfiltercountschange={handleFilterCountsChange}></c-nav-item-cmp-c-d>
+                                          </template>
+                                          <template if:true={newTab.next_14_days}>
+                                              <c-nav-item-cmp-c-d filter={filter} filter-counts={filterCounts} onfiltercountschange={handleFilterCountsChange}></c-nav-item-cmp-c-d>
+                                          </template>
+                                          <template if:true={newTab.next_30_days}>
+                                              <c-nav-item-cmp-c-d filter={filter} filter-counts={filterCounts} onfiltercountschange={handleFilterCountsChange}></c-nav-item-cmp-c-d>
+                                          </template>
+                                          <template if:true={newTab.all_open}>
+                                              <c-nav-item-cmp-c-d filter={filter} filter-counts={filterCounts} onfiltercountschange={handleFilterCountsChange}></c-nav-item-cmp-c-d>
+                                          </template>
+                                          <template if:true={newTab.completed}>
+                                              <c-nav-item-cmp-c-d filter={filter} filter-counts={filterCounts} onfiltercountschange={handleFilterCountsChange}></c-nav-item-cmp-c-d>
+                                          </template>
+                                      </div>
+                                      <!-- Accordion -->
+                                  </div>
+                              </div>
+                          </div>
+                          <article class="slds-grid slds-grid_vertical slds-grow slds-scrollable_none slds-m-top_x-small slds-m-bottom_x-large">
+                              <div class=" slds-grid slds-grid_vertical slds-scrollable_y">
+                              </div>
+                          </article>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </lightning-card>
+</template>

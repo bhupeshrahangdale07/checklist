@@ -1,7 +1,8 @@
-import { LightningElement, api, track } from 'lwc';
+import { LightningElement, api, track, wire } from 'lwc';
 import FORM_FACTOR from '@salesforce/client/formFactor';
 import getTemplateItems from '@salesforce/apex/TemplateManager.getTemplateItems';
-import saveTemplateAndItems from '@salesforce/apex/TemplateManager.saveTemplateAndItems';
+import saveTemplateAndItems from '@salesforce/apex/TemplateManagerDuc.saveTemplateAndItems'; // we need to update class Name it before packaging******************************************************
+import getAssignedPermissions from '@salesforce/apex/CheckListManagerDuc.assignedPermissions';
 import { NavigationMixin } from 'lightning/navigation';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
@@ -17,6 +18,7 @@ import Resource from '@salesforce/resourceUrl/ChecklistGeniusDuc';
 export default class TemplateManager extends NavigationMixin(LightningElement) {
     dueDaysField = DueDays_FIELD;
 
+    askToupdateRelatedOpenChecklists = false;
     openCreateChecklistTemplDialog = true;
     @api recordId;
     @track headerTitle = 'Create/Edit Checklist Template';
@@ -28,6 +30,7 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
     @track showfirstCmp = true;
     @track showSecondCmp = true;
     @track showPerviousBtn = false;
+    @track editItemForMobile = false;
 
     isActive = false;
     isLocked = false;
@@ -38,6 +41,36 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
     descriptionValue;
 
     customCSS = Resource + '/css/style.css';
+
+    @track hasAdminStandardPermission = false;
+	@track hasAdminPermission = false;
+    @track showWarning = false;
+    @track warning = '';
+
+    @track blankItemAdded = false;
+
+    @wire(getAssignedPermissions)
+    wiredData({ error, data }) {
+        if (data) {
+            this.hasAdminStandardPermission = data.isStandard ? data.isStandard : false;
+            this.hasAdminPermission = data.isAdmin ? data.isAdmin : false;
+
+            if (!this.hasAdminStandardPermission && !this.hasAdminPermission) {
+                this.handleShowToast('Error', 'Please Add respective PermissionSet to Use Checklist Genius', 'error', '');
+            }else if(!this.hasAdminPermission){
+                this.showWarning = true;
+                this.warning = 'You need Checklist Genius Admin Permissions to Manage Template.';
+                
+            }
+        } else if (error) {
+            this.handleShowToast('Error', error?.body?.message, 'error', '');
+        }
+    }
+
+    closeWarning(){
+        this.showWarning = false;
+    }
+
 
     /*
     * Assigns the current value of the toggle to the local variables when any of the two toggles Active and Locked is clicked upon.
@@ -52,6 +85,7 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
             console.log('this.isSequential:'+this.isSequential);
         }
     }
+
     handleInputChange(event) {
         const field = event.target.dataset.fieldname;
         if (field == 'Name') {
@@ -97,7 +131,7 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
             }
             const buttonElements = this.template.querySelectorAll('.changeButton');
             buttonElements.forEach(buttonElement => {
-                buttonElement.classList.remove('btn-primary');
+                buttonElement.classList.remove('kt_checklist__button');
                 buttonElement.classList.add('btn-cancel');
                 buttonElement.style.fontSize = 'small';
             });
@@ -173,14 +207,26 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
 		// 	this.template.querySelector('div')?.appendChild(style);
 		// }
 
+        if(this.blankItemAdded == true){
+            const lastRow = this.template.querySelector('.template-row:last-child');
+            if (lastRow) {
+                lastRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            this.blankItemAdded = false;
+        }
+        
+        
         this.loadCss();
 
     }
     get dynamicStyle() {
         return this.isMobile ? '' : 'border-right: 1px solid #ccc;';
     }
-    get dynamicClasses() {
-        return this.isMobile ? 'slds-col' : 'slds-col slds-size_1-of-2';
+    get dynamicClassDet() {
+        return this.isMobile ? 'slds-col' : 'slds-col slds-size_1-of-2 ';
+    }
+    get dynamicClassItm() {
+        return this.isMobile ? 'slds-col' : 'slds-col slds-size_1-of-2 ';
     }
 
 
@@ -211,7 +257,7 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
     loadCss() {
         Promise.all([
             // loadStyle( this, this.customStyle )            
-            // loadStyle(this, this.customCSS)
+            loadStyle(this, this.customCSS)
         ]).then(() => {
         }).catch(error => {
             console.log('loadCss error:',error);
@@ -264,6 +310,7 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
                 if (data[Is_Locked_FIELD.fieldApiName]) {
                     this.isLocked = data[Is_Locked_FIELD.fieldApiName];
                 }
+
                 if (data[Sequential_FIELD.fieldApiName]) {
                     this.isSequential = data[Sequential_FIELD.fieldApiName];
                 }
@@ -285,6 +332,14 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
             }).catch((err) => {
                 this.handleShowToast('Error fetching Template Items', err?.body?.message, 'error', '');
             });
+    }
+
+    EnableAskToupdateRelatedOpenChecklists(){        
+        this.askToupdateRelatedOpenChecklists = true;
+        if(this.isMobile){
+        this.editItemForMobile = true;
+
+        }
     }
 
     /*
@@ -339,7 +394,16 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
         } else if (!index) {
             let row = { 'kt_checklist__Item__c': '', 'kt_checklist__Item_Order__c': this.templateItems.length + 1, 'kt_checklist__Description__c': '' };
             this.templateItems.push(row);
+            this.blankItemAdded = true; //This is used to make the new blank item scroll into view.
         }
+
+        
+        //event.target.scrollIntoView({ behavior: 'smooth', block: 'bottom' });
+
+        //setTimeout(() => {
+            
+        //}, 100);
+    
     }
 
     /*
@@ -603,25 +667,71 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
             // Deleting properties using a loop
             propertiesToDelete.forEach(property => delete fields[property]);
 
-            // Assign the updated templateItems back to the property
+
+            this.formData = {'fields' : fields, 'updatedTemplateItems' : updatedTemplateItems, 'deleteItems' : this.deleteItems };
+
+            // if(this.recordId != null && this.isActive && (fields[DueDays_FIELD.fieldApiName] != this.templateRecord[DueDays_FIELD.fieldApiName] ||
+            //     fields[Is_Locked_FIELD.fieldApiName] != this.templateRecord[Is_Locked_FIELD.fieldApiName]) ){
+            //     this.EnableAskToupdateRelatedOpenChecklists();
+            //     return;
+            // }
+
+            let newItems = updatedTemplateItems.filter(item => item.Id == undefined);
+            
+            if(this.recordId != null && this.isActive && newItems.length > 0){
+                this.EnableAskToupdateRelatedOpenChecklists();
+                return;
+            }else{
+                this.handleSave();
+            }            
+            
+        } else {
+            //alert('Please update the invalid form entries and try again.');
+            //this.handleShowToast('Error', 'Please update the invalid form entries and try again.', 'error', '');
+        }
+    }
+
+    @track formData;
+    updateRelatedOpenChecklist = false;
+    handleupdateRelatedOpenChecklist(event){
+        this.updateRelatedOpenChecklist = event.target.checked;
+    }
+
+    closeAskToupdateRelatedOpenChecklists(event){
+        event.preventDefault();
+        this.askToupdateRelatedOpenChecklists = false;
+        this.updateRelatedOpenChecklist = false;
+    }
+    cancelTemplateManager(event){
+        event.preventDefault();
+        this.editItemForMobile = false;
+        this.askToupdateRelatedOpenChecklists = false;
+        this.updateRelatedOpenChecklist = false;
+    }
+
+    handleSave(){
+        
+        debugger;
+        // Assign the updated templateItems back to the property
             //this.templateItems = updatedTemplateItems;
-            saveTemplateAndItems({ Template: JSON.stringify(fields), TemplateItems: updatedTemplateItems, DeletedTemplateItems: this.deleteItems })
+            saveTemplateAndItems({ Template: JSON.stringify(this.formData.fields), TemplateItems: this.formData.updatedTemplateItems, DeletedTemplateItems: this.formData.deleteItems, updateRelatedOpenChecklist : this.updateRelatedOpenChecklist })
                 .then((result) => {
                     this.handleShowToast('', 'Record Saved Successfully', '', '');
                     if (result.Status === 'Success') {
                         //this.recordId = result.recordId;
                         this.fetchRecords();
+                        this.updateRelatedOpenChecklist = false;
+                        this.askToupdateRelatedOpenChecklists = false;
+                        if(this.isMobile){
+                        this.editItemForMobile = true;
+                    }
                         this.navigate('ListView');
                     }
                 }).catch((err) => {
                     this.handleShowToast('Error saving Template & Items', err?.body?.message, 'error', '');
                     //this.navigate('ListView');
                 });
-        } else {
-            //alert('Please update the invalid form entries and try again.');
-            //this.handleShowToast('Error', 'Please update the invalid form entries and try again.', 'error', '');
-        }
-}
+    }
 
 hideModalBox(){
     if (this.recordId && this.recordId !== '') {

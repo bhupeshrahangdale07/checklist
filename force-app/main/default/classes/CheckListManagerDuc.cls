@@ -5,6 +5,7 @@
 */
 
 global with sharing class CheckListManagerDuc {
+    // private static final List<String> specialObjects = new List<String>{'TASK', 'EVENT'};
 
     @InvocableMethod(label='Create CheckList' description='Create CheckList Record' category='Checklist__c')
     global Static List<responseWrap> CreateCheckList(List<requestWrap> request) {
@@ -85,8 +86,8 @@ global with sharing class CheckListManagerDuc {
             SELECT PermissionSet.Name 
             FROM PermissionSetAssignment 
             WHERE AssigneeId = :UserInfo.getUserId()
-            AND PermissionSet.Name IN ('Checklist_Genius_Standard_User_Permissions', 'Checklist_Genius_Admin_Manager_Permissions')
-            WITH USER_MODE
+            AND PermissionSet.Name IN ('Checklist_Genius_Standard_User_Permissions', 'Checklist_Genius_Admin_Manager_Permissions', 'Checklist_Genius_Standard_User_Permissions_Community')
+            WITH SYSTEM_MODE
         ])
         {
             if(psa.PermissionSet.Name == 'Checklist_Genius_Standard_User_Permissions' ){
@@ -95,6 +96,10 @@ global with sharing class CheckListManagerDuc {
             
             if(psa.PermissionSet.Name == 'Checklist_Genius_Admin_Manager_Permissions' ){
                 permissions.put('isAdmin', true);
+            }
+            
+            if(psa.PermissionSet.Name == 'Checklist_Genius_Standard_User_Permissions_Community' ){
+                permissions.put('isCommunity', true);
             }
         
         }
@@ -131,6 +136,9 @@ global with sharing class CheckListManagerDuc {
         List<Checklist__c> checklistRecords = new List<Checklist__c>();
         String query = 'Select Id, Name, CreatedById, OwnerId, Is_Checklist_Template_Locked__c, Checklist_Title__c, Is_Checklist_Locked__c, Percentage_Completion__c, Description__c,Due_Days__c, CreatedDate, Due_Date__c, Checklist_Template__c, Checklist_Template__r.IsLocked__c, Sequential__c,   (Select Id, Item__c, Item_Order__c, Checked__c,Description__c, CompletedBy__c, CompletedBy__r.Name, format(CompletedDate__c), Checklist__c From CheckList_Items__r order by Item_Order__c ASC )  From Checklist__c Where ';
         String fieldName = getRelatedFieldApiNameByRecordId(recordId);//'Account__c'; 
+        
+        
+        
         query += String.escapeSingleQuotes(fieldName) + ' = :recordId Order By Due_Date__c NULLS LAST';
         
         // system.debug('query : '+query);
@@ -247,7 +255,7 @@ global with sharing class CheckListManagerDuc {
     */
     public Static String getRelatedFieldApiNameByRecordId(String recordId){
         try{
-            return getRelatedFieldNameByObjectName(getSobjectName(recordId)).containsKey('fieldApiName') ? getRelatedFieldNameByObjectName(getSobjectName(recordId)).get('fieldApiName') : '';       
+            return getRelatedFieldNameByObjectName(getSobjectName(recordId)).containsKey('fieldApiName') ? (String) getRelatedFieldNameByObjectName(getSobjectName(recordId)).get('fieldApiName') : '';       
         }catch(Exception e){
             throw new AuraHandledException('Error while Fetching the Relationship field : '+e.getmessage());
         }
@@ -258,7 +266,7 @@ global with sharing class CheckListManagerDuc {
      * This method is returns the map of relation field api name, label, relatedObjectApiName, objectApiName with Checklist object
     */
     @AuraEnabled (cacheable = true)
-    public Static Map<String, String> getRelatedFieldNameByRecordId(String recordId){
+    public Static Map<String, object> getRelatedFieldNameByRecordId(String recordId){
         try{
             return getRelatedFieldNameByObjectName(getSobjectName(recordId));       
         }catch(Exception e){
@@ -280,9 +288,50 @@ global with sharing class CheckListManagerDuc {
      * @param objectName is apiName of any sObject
      * This method is returns the map of relation field api name, label, relatedObjectApiName, objectApiName with Checklist object 
     */
-    public Static Map<String, String> getRelatedFieldNameByObjectName(String objectName){
+    public Static Map<String, object> getRelatedFieldNameByObjectName(String objectName){
         String objName = Checklist__c.getSObjectType().getDescribe().getName();
-        return getRelationObjectField(objectName, objName);
+        
+        Map<String, object> RelatedField = new Map<String, object>{'label' => '', 'fieldApiName' => '',
+            'objectApiName' => 'kt_checklist__Checklist__c',
+            'relatedObjectApiName' => objectName,
+            'displayFieldinUI' => true
+            };
+                // if(specialObjects.contains(objectName.toUpperCase())){
+                //     RelatedField.put('label', 'Related To' );
+                //     RelatedField.put('fieldApiName', 'kt_checklist__Related_To_Id__c');
+                //     RelatedField.put('displayFieldinUI', false);
+                    
+                // }else{
+                //     RelatedField = getRelationObjectField(objectName, objName);
+                // }
+
+        
+
+        RelatedField = getRelationObjectField(objectName, objName);
+        if(!RelatedField.containsKey('fieldApiName') || 
+           (RelatedField.get('fieldApiName') != null && 
+            String.isBlank((String) RelatedField.get('fieldApiName')) ) ){
+                
+                List<Checklist_Relationship__mdt> ChecklistRelationships = new List<Checklist_Relationship__mdt>([Select Id, IsActive__c, Object_Name__c from Checklist_Relationship__mdt 
+                                                                                                                  Where Object_Name__c = :objectName AND IsActive__c = true]);
+                Checklist_Relationship__mdt ChecklistRelationship;
+                if(!ChecklistRelationships.isEmpty()){
+                    ChecklistRelationship = ChecklistRelationships[0];
+                }
+                
+            if(ChecklistRelationship  != null && ChecklistRelationship.Object_Name__c == objectName && ChecklistRelationship.IsActive__c == true){
+                RelatedField = new Map<String, object>{'label' => 'Related To', 
+                                                        'fieldApiName' => 'kt_checklist__Related_To_Id__c', 
+                                                        'objectApiName' => 'kt_checklist__Checklist__c', 
+                                                        'relatedObjectApiName' => objName,
+                                                        'displayFieldinUI' => false
+                                                        };
+           
+            }
+        }
+
+        // return getRelationObjectField(objectName, objName);
+        return RelatedField;
     }
     
     /*
@@ -359,7 +408,7 @@ global with sharing class CheckListManagerDuc {
      * This method is returns the inserted Checklist__c with Items.
     */
     @AuraEnabled
-    public Static Checklist__c saveChecklistAndItems(List<Checklist__c> ChecklistRecord, String Items){
+    public Static Checklist__c saveChecklistAndItems(String recordId, List<Checklist__c> ChecklistRecord, String Items){
         try{
             	
             Boolean CreateChecklistItemsInSystemMode = false;
@@ -372,8 +421,26 @@ global with sharing class CheckListManagerDuc {
                     }*/
                    
                     
+                    if(ChecklistRecord[0].Related_To_Id__c != null){
+                        String Name;
+                        String ObjName = getSobjectName(recordId);
+                        ObjectKeyField__mdt objectKeyFields = ObjectKeyField__mdt.getInstance(ObjName);
+                        String keyField = objectKeyFields != null ? objectKeyFields.Field_Name__c : 'Name';
+                        sObject rec = database.query('Select Id,' + keyField + ' From ' + ObjName + ' Where Id =:recordId', Accesslevel.USER_MODE);
+                        Name = (String) rec.get(keyField);
+                                    
+                        ChecklistRecord[0].Related_To_Object__c = ObjName;
+                        if(String.isNotBlank(Name)){
+                            ChecklistRecord[0].Related_To__c = Name;
+                        }else{
+                            ChecklistRecord[0].Related_To_Id__c = ChecklistRecord[0].Related_To_Id__c;
+                        }
+                    }
                     
                     if(ChecklistRecord[0].OwnerId != null && ChecklistRecord[0].OwnerId != Userinfo.getUserId()){
+                        CreateChecklistItemsInSystemMode = true;
+                        CheckListTriggerHandler.runDMLInSystemMode = true;
+                    }else if(Site.getSiteId() != null){
                         CreateChecklistItemsInSystemMode = true;
                         CheckListTriggerHandler.runDMLInSystemMode = true;
                     }
@@ -454,8 +521,14 @@ global with sharing class CheckListManagerDuc {
                 
                 insert as user checklistItems;
             }
-            Checklist__c checklist = [Select Id, Name, Is_Checklist_Template_Locked__c, Checklist_Title__c, Percentage_Completion__c, Description__c,Due_Days__c, CreatedDate, Due_Date__c, Checklist_Template__c, Checklist_Template__r.IsLocked__c, OwnerId, CreatedById, Sequential__c,   (Select Id, Item__c, Item_Order__c, Checked__c,Description__c, format(LastModifiedDate), Checklist__c, LastModifiedById, LastModifiedBy.Name From CheckList_Items__r order by Item_Order__c ASC )  From Checklist__c Where Id =: checklistId WITH USER_MODE];
+            
+            // Checklist__c checklist = [Select Id, Name, Is_Checklist_Template_Locked__c, Checklist_Title__c, Percentage_Completion__c, Description__c,Due_Days__c, CreatedDate, Due_Date__c, Checklist_Template__c, Checklist_Template__r.IsLocked__c, OwnerId, CreatedById, Sequential__c,   (Select Id, Item__c, Item_Order__c, Checked__c,Description__c, format(LastModifiedDate), Checklist__c, CompletedBy__c, CompletedBy__r.Name, format(CompletedDate__c) From CheckList_Items__r order by Item_Order__c ASC )  From Checklist__c Where Id =: checklistId WITH USER_MODE];
+            // return checklist;
+             
+            String query = 'Select Id, Name, Is_Checklist_Template_Locked__c, Checklist_Title__c, Percentage_Completion__c, Description__c,Due_Days__c, CreatedDate, Due_Date__c, Checklist_Template__c, Checklist_Template__r.IsLocked__c, OwnerId, CreatedById, Sequential__c,   (Select Id, Item__c, Item_Order__c, Checked__c,Description__c, format(LastModifiedDate), Checklist__c, CompletedBy__c, CompletedBy__r.Name, format(CompletedDate__c) From CheckList_Items__r order by Item_Order__c ASC )  From Checklist__c Where Id =: checklistId';
+            Checklist__c checklist = database.query(query, Accesslevel.USER_MODE);
             return checklist;
+            
         }catch(AuraHandledException  e){
             throw e;
         }catch(QueryException  e){
@@ -490,6 +563,102 @@ global with sharing class CheckListManagerDuc {
             if(!e.getmessage().contains('ENTITY_IS_DELETED')){
                throw new AuraHandledException(e.getmessage()); 
             }
+        }
+    }
+
+    /*
+     * @param checkListItemId is the record Id of a single item in a checklist
+     * Deleting the checklist item record & update item orders.
+    */
+    @AuraEnabled
+    public static void deleteChecklistItem(String checkListItemId, String checkListId){
+        try {
+            System.debug('***checkListId:'+checkListId);
+            if (String.isNotBlank(checkListItemId) && checkListItemId instanceof Id && String.isNotBlank(checkListId) && checkListId instanceof Id) {
+                System.debug('***befr query');
+                Checklist__c parentCL = [SELECT Id, Name, (SELECT Id, Item_Order__c FROM CheckList_Items__r ORDER BY Item_Order__c ASC) 
+                    FROM Checklist__c 
+                    WHERE Id =: checkListId 
+                    LIMIT 1
+                ];
+                System.debug('***parentCL:'+parentCL);
+                
+                if (parentCL == null || parentCL.CheckList_Items__r.isEmpty()) {
+                    throw new AuraHandledException('Checklist not found or has no items.');
+                }
+    
+                List<Checklist_Item__c> items = parentCL.CheckList_Items__r;
+                Checklist_Item__c itemToDelete;
+                
+                for (Checklist_Item__c item : items) {
+                    if (item.Id == checkListItemId) {
+                        itemToDelete = item;
+                        break;
+                    }
+                }
+    
+                if (itemToDelete == null) {
+                    throw new AuraHandledException('Checklist Item not found.');
+                }
+    
+                Integer deletedItemOrder = (Integer) itemToDelete.Item_Order__c;
+    
+                delete as user new Checklist_Item__c(id=checkListItemId);
+    
+                List<Checklist_Item__c> itemsToUpdate = new List<Checklist_Item__c>();
+    
+                for (Checklist_Item__c item : items) {
+                    if (item.Item_Order__c > deletedItemOrder) {
+                        // item.Item_Order__c = deletedItemOrder; 
+                        itemsToUpdate.add(new Checklist_Item__c(Id=item.Id, Item_Order__c=deletedItemOrder));
+                        system.debug('inside items loop..'+deletedItemOrder); 
+                        
+                        deletedItemOrder++;
+                    }
+                }
+    
+                if (!itemsToUpdate.isEmpty()) {
+                     database.update(itemsToUpdate, Accesslevel.USER_MODE);
+                }
+            }else{
+                system.debug('inside else.');
+                throw new AuraHandledException('Invalid Checklist Item Id '+checkListItemId);
+            }
+        }catch(AuraHandledException  e){
+            system.debug('inside catch 1');
+            throw e;
+        }catch(Exception e){
+            system.debug('***inside catch 2, e.getLinenumber():'+e.getLinenumber());
+            if(!e.getmessage().contains('ENTITY_IS_DELETED')){
+               throw new AuraHandledException(e.getmessage()); 
+            }
+        }
+    }
+
+
+    /*
+    * @param 
+    * Save the Item and it's description after editing it.
+    */
+    @AuraEnabled
+    public static Checklist_Item__c saveEditedItem(String itemId, String updatedItem, String updatedDesc){
+        
+        Checklist_Item__c checklistItem = new Checklist_Item__c();
+        checklistItem.Id = (Id) itemId;
+        checklistItem.kt_checklist__Item__c = updatedItem;
+        checklistItem.kt_checklist__Description__c = updatedDesc;
+
+        List<Checklist_Item__c> checklistItems = new List<Checklist_Item__c>{checklistItem};
+        
+        if(!checklistItems.isEmpty()){
+
+            update as user checklistItems;
+
+            String query = 'Select Id, Item__c, Item_Order__c, Checked__c, Description__c, CompletedBy__c, CompletedBy__r.Name, format(CompletedDate__c), Checklist__c From Checklist_Item__c Where Id =: itemId';
+            checklistItem = database.query(query, Accesslevel.USER_MODE);
+            return checklistItem;
+        }else{
+            return new Checklist_Item__c();
         }
     }
 }

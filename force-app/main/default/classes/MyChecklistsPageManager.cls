@@ -35,12 +35,22 @@ public with sharing class MyChecklistsPageManager {
                 }
             }
             
-            query += '(Select Id, Item__c, Item_Order__c, Checked__c, Description__c, format(LastModifiedDate), Checklist__c, LastModifiedById, LastModifiedBy.Name From CheckList_Items__r order by Item_Order__c ASC) '
-                + 'From Checklist__c WHERE OwnerId = :ownerId Order By Due_Date__c Asc';
+            Set<String> objects =  new Set<String>();
+            for(Checklist_Relationship__mdt cr : [Select Id, Object_Name__c From Checklist_Relationship__mdt Where IsActive__c = true]){
+                objects.add(cr.Object_Name__c);
+            }
+            
+            objects.add('');
+            
+            // Adding other Related Fields
+            query += 'Related_To_Id__c, Related_To_Object__c, Related_To__c, ';
+                        
+            query += '(Select Id, Item__c, Item_Order__c, Checked__c, Description__c From CheckList_Items__r order by Item_Order__c ASC) '
+                + 'From Checklist__c WHERE OwnerId = :ownerId AND Related_To_Object__c IN: objects Order By Due_Date__c Asc';
             
             // System.debug('**Query:'+query);
             
-            List<Checklist__c> checklistRecords = Database.queryWithBinds(query, new Map<String, Object>{'ownerId' => userId}, Accesslevel.USER_MODE);
+            List<Checklist__c> checklistRecords = Database.queryWithBinds(query, new Map<String, Object>{'ownerId' => userId, 'objects' => objects}, Accesslevel.USER_MODE);
             
             // System.debug('**checklistRecords:'+checklistRecords);
             
@@ -95,6 +105,10 @@ public with sharing class MyChecklistsPageManager {
      * @return: Map<String, String>
      * @param: objectApiName
     */
+    
+    /*
+     * Migrated the logic to fetchIcons
+     * 
     @AuraEnabled (cacheable = true)
     public static Map<String, String> getRelationObjectIconFieldMap(String objectApiName){
         Map<String, String> relationshipFields = new Map<String, String>();
@@ -109,6 +123,60 @@ public with sharing class MyChecklistsPageManager {
             }
         }
         return relationshipFields;
+    }
+    */
+    
+    private static Map<String, String> getRelationObjectFieldMap(String objectApiName){
+        Map<String, String> relationshipFields = new Map<String, String>();
+        Schema.DescribeSObjectResult testObjectDescribe = Schema.getGlobalDescribe().get(objectApiName).getDescribe();
+        List<Schema.SObjectField> fields = testObjectDescribe.fields.getMap().values();
+        for (Schema.SObjectField field : fields) {
+            if (field.getDescribe().isCustom() && field.getDescribe().getType() == Schema.DisplayType.REFERENCE && !field.getDescribe().isNamePointing() ) {
+                String relatedObjectName = field.getDescribe().getReferenceTo()[0].getDescribe().getName();
+                
+                relationshipFields.put(field.getDescribe().getName(), relatedObjectName);
+            }
+        }
+        return relationshipFields;
+    }
+    
+    @AuraEnabled (cacheable = true)
+    public static Map<String, String> fetchIcons(List<String> sObjectTypes, String objectApiName){        
+        Map<String, String> relationshipFields = getRelationObjectFieldMap(objectApiName);
+        /*
+        List<String> objectNames = new List<String>();
+        objectNames = relationshipFields.values();
+        String checklistObejctId = '01IHu000003GFE6';
+        
+        for(FieldDefinition field : [SELECT DurableId, DataType, DeveloperName, ReferenceTo, IsSearchPrefilterable  from FieldDefinition where  EntityDefinitionId =:checklistObejctId and  IsSearchPrefilterable  = true]){
+            system.debug('field.ReferenceTo'+field.ReferenceTo);
+        }
+		*/
+        for(String obj : sObjectTypes){
+            relationshipFields.put(obj, obj);
+        }
+        
+        Map<String, String> relationshipIcons = new Map<String, String>();
+        Map<String, String> objIconMap = new Map<String, String>();
+        for(TabDefinition tab : [SELECT DurableId, IsCustom, SobjectName, (Select Id, url from Icons where ContentType = 'image/svg+xml') from TabDefinition where SobjectName IN :relationshipFields.values() WITH SYSTEM_MODE]){
+            String url = !tab.Icons.isEmpty() ? tab.Icons[0].url : ''; 
+            
+            if(tab.IsCustom){
+                url = 'custom:' + url.substringBetween('custom/','.svg');
+            }else{
+                url = 'standard:' + url.substringBetween('standard/','.svg');
+            }
+            objIconMap.put(tab.SobjectName, url);
+        }
+        
+        for(String field :  relationshipFields.keySet()){
+            String objName = relationshipFields.get(field);
+            String iconUrl = objIconMap.containsKey(objName) ? objIconMap.get(objName) : '';
+            if(String.isNotBlank(iconUrl)){
+                relationshipIcons.put(field, iconUrl);
+            }
+        }
+        return relationshipIcons;
     }
     
     /*
@@ -147,6 +215,7 @@ public with sharing class MyChecklistsPageManager {
     }
 */
   // Updated to below 
+    /*Migrated the logic to fetchIcons
     @AuraEnabled 
     public static String getIconName(String sobjectApiName){
         String iconName;
@@ -174,7 +243,7 @@ public with sharing class MyChecklistsPageManager {
                     iconName = 'custom:' + ir.getUrl().substringBetween('custom/','.svg').substringBefore('_');
                     break;
                 }else{
-                    iconName = 'standard:' + ir.getUrl().substringBetween('standard/','.svg').substringBefore('_');
+                    iconName = 'standard:' + ir.getUrl().substringBetween('standard/','.svg');
                     break;
                 }
                 
@@ -182,7 +251,7 @@ public with sharing class MyChecklistsPageManager {
         }
         return iconName;
     }
-    
+    */
     
     public class FieldNamesWrapper {
         /**

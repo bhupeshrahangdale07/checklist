@@ -84,12 +84,13 @@ public class CheckListManagerTest {
         
         // false test
         try{
-            CheckListManager.saveChecklistAndItems(new List<Checklist__c>{new Checklist__c(Checklist_Title__c='test')}, '{Item__c="Test"}');
+            CheckListManager.saveChecklistAndItems([Select id from Account limit 1][0].Id, new List<Checklist__c>{new Checklist__c(Checklist_Title__c='test')}, '{Item__c="Test"}');
         }catch(exception e){
             system.debug('91 ---- '+e.getMessage());
         }
         
-        CheckListManager.saveChecklistAndItems(new List<Checklist__c>{new Checklist__c(Checklist_Title__c='test')}, JSON.serialize(new List<Checklist_Item__c>{new Checklist_Item__c(Item__c='Test')}));
+        CheckListManager.saveChecklistAndItems([Select id from Account limit 1][0].Id, new List<Checklist__c>{new Checklist__c(Checklist_Title__c='test')}, JSON.serialize(new List<Checklist_Item__c>{new Checklist_Item__c(Item__c='Test')}));
+        CheckListManager.saveChecklistAndItems([Select id from Account limit 1][0].Id, new List<Checklist__c>{new Checklist__c(Checklist_Title__c='test', Related_To_Id__c=[Select id from Account limit 1][0].Id)}, JSON.serialize(new List<Checklist_Item__c>{new Checklist_Item__c(Item__c='Test')}));
         Test.stopTest();
         
         Checklist_Item__c updatedItem = [SELECT Checked__c FROM Checklist_Item__c WHERE Id =: ci.Id];
@@ -100,7 +101,7 @@ public class CheckListManagerTest {
     public static void getRelatedFieldNameByRecordId_Test(){
         Account acc = [Select id from Account limit 1];
         Test.startTest();
-        Map<String, String> fieldMap = CheckListManager.getRelatedFieldNameByRecordId(acc.Id);
+        Map<String, Object> fieldMap = CheckListManager.getRelatedFieldNameByRecordId(acc.Id);
         Test.stopTest();
         
         System.assertNotEquals(0, fieldMap.size(), 'No related field information found');
@@ -224,7 +225,7 @@ public class CheckListManagerTest {
 
         Test.startTest();
 
-        CheckListManager.saveChecklistAndItems(new List<Checklist__c>{new Checklist__c(Checklist_Title__c='test', OwnerId=usr.id, Checklist_Template__c = ct.id)}, JSON.serialize(new List<Checklist_Item__c>{new Checklist_Item__c(Item__c='Test')}));
+        CheckListManager.saveChecklistAndItems([Select id from Account limit 1][0].Id, new List<Checklist__c>{new Checklist__c(Checklist_Title__c='test', OwnerId=usr.id, Checklist_Template__c = ct.id)}, JSON.serialize(new List<Checklist_Item__c>{new Checklist_Item__c(Item__c='Test')}));
         Test.stopTest();
         
         System.assertEquals(true, CheckListTriggerHandler.runDMLInSystemMode, 'System Mode not activated');

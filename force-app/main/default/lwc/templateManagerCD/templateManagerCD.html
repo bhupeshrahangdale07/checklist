@@ -1,0 +1,484 @@
+<!-- sldsValidatorIgnore -->
+<template>
+    <template if:false={editItemForMobile}>
+        <div class="kt_checklist__template template-container slds-card">
+            <div class="slds-card" style="border-bottom: none;">
+                <header class="slds-card__header slds-text-heading_medium slds-text-align_center">
+                    {headerTitle}
+                </header>
+
+                <div class="kt_checklist">
+                    <div lwc:if={showWarning} class="slds-alert_warning slds-notify_alert"
+                        style="background-image:none;" role="alert">
+                        <lightning-icon icon-name="utility:warning" alternative-text="Warning!" title="Warning">
+                        </lightning-icon>
+                        <h2>
+                            {warning}
+                        </h2>
+                        <div class="slds-notify__close">
+                            <lightning-button-icon icon-name="utility:close" alternative-text="close" title="Close"
+                                onclick={closeWarning}></lightning-button-icon>
+                        </div>
+                    </div>
+                    
+                    <lightning-quick-action-panel class="">
+                        <lightning-record-edit-form object-api-name='kt_checklist__Checklist_Template__c'
+                            record-id={recordId} onload={handleOnLoad} onsuccess={handleSuccess}
+                            onsubmit={handleSubmit}>
+                            <lightning-messages> </lightning-messages>
+                            <div class="slds-grid slds-gutters mobDevice">
+
+                                <template if:true={showfirstCmp}>
+                                    <div class={dynamicClasses} style={dynamicStyle}>
+                                        <div class=" slds-text-align_center slds-p-bottom_small">
+                                            <p class="slds-text-heading_small">Template Details</p>
+                                            <p class="slds-text-body_medium">Enter the basic details of the Template.
+                                            </p>
+                                        </div>
+                                        <div style="">
+                                            <lightning-layout multiple-rows class="kt_checklist__add-item-form ">
+                                                <lightning-layout-item flexibility="auto" size="12"
+                                                    class="slds-align_absolute-center slds-form-element__label">
+                                                    <!-- <lightning-input-field field-name="Name" style="font-weight: normal;" required> </lightning-input-field> -->
+                                                    <lightning-input type="text" label="Name" value={nameValue}
+                                                        data-fieldname="Name" max-length='255' required="true"
+                                                        onchange={handleInputChange} onkeypress={handleKeyPress}
+                                                        style="font-weight: normal; width: 100%;"></lightning-input>
+                                                </lightning-layout-item>
+                                                <lightning-layout-item flexibility="auto" size="12"
+                                                    class="slds-align_absolute-center slds-form-element__label">
+                                                    <lightning-input type="Number" label="Due Days" value={dueDaysValue}
+                                                        onchange={handleInputChange}
+                                                        field-level-help="Number of days a checklist of this template is due from the date of creation."
+                                                        data-fieldname={dueDaysField.fieldApiName} min="0" max="9999"
+                                                        required="true" onkeypress={handleKeyPress}
+                                                        style="font-weight: normal; width: 100%; "
+                                                        class="helptext-icon">
+
+                                                    </lightning-input>
+                                                    <!--  <lightning-input-field field-name="kt_checklist__Due_Days__c" required min="0" style="font-weight: normal;"> </lightning-input-field> -->
+                                                </lightning-layout-item>
+                                                <lightning-layout-item flexibility="auto" size="12">
+                                                    <label
+                                                        style="color:#181818; font-size:14px; line-height:32px; font-weight:500;"
+                                                        class="centerAlighment slds-no-flex">Description
+                                                    </label>
+                                                    <lightning-input-field variant="label-hidden"
+                                                        value={descriptionValue} onchange={handleInputChange}
+                                                        field-name="kt_checklist__Description__c"
+                                                        data-name="kt_checklist__Description__c"
+                                                        style="font-weight: normal;"> </lightning-input-field>
+                                                </lightning-layout-item>
+                                                <div class="slds-grid slds-wrap  slds-p-right_small"
+                                                    style="padding-left: 6px; width:max-content; align-items: center; justify-content: left; width: 100%;">
+                                                    <lightning-layout-item flexibility="auto" size="12">
+                                                        <div class="toggle-colourhook slds-form-element slds-grid">
+                                                            <label for="togglevalue1" class="slds-form-element__label">
+                                                                Locked
+                                                            </label>
+                                                            <div class="slds-form-element__icon">
+                                                                <lightning-helptext class="helptext-icon"
+                                                                    slot="assistive-text"
+                                                                    content="If the Template is locked, a checklist of this template can not be added with more items.">
+                                                                </lightning-helptext>
+                                                            </div>
+
+                                                            <div class="slds-form-element__control"
+                                                                style="align-content: center;">
+                                                                <lightning-input id="togglevalue1" type="toggle"
+                                                                    onchange={handleToggle} name="togglevalue1"
+                                                                    checked={isLocked} message-toggle-active=""
+                                                                    message-toggle-inactive="" title="">
+                                                                </lightning-input>
+                                                            </div>
+                                                        </div>
+                                                    </lightning-layout-item>
+                                                    <lightning-layout-item flexibility="auto" size="7"
+                                                        class="slds-col slds-size_7-of-12 slds-text-align_left slds-p-left_large slds-form-element__label notinclude">
+                                                        <!-- <div class="toggle-container toggle-colourhook" style="display: flex; align-items: center;">
+                                                <label for="togglevalue2" class="centerAlighment"  style="min-width: 70px;">Active
+                                                    <lightning-helptext class="helptext-icon" slot="assistive-text" content="When Template is Active, the Template is available for Checklist creation.">
+                                                    </lightning-helptext>
+                                                </label>
+                                                <lightning-input type="toggle" onchange={handleToggle} message-toggle-active="" name="togglevalue2" checked={isActive} message-toggle-inactive="" title=""></lightning-input>
+                                            </div> -->
+
+                                                        <div class="toggle-colourhook slds-form-element slds-grid">
+                                                            <label for="togglevalue2" class="slds-form-element__label">
+                                                                Active
+                                                            </label>
+                                                            <div class="slds-form-element__icon">
+                                                                <lightning-helptext class="kt_checklist___helptext-icon"
+                                                                    slot="assistive-text"
+                                                                    content="When Template is Active, the Template is available for Checklist creation.">
+                                                                </lightning-helptext>
+                                                            </div>
+
+                                                            <div class="slds-form-element__control"
+                                                                style="align-content: center;">
+                                                                <lightning-input type="toggle" onchange={handleToggle}
+                                                                    message-toggle-active="" id="togglevalue2"
+                                                                    name="togglevalue2" checked={isActive}
+                                                                    message-toggle-inactive="" title="">
+                                                                </lightning-input>
+                                                            </div>
+                                                        </div>
+
+                                                    </lightning-layout-item>
+                                                    <lightning-layout-item flexibility="auto" size="7"
+                                                        class="slds-col slds-size_7-of-12 slds-text-align_left slds-p-left_large slds-form-element__label notinclude">
+                                                        <!--
+                                                        <div class="toggle-container toggle-colourhook" style="display: flex; white-space: nowrap; align-items: center;">
+                                                            <label for="togglevalue3" class="centerAlighment"  style="min-width: 70px;">Sequential
+                                                                <lightning-helptext class="helptext-icon" slot="assistive-text" content="When you make a Checklist Template sequential, it's checklists' items must be completed in order.">
+                                                                </lightning-helptext>
+                                                            </label>
+                                                            <lightning-input type="toggle" onchange={handleToggle} message-toggle-active="" name="togglevalue3" checked={isSequential} message-toggle-inactive="" title=""></lightning-input>
+                                                        </div> -->
+                                                    
+                                                        <div class="toggle-colourhook slds-form-element slds-grid" >
+                                                            <label for="togglevalue3" class="slds-form-element__label" >
+                                                                Sequential
+                                                            </label>
+                                                            <div class="slds-form-element__icon">
+                                                                <lightning-helptext class="helptext-icon" slot="assistive-text" content="When you make a Checklist Template sequential, it's checklists' items must be completed in order.">
+                                                                </lightning-helptext>
+                                                            </div>
+                                                            
+                                                            <div class="slds-form-element__control" style="align-content: center;">
+                                                                <lightning-input type="toggle" onchange={handleToggle} message-toggle-active="" id="togglevalue3" name="togglevalue3" checked={isSequential} message-toggle-inactive="" title=""></lightning-input>
+                                                            </div>
+                                                        </div>
+                                                    </lightning-layout-item>
+
+                                                    <template lwc:if={editForm}>
+                                                        <div class="slds-col slds-size_12-of-12 slds-p-top_x-small slds-p-bottom_xx-small"
+                                                            style="">
+                                                            <div class="slds-border_bottom"></div>
+                                                        </div>
+
+                                                        <lightning-layout-item flexibility="auto" size="7"
+                                                            class="slds-col slds-size_7-of-12 slds-form-element__label">
+                                                            <div class="slds-text-align_left slds-grid slds-grid_align-spread slds-p-around_none"
+                                                                style="line-height: 2.1;">
+                                                                <div class="slds-grid slds-grid_vertical-align-center">
+                                                                    <span class="slds-m-right_xx-small">Template Used
+                                                                        Count:</span>
+                                                                    <lightning-output-field title="Template Used Count"
+                                                                        field-name="kt_checklist__Template_Used_Count__c"
+                                                                        class="slds-p-around_none"
+                                                                        variant="label-hidden">
+                                                                    </lightning-output-field>
+                                                                </div>
+                                                            </div>
+                                                        </lightning-layout-item>
+
+                                                        <lightning-layout-item flexibility="auto" size="5"
+                                                            class="slds-col slds-size_6-of-12 slds-form-element__label fullWidthCls"
+                                                            style="line-height: 1.5;">
+                                                            <span>Created By: </span>
+                                                            <div
+                                                                class="slds-text-align_left slds-grid slds-grid_vertical-align-center">
+                                                                <lightning-output-field title="Created By"
+                                                                    field-name="CreatedById" variant="label-hidden"
+                                                                    class="slds-m-bottom_none slds-p-around_none outputField">
+                                                                </lightning-output-field>
+                                                                <span class="slds-m-right_xx-small outputField">,</span>
+                                                                <lightning-output-field title="Created Date"
+                                                                    field-name="CreatedDate" variant="label-hidden"
+                                                                    class="slds-m-bottom_none slds-p-around_none outputField">
+                                                                </lightning-output-field>
+                                                            </div>
+                                                        </lightning-layout-item>
+
+                                                        <lightning-layout-item flexibility="auto" size="5"
+                                                            class="slds-col slds-size_6-of-12 slds-form-element__label fullWidthCls marginTop"
+                                                            style="line-height: 1.5;">
+                                                            <span>Last Modified By: </span>
+                                                            <div
+                                                                class="slds-text-align_left slds-grid slds-grid_vertical-align-center">
+                                                                <lightning-output-field title="Last Modified By"
+                                                                    field-name="LastModifiedById" variant="label-hidden"
+                                                                    class="slds-m-bottom_none slds-p-around_none outputField">
+                                                                </lightning-output-field>
+                                                                <span class="slds-m-right_xx-small outputField">,</span>
+                                                                <lightning-output-field title="Last Modified Date"
+                                                                    field-name="LastModifiedDate" variant="label-hidden"
+                                                                    class="slds-m-bottom_none slds-p-around_none outputField">
+                                                                </lightning-output-field>
+                                                            </div>
+
+                                                        </lightning-layout-item>
+                                                    </template>
+                                                </div>
+                                                <div class="slds-text-align_center slds-align_absolute-center slds-m-top_medium "
+                                                    if:true={isMobile}>
+                                                    <lightning-button label="Manage Items" name="Next" variant="brand"
+                                                        onclick={onNextClick}></lightning-button>
+                                                    <lightning-button
+                                                        class="slds-m-left_medium button-cancel-widthhook button-heighthook paddingClass"
+                                                        variant="neutral" onclick={hideModalBox} label="Cancel">
+                                                    </lightning-button>
+                                                </div>
+
+                                            </lightning-layout>
+                                        </div>
+                                    </div>
+                                </template>
+                                <template if:true={showSecondCmp}>
+                                    <div class={dynamicClasses} style="">
+                                        <div class="slds-text-align_center slds-p-bottom_small">
+                                            <p class="slds-text-heading_small">Template Items </p>
+                                            <p class="slds-text-body_medium">Add/edit/delete the Items of the Template
+                                                here. Atleast one Item is required.</p>
+                                        </div>
+                                        <!-- CheckList Template Items -->
+                                        <div
+                                            class="kt_checklist__add-item-form slds-var-m-top_small slds-var-m-left_large slds-var-m-right_large toRemoveClass">
+                                            <table width="50%" class="table-dragable slds-table slds-table_cell-buffer "
+                                                style="border-collapse: separate; border-spacing: 0 15px;">
+                                                <thead class="">
+                                                    <!-- <tr >
+                                            <td>
+                                                <lightning-button-icon icon-name="utility:add"  variant="inverse" title="Add Item" size="small" alternative-text="Add"  onclick={handleRowAction} class="slds-m-left_xx-small" ></lightning-button-icon>
+                                            </td>
+                                            </tr> -->
+                                                </thead>
+                                                <tbody>
+                                                    <template for:each={templateItems} for:item="item"
+                                                        for:index="index">
+                                                        <tr id={item.kt_checklist__Item_Order__c}
+                                                            key={item.kt_checklist__Item_Order__c} draggable="true"
+                                                            ondragstart={DragStart} ondragover={DragOver} ondrop={Drop}
+                                                            data-key={item.kt_checklist__Item_Order__c}
+                                                            data-rowindex={index} class="" style="">
+                                                            <td class="target-td" width="10%"
+                                                                style="border-left:1px solid rgb(0,0,0,0.1); border-top:1px solid rgb(0,0,0,0.1); border-bottom:1px solid rgb(0,0,0,0.1); border-radius: 8px 0 0 8px;"
+                                                                if:false={isMobile}>
+                                                                <lightning-icon icon-name="utility:drag_and_drop"
+                                                                    alternative-text="Reorder" title="Reorder"
+                                                                    class="slds-m-left_xx-small slds-is-draggable">
+                                                                </lightning-icon>
+                                                            </td>
+                                                            <td class="target-td2" width="80%"
+                                                                style=" border-top:1px solid rgb(0,0,0,0.1); border-bottom:1px solid rgb(0,0,0,0.1);">
+                                                                <div class="slds-p-around_xxx-small input-field-wrapper"
+                                                                    style=" width:100%; margin:0;">
+                                                                    <lightning-input type="text" data-rowindex={index}
+                                                                        label="kt_checklist__Item__c" max-length="255"
+                                                                        variant="label-hidden"
+                                                                        value={item.kt_checklist__Item__c}
+                                                                        onchange={handleItemChange} required="true"
+                                                                        placeholder="Type Item here..."
+                                                                        class="my-custom-input"
+                                                                        style="white-space: normal; overflow: auto; min-width: 50px; "
+                                                                        data-focus={isInputFocused}
+                                                                        onfocus={handleInputFocus}
+                                                                        onblur={handleInputBlur}> </lightning-input>
+                                                                    <template lwc:if={item.showDuplicateMessage}>
+                                                                        <div class="duplicate-message slds-balloon slds-balloon_small slds-theme_warning"
+                                                                            role="alert">
+                                                                            <span class="slds-balloon__content">
+                                                                                <span
+                                                                                    class="slds-text-body_small">Duplicate
+                                                                                    item found. </span>
+                                                                            <lightning-button-icon
+                                                                                icon-name="utility:close"
+                                                                                alternative-text="Close"
+                                                                                onclick={handleCloseDuplicateMessage}
+                                                                                data-rowindex={index}
+                                                                                class="slds-balloon__dismiss"
+                                                                                style="color: red; font-size: 0.75rem; line-height: 0.6;">
+                                                                            </lightning-button-icon>
+                                                                            </span>
+                                                                        </div>
+                                                                    </template>
+                                                                </div>
+                                                                <div class="slds-p-around_xxx-small"
+                                                                    style="width:100%; margin:0;">
+                                                                    <lightning-textarea
+                                                                        name="kt_checklist__Description__c"
+                                                                        data-rowindex={index}
+                                                                        label="kt_checklist__Description__c"
+                                                                        max-length="255"
+                                                                        placeholder="Type Description here..."
+                                                                        variant="label-hidden"
+                                                                        value={item.kt_checklist__Description__c}
+                                                                        onchange={handleItemChange}
+                                                                        class="my-custom-input"></lightning-textarea>
+                                                                </div>
+                                                            </td>
+                                                            <td class="target-td target-td1" width="10%"
+                                                                style="border-top:1px solid rgb(0,0,0,0.1); border-bottom:1px solid rgb(0,0,0,0.1); border-right:1px solid rgb(0,0,0,0.1);  border-radius: 0 8px 8px 0;">
+                                                                <lightning-button-icon icon-name="utility:delete"
+                                                                    variant="destructive" alternative-text="Delete"
+                                                                    data-rowindex={index} onclick={handleRowAction}
+                                                                    class="slds-m-left_xx-small" title="Delete">
+                                                                </lightning-button-icon>
+                                                            </td>
+                                                        </tr>
+                                                    </template>
+                                                </tbody>
+                                            </table>
+                                            <lightning-button lwc:if={hasAdminPermission} icon-name="utility:add"
+                                                id="addItemButton"
+                                                class="kt_checklist__button button-colourhook slds-button changeButton paddingClass"
+                                                variant="brand" label="Add Item" onclick={handleRowAction} style="">
+                                            </lightning-button>
+                                            <template lwc:if={editForm}>
+                                            </template>
+                                        </div>
+                                        <!--
+                                <div class="slds-text-align_center slds-m-top_medium ">
+                                    <lightning-input-field field-name="CreatedById"  style="font-weight: normal;"> </lightning-input-field>
+                                    <lightning-input-field field-name="LastModifiedById"  style="font-weight: normal;"> </lightning-input-field>
+                                    <lightning-formatted-text label="Last Modified By" value={lastModBy} field='LastModifiedById'></lightning-formatted-text>
+                                    <lightning-formatted-text label="Created By" value={createdBy} field='CreatedById'></lightning-formatted-text>
+                                </div>
+                                -->
+                                    </div>
+                                </template>
+                            </div>
+                            <template if:false={isMobile}>
+                                <div class="slds-text-align_center slds-m-top_medium ">
+                                    <lightning-button lwc:if={hasAdminPermission}
+                                        class="button-colourhook button-save-widthhook button-heighthook changeButton paddingClass"
+                                        variant="brand" type="submit" label="Save" style=" ">
+                                    </lightning-button>
+                                    <!-- <button style={btnStyle} class="kt_checklist__button slds-button slds-button_brand slds-p-vertical_xx-small slds-p-horizontal_x-small">
+                            Save
+                        </button> -->
+                                    <!--button class="btn-cancel slds-button slds-button_neutral" onclick={hideModalBox}>Cancel</button-->
+                                    <lightning-button
+                                        class="slds-m-left_medium button-cancel-widthhook button-heighthook paddingClass"
+                                        variant="neutral" onclick={hideModalBox} label="Cancel" style="">
+                                    </lightning-button>
+                                    <!-- <button style={btnStyle} class="btn-neutral slds-button slds-button_neutral slds-p-vertical_xx-small slds-p-horizontal_x-small">
+                            Cancel
+                        </button> -->
+                                </div>
+                            </template>
+                            <template if:true={showPerviousBtn}>
+                                <div class="slds-text-align_center slds-m-top_medium ">
+                                    <lightning-button class="slds-m-right_small" label="Previous" name="Previous"
+                                        ariant="brand-outline" onclick={onPreviousClick}></lightning-button>
+                                    <lightning-button lwc:if={hasAdminPermission}
+                                        class="button-colourhook button-save-widthhook button-heighthook changeButton paddingClass"
+                                        variant="brand" type="submit" label="Save" style=" ">
+                                    </lightning-button>
+                                    <!-- <button style={btnStyle} class="kt_checklist__button slds-button slds-button_brand slds-p-vertical_xx-small slds-p-horizontal_x-small">
+                            Save
+                        </button> -->
+                                    <!--button class="btn-cancel slds-button slds-button_neutral" onclick={hideModalBox}>Cancel</button-->
+                                    <lightning-button
+                                        class="slds-m-left_medium button-cancel-widthhook button-heighthook paddingClass"
+                                        variant="neutral" onclick={hideModalBox} label="Cancel" style="">
+                                    </lightning-button>
+                                    <!-- <button style={btnStyle} class="btn-neutral slds-button slds-button_neutral slds-p-vertical_xx-small slds-p-horizontal_x-small">
+                            Cancel
+                        </button> -->
+                                </div>
+                            </template>
+                        </lightning-record-edit-form>
+                    </lightning-quick-action-panel>
+                </div>
+            </div>
+
+            <template lwc:if={askToupdateRelatedOpenChecklists}>
+                <template if:false={isMobile}>
+                    <section role="dialog" tabindex="-1" aria-labelledby="Template Manager" aria-modal="true"
+                        aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                        <div class="slds-modal__container">
+                            <!-- modal header start -->
+                            <header class="slds-modal__header">
+                                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                                    title="Close" onclick={closeAskToupdateRelatedOpenChecklists}>
+                                    <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse"
+                                        size="small"></lightning-icon>
+                                    <span class="slds-assistive-text">Close</span>
+                                </button>
+                                <h2 id="header" class="slds-text-heading_medium slds-hyphenate">
+                                    Template Manager
+                                </h2>
+                            </header>
+
+                            <!-- modal body start -->
+                            <div class="slds-modal__content slds-p-around_medium" id="modalbody">
+                                <div class="popupBody">
+                                    <p>Selecting this option will apply changes to all open checklists derived from this
+                                        template.</p>
+                                    <lightning-input type="checkbox"
+                                        label="Update Existing Open Checklists using this Template?" field-level-help=""
+                                        title="Selecting this option will apply changes to all open checklists derived from this template."
+                                        value={updateRelatedOpenChecklist} onchange={handleupdateRelatedOpenChecklist}>
+                                    </lightning-input>
+                                </div>
+                            </div>
+
+                            <!-- modal footer start-->
+                            <footer class="slds-modal__footer">
+                                <button class="slds-button slds-button_brand" onclick={handleSave}>Save</button>
+                            </footer>
+
+                        </div>
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open"></div>
+                </template>
+            </template>
+
+            <!-- <c-modal-pop-up show-modal={askToupdateRelatedOpenChecklists} enable-header="true"
+                        onclose={closePopup}>
+            <div slot="header">
+                <h2 slot="header" id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+                    Checklist Template
+                </h2>
+            </div>
+            <div slot="body">
+                <div class="alignCenter">
+                    <lightning-input type="checkbox" label="Update Existing Open Checklists using this Template?" field-level-help="Selecting this option will apply changes to all open checklists derived from this template." ></lightning-input>
+                </div>
+            </div>
+        </c-modal-pop-up> -->
+
+
+
+        </div>
+    </template>
+    <template if:true={isMobile}>
+        <template if:true={editItemForMobile}>
+            <template if:true={askToupdateRelatedOpenChecklists}>
+
+                <div class="page-container">
+                    <div class="centered-box">
+                        <!-- Header -->
+                        <div class="box-header">
+                            <h2 class="slds-text-heading_medium">Template Manager</h2>
+                        </div>
+
+                        <!-- Body -->
+                        <div class="box-body">
+                            <p>
+                                Selecting this option will apply changes to all open checklists derived from this
+                                template.
+                            </p>
+                            <lightning-input class="slds-m-top_small" type="checkbox"
+                                label="Update Existing Open Checklists using this Template?"
+                                title="Selecting this option will apply changes to all open checklists derived from this template."
+                                value={updateRelatedOpenChecklist} onchange={handleupdateRelatedOpenChecklist}>
+                            </lightning-input>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="box-footer">
+                            <lightning-button label="Cancel" title="Cancel" variant="Neutral"
+                                onclick={cancelTemplateManager} class="slds-m-right_medium">
+                            </lightning-button>
+                            <lightning-button label="Save" title="Save" variant="brand" onclick={handleSave}>
+                            </lightning-button>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </template>
+    </template>
+</template>

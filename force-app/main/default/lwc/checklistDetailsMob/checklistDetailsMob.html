@@ -1,0 +1,233 @@
+<template>
+    <!-- Accordion -->
+    <div class="slds-card Accordion-index">
+
+        <ul lwc:if={checkListData} class="slds-accordion">
+            <template for:each={checkListData} for:item="CheckL" for:index="checklistIndex">
+                <li class="slds-accordion__list-item" key={CheckL.Id} style="border-top: 0;">
+                    <section class="slds-accordion__section slds-is-open slds-var-m-bottom_small"  data-checklistid={CheckL.Id} style="background-color: #f4f4f4; border-radius: 8px; margin-bottom: 10px;">
+                        <!-- slds-var-m-bottom_medium"> -->
+
+                        <div class="slds-accordion__summary slds-grid_align-spread ">
+                            <h2 class="slds-accordion__summary-heading">
+                                <div style="display: flex; width: 100%;">
+                                    <div style="flex: 3;">
+                                        <span class="slds-accordion__summary-content  slds-text-title_bold">
+                                            <!-- Project Checklist -->
+                                            {CheckL.kt_checklist__Checklist_Title__c}
+                                        </span>
+                                    </div>
+                                    <div style="flex: 2;">
+                                            <span class="slds-accordion__summary-content clr-blue slds-text-title_regular">
+                                                <!-- Due Date-08-09-2023 -->
+                                                <!-- Due: {CheckL.finalDueDate} -->
+                                                <span lwc:if={CheckL.kt_checklist__Due_Days__c} class={CheckL.dueColour}>
+                                                    Due: {CheckL.finalDueDate}
+                                                </span>
+                                                </span>
+                                                &nbsp;&nbsp;&nbsp;
+                                    </div>
+                                    <div style="flex: 0.5;">
+                                    <lightning-progress-ring slot="actions" value={CheckL.kt_checklist__Percentage_Completion__c} variant={CheckL.kt_checklist__progressRingVariant} size="medium">
+                                            </lightning-progress-ring>
+                                    </div>
+                                    <div style="flex: 0.5;">
+                                        <button onclick={handleAccordian} data-checklistid={CheckL.Id} 
+                                            class="slds-button slds-button_reset slds-accordion__summary-action slds-grid_align-end"
+                                            aria-expanded="true" title="Accordion summary">    
+                                            <svg class="chevron slds-accordion__summary-action-icon slds-button__icon slds-button__icon_right slds-button_icon-border dark accordion-icon slds-m-left_small"
+                                                aria-hidden="true">
+                                                <use xlink:href={accordion_ICON}></use>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div> 
+                            </h2>
+
+                        </div>
+
+                        <!-- progress-bar -->
+                        <!-- 
+                        <div class="progress-bar">
+                            <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center"
+                                id="progress-bar-label-id-3">
+
+
+                                <div class="slds-progress-bar slds-progress-bar_medium slds-progress-bar_circular"
+                                    aria-valuemin="0" aria-valuemax="70" aria-valuenow="25"
+                                    aria-labelledby="progress-bar-label-id-3"
+                                    aria-label="Placeholder for description of progress bar" role="progressbar">
+
+                                    <span class="slds-progress-bar__value slds-progress-bar__value_success"
+                                        style={CheckL.ProgressbarPercentage}>
+                                    </span>
+
+
+                                </div>
+                                <span aria-hidden="true" class="g-txt">
+                                    <strong>
+                                         75% 
+                                        {CheckL.Percentage_Completion__c}%
+                                    </strong>
+                                </span>
+
+                            </div>
+                        </div> -->
+                        <!-- bar end -->
+
+                        <div class="slds-accordion__content" >
+                            <p class="clr-light">
+                                <!-- {CheckL.Description__c}  -->
+                                <template lwc:if={CheckL.kt_checklist__Description__c}>
+                                    <c-description-display description={CheckL.kt_checklist__Description__c}></c-description-display>
+                                </template>
+                                <!-- Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                            Lorem
+                            Ipsum has been the industry's standard dummy text ever since the...<strong>More
+                                info.</strong> -->
+
+                            </p>
+
+
+                            <!-- Items loop should start from here -->
+                            <template for:each={CheckL.kt_checklist__Checklist_Items__r} for:item="Item" for:index="itemIndex">
+                                <div key={Item.Id}
+                                    class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center slds-var-m-bottom_small">
+                                    <!-- slds-var-m-top_small -->
+                                    <div class="slds-form-element">
+                                        <div class="slds-form-element__control">
+                                            <div class="slds-checkbox">
+                                                <input type="checkbox" name="ChecklistItem" id={Item.Id}
+                                                    value={Item.Checked} disabled={Item.CheckboxDisabled}
+                                                    onchange={handleCheckbox} data-itemid={Item.Id}
+                                                    data-checklistid={CheckL.Id} />
+                                                <label class="slds-checkbox__label" for={Item.Id}>
+                                                    <span class="slds-checkbox_faux"></span>
+                                                    <span class="slds-form-element__label" style=" font-size: small; font-weight: normal;">
+                                                        <!-- Profile Verified -->
+                                                        {Item.kt_checklist__Item__c}
+                                                    </span>
+
+                                                </label>
+
+                                                <div class="checkbox-txt clr-light">
+                                                    <span>
+                                                        <!-- {Item.Description__c} -->
+                                                        <template lwc:if={Item.kt_checklist__Description__c}>
+                                                            <c-description-display
+                                                                description={Item.kt_checklist__Description__c}></c-description-display>
+                                                        </template>
+                                                        <!-- Lorem Ipsum is simply dummy text of the printing and
+                                                    typesetting...  -->
+
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- <template lwc:if={Item.CheckboxDisabled}>
+                                    <svg class="linked slds-accordion__summary-action-icon slds-button__icon slds-button__icon_right"
+                                        aria-hidden="true">
+                                        <use xlink:href={linked_ICON}></use>
+                                    </svg>
+                                </template>
+                                <template if:false={Item.CheckboxDisabled}>
+                                    <svg class="unlinked slds-accordion__summary-action-icon slds-button__icon slds-button__icon_right"
+                                        aria-hidden="true">
+                                        <use xlink:href={unlinked_ICON}></use>
+                                    </svg>
+                                </template> -->
+                                    <lightning-icon icon-name="utility:error" size="x-small" class={Item.iconClass}
+                                        variant={Item.iconVariant} alternative-text="Not Applicable!"
+                                        title="Not Applicable" onclick={handleNotApplicable} data-checked={Item.Checked}
+                                        data-checkedvalue={Item.kt_checklist__Checked__c} data-itemid={Item.Id}
+                                        data-checklistid={CheckL.Id}></lightning-icon>
+                                </div>
+                            </template>
+                            <!-- Items loop End -->
+
+
+
+                            <!-- Add Item -->
+                            <div lwc:if={CheckL.isActiveAddItem}
+                                class="slds-form-element slds-form-element_vertical slds-is-editing slds-m-top_medium">
+                                <!-- <form onsubmit={handleSubmitAddItemForm}> -->
+                                <label class="slds-form-element__label  slds-text-title_bold"
+                                    for="horizontal-combobox-id-06" id="combobox-label-id-18" style="font-size: medium;">Create Checklist Item
+                                    <!-- <div class="buttons">
+                                    <button class="btn-dnwld slds-button slds-button_icon slds-button_icon-border slds-m-bottom_small"
+                                        title="Clear the text input ">
+                                        <svg class="slds-button__icon" aria-hidden="true">
+                                            <use xlink:href="/style/icons/utility-sprite/svg/symbols.svg#package"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Clear the text input</span>
+                                    </button>
+                    
+                                    <button class="slds-button slds-button_icon slds-button_icon-border slds-m-bottom_small"
+                                        title="Clear the text input">
+                                        <svg class="slds-button__icon" aria-hidden="true">
+                                            <use xlink:href="/style/icons/utility-sprite/svg/symbols.svg#delete"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Clear the text input</span>
+                                    </button>
+                                </div> -->
+                                </label>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-combobox_container">
+                                        <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click">
+
+                                            <div class="add-item-form slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right"
+                                                role="none">
+                                                <lightning-input type="text" name="ChecklistItemFormField"
+                                                    onchange={handleChangeAddItemFormField}
+                                                    data-fieldname={checkPointField.fieldApiName} variant="label-hidden"
+                                                    placeholder="Add Item" required="true"
+                                                    max-length="255" style=" font-size: small;"></lightning-input>
+                                                <lightning-textarea name="ChecklistItemFormField"
+                                                    onchange={handleChangeAddItemFormField}
+                                                    data-fieldname={descriptionField.fieldApiName}
+                                                    variant="label-hidden" placeholder="Add Description"
+                                                    max-length="255" style=" font-size: small;"></lightning-textarea>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="slds-form-element slds-form-element_vertical slds-is-editing slds-m-top_medium" style="margin-top: 0px;">
+                                    <div>
+                                        <button class="btn-cancel slds-button slds-button_brand" style="color: #ffffff; background: #1b96ff;"
+                                            onclick={handleSubmitAddItemForm} data-checklistid={CheckL.Id}>Save</button>
+                                        <button class="btn-cancel slds-button slds-button_neutral"
+                                            onclick={handleAddItemCancel} data-checklistid={CheckL.Id}>Cancel</button>
+                                    </div>
+                                </div>
+                                <!--  -->
+                            </div>
+
+                            <div lwc:else class="content-container">
+                                <div class="button-container">
+                                <button class="btn-cancel slds-button slds-button_brand" onclick={handleAddItem} disabled={CheckL.kt_checklist__Is_Checklist_Locked__c}
+                                    data-checklistid={CheckL.Id} style="color: #ffffff; background: #1b96ff;">
+                                    <lightning-icon icon-name="utility:add" alternative-text="Add Item" title="Add Item"
+                                        size="xx-small" variant="inverse"></lightning-icon>
+                                    <span class="slds-m-left_x-small" style=" font-size: smaller;">
+                                        Add Item
+                                    </span>
+                                </button>
+
+                                <div class="delete-icon">
+                                    <lightning-icon data-checklistid={CheckL.Id} data-title={CheckL.kt_checklist__Checklist_Title__c} icon-name="utility:delete" class="icon-clickable" size="medium" alternative-text="Delete Checklist" title="Delete Checklist" onclick={handleDeleteChecklist}></lightning-icon>
+                                    <!-- <lightning-button-icon icon-name="utility:delete" variant="bare" alternative-text="Delete Checklist" title="Delete Checklist"></lightning-button-icon> -->
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </section>
+                </li>
+            </template>
+        </ul>
+    </div>
+</template>

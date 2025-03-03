@@ -1,17 +1,17 @@
 <template>
   <lightning-card>
-    <div class="my-checklist slds-p-around_medium slds-is-relative">
-      <div class="checklist-inner ">
-        <div class="empty-state">
+    <div class="kt_checklist kt_checklist__my-checklist slds-p-around_medium slds-is-relative">
+      <div class="kt_checklist__checklist-inner ">
+        <div class="kt_checklist__empty-state">
           <div class="slds-flex slds-align-items-center" style="display: flex;  justify-items: start;">
             <div class="inner-flex" style="display: flex; flex-grow: 1; flex-basis: auto;  justify-items: start;">
-              <div class="empty-state-vrtl vrtl-state-tab slds-vertical-tabs" style="border: none;  flex: 0 1 auto; ">
+              <div class="kt_checklist__empty-state-vrtl kt_checklist__vrtl-state-tab slds-vertical-tabs" style="border: none;  flex: 0 1 auto; ">
                 <ul class="slds-vertical-tabs__nav slds-var-p-around_medium" role="tablist" aria-orientation="vertical" id="tabs-nav" style="padding: 10px;">
                   <li class="slds-vertical-tabs__nav-item slds-is-active slds-var-m-bottom_small" title="Checklist" role="presentation"  onclick={handleSelect} data-name="today" aria-selected={newTab.today}>
-                    <a class="slds-vertical-tabs__link" href="#slds-vertical-tabs-0" role="tab" tabindex="0" aria-selected={newTab.today} aria-controls="slds-vertical-tabs-0">
+                    <a class="slds-vertical-tabs__link" href="#today" role="tab" tabindex="0" aria-selected={newTab.today} aria-controls="slds-vertical-tabs-0">
                       <span class="slds-vertical-tabs__left-icon">
                         <span class="slds-icon_container" title="Description of icon when needed">
-                          <svg class="vrtl-icon slds-icon slds-icon_medium" aria-hidden="true">
+                          <svg class="kt_checklist__vrtl-icon slds-icon slds-icon_medium" aria-hidden="true">
                             <use xlink:href={icon1}></use>
                           </svg>
                         </span>
@@ -21,10 +21,10 @@
                     </a>
                   </li>
                   <li class="slds-vertical-tabs__nav-item  slds-var-m-bottom_small" title="Overdues" role="presentation" onclick={handleSelect} data-name="overdue" aria-selected={newTab.overdue}>
-                    <a class="slds-vertical-tabs__link" href="#" role="tab" tabindex="-1" aria-selected={newTab.overdue} aria-controls="slds-vertical-tabs-1" id="slds-vertical-tabs-1__nav">
+                    <a class="slds-vertical-tabs__link" href="#overdue" role="tab" tabindex="-1" aria-selected={newTab.overdue} aria-controls="slds-vertical-tabs-1" id="slds-vertical-tabs-1__nav">
                       <span class="slds-vertical-tabs__left-icon">
                         <span class="slds-icon_container" title="Description of icon when needed">
-                          <svg class="vrtl-icon slds-icon slds-icon_medium" aria-hidden="true">
+                          <svg class="kt_checklist__vrtl-icon slds-icon slds-icon_medium" aria-hidden="true">
                             <use xlink:href={icon2}></use>
                           </svg>
                         </span>
@@ -37,7 +37,7 @@
                     <a class="slds-vertical-tabs__link" href="#" role="tab" tabindex="-1" aria-selected={newTab.next_7_days} aria-controls="slds-vertical-tabs-2" id="slds-vertical-tabs-2__nav">
                       <span class="slds-vertical-tabs__left-icon">
                         <span class="slds-icon_container" title="Description of icon when needed">
-                          <svg class="vrtl-icon slds-icon slds-icon_medium" aria-hidden="true">
+                          <svg class="kt_checklist__vrtl-icon slds-icon slds-icon_medium" aria-hidden="true">
                             <use xlink:href={icon3}></use>
                           </svg>
                         </span>
@@ -50,7 +50,7 @@
                     <a class="slds-vertical-tabs__link" href="#" role="tab" tabindex="-1" aria-selected={newTab.next_14_days} aria-controls="slds-vertical-tabs-2" id="slds-vertical-tabs-3__nav">
                       <span class="slds-vertical-tabs__left-icon">
                         <span class="slds-icon_container" title="Description of icon when needed">
-                          <svg class="vrtl-icon slds-icon slds-icon_medium" aria-hidden="true">
+                          <svg class="kt_checklist__vrtl-icon slds-icon slds-icon_medium" aria-hidden="true">
                             <use xlink:href={icon4}></use>
                           </svg>
                         </span>
@@ -63,7 +63,7 @@
                     <a class="slds-vertical-tabs__link" href="#" role="tab" tabindex="-1" aria-selected={newTab.next_30_days} aria-controls="slds-vertical-tabs-2" id="slds-vertical-tabs-4__nav">
                       <span class="slds-vertical-tabs__left-icon">
                         <span class="slds-icon_container" title="Description of icon when needed">
-                          <svg class="vrtl-icon slds-icon slds-icon_medium" aria-hidden="true">
+                          <svg class="kt_checklist__vrtl-icon slds-icon slds-icon_medium" aria-hidden="true">
                             <use xlink:href={icon5}></use>
                           </svg>
                         </span>
@@ -76,7 +76,7 @@
                     <a class="slds-vertical-tabs__link" href="#" role="tab" tabindex="-1" aria-selected={newTab.all_open} aria-controls="slds-vertical-tabs-2" id="slds-vertical-tabs-5__nav">
                       <span class="slds-vertical-tabs__left-icon">
                         <span class="slds-icon_container" title="Description of icon when needed">
-                          <svg class="vrtl-icon slds-icon slds-icon_medium" aria-hidden="true">
+                          <svg class="kt_checklist__vrtl-icon slds-icon slds-icon_medium" aria-hidden="true">
                             <use xlink:href={icon6}></use>
                           </svg>
                         </span>
@@ -89,7 +89,7 @@
                     <a class="slds-vertical-tabs__link" href="#" role="tab" tabindex="-1" aria-selected={newTab.completed} aria-controls="slds-vertical-tabs-2" id="slds-vertical-tabs-6__nav">
                       <span class="slds-vertical-tabs__left-icon">
                         <span class="slds-icon_container" title="Description of icon when needed">
-                          <svg class="vrtl-icon slds-icon slds-icon_medium" aria-hidden="true">
+                          <svg class="kt_checklist__vrtl-icon slds-icon slds-icon_medium" aria-hidden="true">
                             <use xlink:href={icon7}></use>
                           </svg>
                         </span>
@@ -100,7 +100,7 @@
                   </li>
                 </ul>
               </div>
-              <div class="empty-state-vrtl vrtl-state-tab slds-vertical-tabs" style=" flex: 1 0 auto;  justify-items: start; padding-left: 20px; height: 100%;">
+              <div class="kt_checklist__empty-state-vrtl kt_checklist__vrtl-state-tab slds-vertical-tabs" style=" flex: 1 0 auto;  justify-items: start; padding-left: 20px; height: 100%;">
                 <div class="slds-vertical-tabs__content slds-show" id="slds-vertical-tabs-0" role="tabpanel" aria-labelledby="slds-vertical-tabs-0__nav" style="padding: 0 !important; background-color: transparent; min-height: max-content; height: 100%;">
                   <div style="display: flex; flex-direction: column; flex-grow: 1; padding: 0 !important;margin: 0; height: 100%;">
                     <div class="slds-size_4-of-4 slds-var-p-around_medium" style="padding-left: 20px; border: 1px solid rgb(0,0,0,0.1); border-radius: 8px; background: #fafafa; flex-grow: 0;">
@@ -207,12 +207,12 @@
       <div class="empty-state" style="border: none;">
         <div class="slds-flex slds-align-items-center" style="display: flex;">
           <div class="inner-flex" style="display: flex; flex-grow: 1;">
-            <div class="empty-state-vrtl vrtl-state-tab slds-vertical-tabs" style="border: none; width: 25%;">
+            <div class="kt_checklist__empty-state-vrtl kt_checklist__vrtl-state-tab slds-vertical-tabs" style="border: none; width: 25%;">
               <ul class="slds-vertical-tabs__nav slds-var-p-around_medium tab-nav" role="tablist" aria-orientation="vertical">
                 Testing empty-state.-Inside Ul.
               </ul>
             </div>
-            <div class="empty-state-vrtl vrtl-state-tab slds-vertical-tabs" style="padding-left: 20px; flex: 0 0 75%;">
+            <div class="kt_checklist__empty-state-vrtl kt_checklist__vrtl-state-tab slds-vertical-tabs" style="padding-left: 20px; flex: 0 0 75%;">
               <div class="slds-vertical-tabs__content slds-show slds-var-p-around_medium tab-content" role="tabpanel" aria-orientation="vertical">
                 Testing empty-state.-Outside Ul.
               </div>

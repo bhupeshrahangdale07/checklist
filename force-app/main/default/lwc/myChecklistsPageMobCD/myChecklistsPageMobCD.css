@@ -1,0 +1,58 @@
+.sidebar-button{    
+    width: 20px;
+    height: 50px;
+    top: 100px;
+        right: 0px;
+
+}
+.open-panel {
+    width: 60%;
+    overflow:hidden;
+    transition: 0.3s;
+}
+.close-panel {
+    width: 0px;
+    min-width: 0px;
+    overflow:unset;
+    transition: 0.3s;
+}
+.expand-panel{
+    width: 99.5%;
+    transition: 0.3s;
+}
+.collapse-panel{
+    width: 9.5%;
+    transition: 0.3s;
+}
+.page-section {
+    border: solid 1px #ccc;
+    padding: .25rem;
+    background-color: #fff;
+}
+
+.refreshRotate {
+    animation: rotate .4s;
+}
+.font-weightforMenu{
+  font-weight: 100;
+}
+.font-sizeformenu{
+  font-size: small;
+}
+div.collapse-panel button.slds-button.slds-button_icon.slds-m-around_x-small {
+    width: 80% !important;
+    padding: 12px 0px !important;
+    margin-top: 0px;
+}
+div.collapse-panel{
+    width: 13.5%;
+}
+div.collapse-panel .slds-size_4-of-4.slds-var-p-around_medium, div.collapse-panel .slds-m-top_medium {
+    display: none !important;
+}
+div.collapse-panel .vrtl-state-tab .slds-vertical-tabs__content {
+    margin-left: 10px !important;
+}
+button.slds-button.slds-button_icon.slds-m-around_x-small{
+    box-shadow: none;
+}

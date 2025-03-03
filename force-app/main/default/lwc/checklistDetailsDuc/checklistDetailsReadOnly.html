@@ -1,7 +1,6 @@
 <template>
 
-    <!-- Accordion -->
-    <div class="checklist-detail Accordion-index">
+    <div class="kt_checklist kt_checklist__details kt_checklist__Accordion-index">
         <div lwc:if={ischeckListDataAvailable}>
             <ul lwc:if={checkListData} class="slds-accordion">
                 <template for:each={checkListData} for:item="CheckL" for:index="checklistIndex">
@@ -24,7 +23,7 @@
                                         </div>
                                         <div style="text-align: right;">
                                             <span
-                                                class="slds-accordion__summary-content clr-blue slds-text-title_regular">
+                                                class="slds-accordion__summary-content kt_checklist__clr-blue slds-text-title_regular">
                                                 <!-- Due Date-08-09-2023 -->
                                                 <!-- Due: {CheckL.finalDueDate} -->
                                                 <span lwc:if={CheckL.kt_checklist__Due_Date__c}
@@ -45,7 +44,7 @@
                                             <button onclick={handleAccordian} data-checklistid={CheckL.Id}
                                                 class="slds-m-left_small slds-button slds-button_reset slds-grid_align-end"
                                                 title="">
-                                                <svg class="chevron slds-accordion__summary-action-icon"
+                                                <svg class="kt_checklist__chevron slds-accordion__summary-action-icon"
                                                     aria-hidden="true">
                                                     <use xlink:href={accordion_ICON}></use>
                                                 </svg>
@@ -59,8 +58,8 @@
                             <div class="slds-accordion__content ">
                                 <template lwc:if={CheckL.kt_checklist__Description__c}>
                                     <p class="slds-p-bottom_x-small" style="font-size: 14px;">
-                                        <c-Description-display description={CheckL.kt_checklist__Description__c}
-                                            flexipage-region-width={flexipageRegionWidth}></c-Description-display>
+                                        <c-Description-display-duc description={CheckL.kt_checklist__Description__c}
+                                            flexipage-region-width={flexipageRegionWidth}></c-Description-display-duc>
                                     </p>
                                 </template>
                                 <!-- Checklist Items start here -->
@@ -72,35 +71,40 @@
                                                     <template for:each={CheckL.kt_checklist__Checklist_Items__r}
                                                         for:item="item" for:index="itemIndex">
                                                         <li key={item.Id} class="kt_checklist__timeline">
-                                                            <c-custom-timeline-item show-line={CheckL.kt_checklist__Sequential__c} item-type={item.kt_checklist__Checked__c}>
+                                                            <c-custom-timeline-item
+                                                                show-line={CheckL.kt_checklist__Sequential__c}
+                                                                item-type={item.kt_checklist__Checked__c}>
                                                                 <div slot="header">
                                                                     {item.kt_checklist__Item__c}
                                                                 </div>
 
                                                                 <div slot="body">
                                                                     <div class="slds-var-m-horizontal_xx-small">
-                                                                        <c-description-display
+                                                                        <c-Description-display-duc
                                                                             description={item.kt_checklist__Description__c}
-                                                                            flexipage-region-width={flexipageRegionWidth}></c-description-display>
+                                                                            flexipage-region-width={flexipageRegionWidth}></c-Description-display-duc>
                                                                     </div>
 
                                                                     <div lwc:if={item.showDetails}
                                                                         class="slds-form-element__control slds-input-has-fixed-addon kt_checklist__activity-data">
-                                                                        <div class="kt_checklist__Completedby">
+                                                                        <div class="kt_checklist__Completedby slds-badge" style="margin-left:0px;">
 
-                                                                            <span class="kt_checklist__clickable slds-truncate">
+                                                                            <span
+                                                                                class="kt_checklist__clickable slds-truncate">
                                                                                 <div lwc:if={item.CompletedBy}>
-                                                                                    <a href={item.CompletedByLink} target="_blank">
+                                                                                    <a href={item.CompletedByLink}
+                                                                                        target="_blank">
                                                                                         {item.CompletedBy}
                                                                                     </a>
                                                                                 </div>
                                                                             </span>
 
                                                                         </div>
-                                                                        <div class="kt_checklist__Completed-date">
+                                                                        <div lwc:if={item.CompletedDate} class="kt_checklist__Completed-date slds-badge" style="margin-left:0px;">
                                                                             <span class="slds-truncate">
                                                                                 <lightning-formatted-text
                                                                                     value={item.CompletedDate}></lightning-formatted-text>
+                                                                                <!-- <lightning-relative-date-time value={item.CompletedDate}></lightning-relative-date-time> -->
                                                                             </span>
                                                                         </div>
                                                                     </div>
@@ -109,7 +113,8 @@
                                                         </li>
                                                     </template>
                                                 </ul>
-                                                <span lwc:if={CheckL.kt_checklist__Sequential__c} class="kt_checklist__gradient-mask"></span>
+                                                <span lwc:if={CheckL.kt_checklist__Sequential__c}
+                                                    class="kt_checklist__gradient-mask"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -122,7 +127,7 @@
             </ul>
         </div>
         <div lwc:else>
-            <div class="empty-state-vrtl vrtl-state-tab slds-vertical-tabs"
+            <div class="kt_checklist__empty-state-vrtl kt_checklist__vrtl-state-tab slds-vertical-tabs"
                 style="display: flex; border: 1px solid rgb(0,0,0,0.1); border-radius: 8px; flex-grow: 1;">
                 <div class="slds-vertical-tabs__content ">
                     <div class="slds-text-longform">

@@ -1,174 +1,182 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>		
-<Package xmlns="http://soap.sforce.com/2006/04/metadata">		
-		
-<types>		
-<members>CheckListManager</members>		
-		<members>CheckListManagerTest</members>
-		<members>CheckListTriggerHandler</members>
-		<members>CheckListTriggerHelper</members>
-		<members>CheckListTriggerTest</members>
-		<members>MyChecklistsPageManager</members>
-		<members>MyChecklistsPageManagerTest</members>
-		<members>TemplateManager</members>
-		<members>TemplateManagerTest</members>
-		<name>ApexClass</name>
-	</types>	
-	<types>	
-		<members>CheckListTrigger</members>
-		<name>ApexTrigger</name>
-	</types>	
-	<types>	
-		<members>TemplateManagerAuraCD</members>
-		<name>AuraDefinitionBundle</name>
-	</types>	
-	<types>	
-		<members>Checklist_Item__c.Checked__c</members>
-		<members>Checklist_Item__c.Checklist_Template_Item__c</members>
-		<members>Checklist_Item__c.Checklist__c</members>
-		<members>Checklist_Item__c.Description__c</members>
-		<members>Checklist_Item__c.Item_Order__c</members>
-		<members>Checklist_Item__c.Item__c</members>
-		<members>Checklist_Template_Item__c.Checklist_Template__c</members>
-		<members>Checklist_Template_Item__c.Description__c</members>
-		<members>Checklist_Template_Item__c.Item_Order__c</members>
-		<members>Checklist_Template_Item__c.Item__c</members>
-		<members>Checklist_Template__c.Active__c</members>
-		<members>Checklist_Template__c.Checklist_Count__c</members>
-		<members>Checklist_Template__c.Checklist_Template_Title__c</members>
-		<members>Checklist_Template__c.Description__c</members>
-		<members>Checklist_Template__c.Due_Days__c</members>
-		<members>Checklist_Template__c.IsLocked__c</members>
-		<members>Checklist_Template__c.Template_Used_Count__c</members>
-		<members>Checklist__c.Account__c</members>
-		<members>Checklist__c.Assign_To__c</members>
-		<members>Checklist__c.Checklist_Item_Checked_Count__c</members>
-		<members>Checklist__c.Checklist_Item_Count__c</members>
-		<members>Checklist__c.Checklist_Template__c</members>
-		<members>Checklist__c.Checklist_Title__c</members>
-		<members>Checklist__c.Contact__c</members>
-		<members>Checklist__c.Description__c</members>
-		<members>Checklist__c.Due_Date__c</members>
-		<members>Checklist__c.Due_Days__c</members>
-		<members>Checklist__c.Is_Checklist_Locked__c</members>
-		<members>Checklist__c.Is_Checklist_Template_Locked__c</members>
-		<members>Checklist__c.Percentage_Completion__c</members>
-		<name>CustomField</name>
-	</types>	
-	<types>	
-		<members>ObjectKeyField.Case</members>
-		<members>ObjectKeyField.ContentDocument</members>
-		<members>ObjectKeyField.ContentVersion</members>
-		<members>ObjectKeyField.Contract</members>
-		<members>ObjectKeyField.EmailMessage</members>
-		<members>ObjectKeyField.Event</members>
-		<members>ObjectKeyField.Note</members>
-		<members>ObjectKeyField.Order</members>
-		<members>ObjectKeyField.Solution</members>
-		<members>ObjectKeyField.Task</members>
-		<name>CustomMetadata</name>
-	</types>	
-	<types>	
-		<members>CheckListGenius_Logo</members>
-		<members>Checklist_Genius_Logo_Wide</members>
-		<members>Checklist_Genius_Logo_WideTrimmed</members>
-		<name>ContentAsset</name>
-	</types>	
-		
-	<types>	
-		<members>Checklist_Item__c</members>
-		<members>Checklist_Template_Item__c</members>
-		<members>Checklist_Template__c</members>
-		<members>Checklist__c</members>
-		<members>ObjectKeyField__mdt</members>
-		<name>CustomObject</name>
-	</types>	
-	<types>	
-		<members>Checklist_Template__c</members>
-		<members>My_Checklists</members>
-		<name>CustomTab</name>
-	</types>	
-		
-	<types>	
-		<members>ChecklistPro_UtilityBar</members>
-		<members>Checklist_Template_Custom_Lightning_Page</members>
-		<members>Home_ChecklistGenius</members>
-		<name>FlexiPage</name>
-	</types>	
-	<types>	
-		<members>Checklist_Item__c-Checklist Item Layout</members>
-		<members>Checklist_Template_Item__c-Checklist Template Item Layout</members>
-		<members>Checklist_Template__c-Checklist Template Layout</members>
-		<members>Checklist__c-Checklist Layout</members>
-		<members>ObjectKeyField__mdt-ObjectKeyField Layout</members>
-		<name>Layout</name>
-	</types>	
-	<types>	
-		
-        <members>checklistAddItemFormDuc</members>
-		<members>checklistDetailsDuc</members>
-		<members>checklistIndexDuc</members>
-		<members>createChecklistDuc</members>
-		<members>customTimelineItem</members>
-		<members>createChecklistDialogDuc</members>
-		<members>descriptionDisplayDuc</members>
-		<members>modalPopUpDuc</members>
-		<members>myChecklistsPageCDDuc</members>
-		<members>myChecklistsPageParentCDDuc</members>
-		<members>navItemCmpCDDuc</members>
-		<members>templateManagerCDDuc</members>
-        <members>checklistDetailsMobDuc</members>
-        <members>myChecklistsPageMobCDDuc</members>
-		<name>LightningComponentBundle</name>
-	</types>	
-		
-		
-	<types>	
-		<members>Checklist_Genius</members>
-		<name>CustomApplication</name>
-	</types>	
-	<types>	
-		<members>ChecklistGeniusAdminManagerDashboard/UifXlznHNwAZRFmSZrmGTRnJxkNLug</members>
-		<members>ChecklistGeniusHomeDashboard/ssFFTxileMpddWHNRIdGjhfTjQTmOU</members>
-		<members>ChecklistGeniusMyDashboard/XAPoKjMPIFuVNWKNqeRenNaYhzpFha</members>
-		<name>Dashboard</name>
-	</types>	
-		
-	<types>	
-		<members>Checklist_Genius_Admin_Manager_Permissions</members>
-		<members>Checklist_Genius_Standard_User_Permissions</members>
-		<name>PermissionSet</name>
-	</types>	
-	<types>	
-		<members>ChecklistGeniusReports/All_Checklists_grouped_by_Template_E0Y</members>
-		<members>ChecklistGeniusReports/All_Checklists_grouped_by_Template_LastM_MXh</members>
-		<members>ChecklistGeniusReports/All_Checklists_grouped_by_Template_LastQ_JWL</members>
-		<members>ChecklistGeniusReports/All_Checklists_jjn</members>
-		<members>ChecklistGeniusReports/All_Overdue_Checklists_8WD</members>
-		<members>ChecklistGeniusReports/CL_Completed_Templatewise_LastQuarter_VSU</members>
-		<members>ChecklistGeniusReports/CL_Completed_Templatewise_Last_Month_rLq</members>
-		<members>ChecklistGeniusReports/CL_Completed_vs_Created_Last_Quarter_Qir</members>
-		<members>ChecklistGeniusReports/Checklist_Templates_Used_Count_Report_oDe</members>
-		<members>ChecklistGeniusReports/Created_vs_Completed_LastMonth_1ne</members>
-		<members>ChecklistGeniusReports/My_Checklists_Due_in_14_Days_wcG</members>
-		<members>ChecklistGeniusReports/My_Checklists_Due_in_7_Days_eK9</members>
-		<members>ChecklistGeniusReports/My_Checklists_Last_Month_JMB</members>
-		<members>ChecklistGeniusReports/My_Checklists_Report_Opb</members>
-		<members>ChecklistGeniusReports/My_Overdue_Checklists_Xbp</members>
-		<members>ChecklistGeniusReports/Not_Applicable_Items_by_Template_ZVY</members>
-		<members>ChecklistGeniusReports/Overdue_Checklists_Userwise_0U9</members>
-		<name>Report</name>
-	</types>	
-	<types>	
-		<members>Checklist_Templates_Checklists_Checklist_Items</members>
-		<name>ReportType</name>
-	</types>	
-		
-		
-	<types>	
-		<members>ChecklistGenius</members>
-		<members>ChecklistGeniusDuc</members>
-		<name>StaticResource</name>
-	</types>	
-	<version>60.0</version>	
-</Package>		
-		
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+<types>
+<members>CheckListManager</members>
+<members>CheckListManagerTest</members>
+<members>CheckListTriggerHandler</members>
+<members>CheckListTriggerHelper</members>
+<members>CheckListTriggerTest</members>
+<members>MyChecklistsPageManager</members>
+<members>MyChecklistsPageManagerTest</members>
+<members>TemplateManager</members>
+<members>TemplateManagerTest</members>
+<members>ChecklistItemsBatch</members>
+<members>ChecklistItemsBatchTest</members>
+<members>CheckListManagerDuc</members>
+<name>ApexClass</name>
+</types>
+<types>
+<members>CheckListTrigger</members>
+<name>ApexTrigger</name>
+</types>
+<types>
+<members>TemplateManagerAuraCD</members>
+<members>TemplateManagerAuraCDDuc</members>
+<name>AuraDefinitionBundle</name>
+</types>
+<types>
+<members>Checklist_Item__c.Checked__c</members>
+<members>Checklist_Item__c.Checklist_Template_Item__c</members>
+<members>Checklist_Item__c.Checklist__c</members>
+<members>Checklist_Item__c.Description__c</members>
+<members>Checklist_Item__c.Item_Order__c</members>
+<members>Checklist_Item__c.Item__c</members>
+<members>Checklist_Template_Item__c.Checklist_Template__c</members>
+<members>Checklist_Template_Item__c.Description__c</members>
+<members>Checklist_Template_Item__c.Item_Order__c</members>
+<members>Checklist_Template_Item__c.Item__c</members>
+<members>Checklist_Template__c.Active__c</members>
+<members>Checklist_Template__c.Checklist_Count__c</members>
+<members>Checklist_Template__c.Checklist_Template_Title__c</members>
+<members>Checklist_Template__c.Description__c</members>
+<members>Checklist_Template__c.Due_Days__c</members>
+<members>Checklist_Template__c.IsLocked__c</members>
+<members>Checklist_Template__c.Sequential__c</members>
+<members>Checklist_Template__c.Template_Used_Count__c</members>
+<members>Checklist__c.Account__c</members>
+<members>Checklist__c.Assign_To__c</members>
+<members>Checklist__c.Checklist_Item_Checked_Count__c</members>
+<members>Checklist__c.Checklist_Item_Count__c</members>
+<members>Checklist__c.Checklist_Template__c</members>
+<members>Checklist__c.Checklist_Title__c</members>
+<members>Checklist__c.Contact__c</members>
+<members>Checklist__c.Description__c</members>
+<members>Checklist__c.Due_Date__c</members>
+<members>Checklist__c.Due_Days__c</members>
+<members>Checklist__c.Is_Checklist_Locked__c</members>
+<members>Checklist__c.Is_Checklist_Template_Locked__c</members>
+<members>Checklist__c.Percentage_Completion__c</members>
+<name>CustomField</name>
+</types>
+<types>
+<members>ObjectKeyField.Case</members>
+<members>ObjectKeyField.ContentDocument</members>
+<members>ObjectKeyField.ContentVersion</members>
+<members>ObjectKeyField.Contract</members>
+<members>ObjectKeyField.EmailMessage</members>
+<members>ObjectKeyField.Event</members>
+<members>ObjectKeyField.Note</members>
+<members>ObjectKeyField.Order</members>
+<members>ObjectKeyField.Solution</members>
+<members>ObjectKeyField.Task</members>
+<members>Checklist_Relationship.Task</members>
+<name>CustomMetadata</name>
+</types>
+<types>
+<members>CheckListGenius_Logo</members>
+<members>Checklist_Genius_Logo_Wide</members>
+<members>Checklist_Genius_Logo_WideTrimmed</members>
+<name>ContentAsset</name>
+</types>
+<types>
+<members>Checklist_Item__c</members>
+<members>Checklist_Template_Item__c</members>
+<members>Checklist_Template__c</members>
+<members>Checklist__c</members>
+<members>ObjectKeyField__mdt</members>
+<members>Checklist_Relationship__mdt</members>
+<name>CustomObject</name>
+</types>
+<types>
+<members>Checklist_Template__c</members>
+<members>My_Checklists</members>
+<name>CustomTab</name>
+</types>
+<types>
+<members>ChecklistPro_UtilityBar</members>
+<members>Checklist_Template_Custom_Lightning_Page</members>
+<members>Home_ChecklistGenius</members>
+<name>FlexiPage</name>
+</types>
+<types>
+<members>Checklist_Item__c-Checklist Item Layout</members>
+<members>Checklist_Template_Item__c-Checklist Template Item Layout</members>
+<members>Checklist_Template__c-Checklist Template Layout</members>
+<members>Checklist__c-Checklist Layout</members>
+<members>ObjectKeyField__mdt-ObjectKeyField Layout</members>
+<name>Layout</name>
+</types>
+<types>
+<members>checklistAddItemForm</members>
+<members>checklistDetails</members>
+<members>checklistDetailsMob</members>
+<members>checklistIndex</members>
+<members>createChecklist</members>
+<members>createChecklistDialog</members>
+<members>customTimelineItem</members>
+<members>descriptionDisplay</members>
+<members>modalPopUp</members>
+<members>myChecklistsPageCD</members>
+<members>myChecklistsPageMobCD</members>
+<members>myChecklistsPageParentCD</members>
+<members>navItemCmpCD</members>
+<members>templateManagerCD</members>
+<members>checklistAddItemFormDuc</members>
+<members>checklistDetailsDuc</members>
+<members>checklistIndexDuc</members>
+<members>createChecklistDuc</members>
+<members>createChecklistDialogDuc</members>
+<members>descriptionDisplayDuc</members>
+<members>modalPopUpDuc</members>
+<members>myChecklistsPageCDDuc</members>
+<members>myChecklistsPageParentCDDuc</members>
+<members>navItemCmpCDDuc</members>
+<members>templateManagerCDDuc</members>
+<members>checklistDetailsMobDuc</members>
+<members>myChecklistsPageMobCDDuc</members>
+<name>LightningComponentBundle</name>
+</types>
+<types>
+<members>Checklist_Genius</members>
+<name>CustomApplication</name>
+</types>
+<types>
+<members>ChecklistGeniusAdminManagerDashboard/UifXlznHNwAZRFmSZrmGTRnJxkNLug</members>
+<members>ChecklistGeniusHomeDashboard/ssFFTxileMpddWHNRIdGjhfTjQTmOU</members>
+<members>ChecklistGeniusMyDashboard/XAPoKjMPIFuVNWKNqeRenNaYhzpFha</members>
+<name>Dashboard</name>
+</types>
+<types>
+<members>Checklist_Genius_Admin_Manager_Permissions</members>
+<members>Checklist_Genius_Standard_User_Permissions</members>
+<name>PermissionSet</name>
+</types>
+<types>
+<members>ChecklistGeniusReports/All_Checklists_grouped_by_Template_E0Y</members>
+<members>ChecklistGeniusReports/All_Checklists_grouped_by_Template_LastM_MXh</members>
+<members>ChecklistGeniusReports/All_Checklists_grouped_by_Template_LastQ_JWL</members>
+<members>ChecklistGeniusReports/All_Checklists_jjn</members>
+<members>ChecklistGeniusReports/All_Overdue_Checklists_8WD</members>
+<members>ChecklistGeniusReports/CL_Completed_Templatewise_LastQuarter_VSU</members>
+<members>ChecklistGeniusReports/CL_Completed_Templatewise_Last_Month_rLq</members>
+<members>ChecklistGeniusReports/CL_Completed_vs_Created_Last_Quarter_Qir</members>
+<members>ChecklistGeniusReports/Checklist_Templates_Used_Count_Report_oDe</members>
+<members>ChecklistGeniusReports/Created_vs_Completed_LastMonth_1ne</members>
+<members>ChecklistGeniusReports/My_Checklists_Due_in_14_Days_wcG</members>
+<members>ChecklistGeniusReports/My_Checklists_Due_in_7_Days_eK9</members>
+<members>ChecklistGeniusReports/My_Checklists_Last_Month_JMB</members>
+<members>ChecklistGeniusReports/My_Checklists_Report_Opb</members>
+<members>ChecklistGeniusReports/My_Overdue_Checklists_Xbp</members>
+<members>ChecklistGeniusReports/Not_Applicable_Items_by_Template_ZVY</members>
+<members>ChecklistGeniusReports/Overdue_Checklists_Userwise_0U9</members>
+<name>Report</name>
+</types>
+<types>
+<members>Checklist_Templates_Checklists_Checklist_Items</members>
+<name>ReportType</name>
+</types>
+<types>
+<members>ChecklistGenius</members>
+<name>StaticResource</name>
+</types>
+<version>61.0</version>
+</Package>

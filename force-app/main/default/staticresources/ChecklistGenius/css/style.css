@@ -2,9 +2,9 @@
   --clr-1: #1b96ff;
   --clr-2: #29ae13;
   --clr-3: #888888;
-  --clr-green: green;
-  --clr-red: red;
-  --clr-orange: orange;
+  --kt_checklist__clr-green: green;
+  --kt_checklist__clr-red: red;
+  --kt_checklist__clr-orange: orange;
 
   --clr-black: #181818;
   --bg-clr: #ffffff;
@@ -16,32 +16,47 @@
   
 }
 
-html {
-  /* background-color: var(--bg-clr); */
+.kt_checklist.kt_checklist__index{
+    /* min-width: 280px; */
+    overflow-x: auto;
 }
 
-body {
-  background: rgba(1, 1, 1, 0.4);
+.kt_checklist.kt_checklist__details section{
+  /* min-width: 270px; */
+  overflow-x: auto;
 }
 
-.sldc-color-background-alt {
+.kt_checklist__index_filter-pill  lightning-pill .slds-pill{
+    --slds-c-pill-color-background: var(--clr-1);
+    --slds-c-icon-color-foreground : white;
+    padding-left: 0.5rem;
+    color: white;
+}
+
+
+/* .sldc-color-background-alt {
+  background-color: var(--bg-clr);
+} */
+
+.kt_checklist .sldc-color-background-alt {
   background-color: var(--bg-clr);
 }
 
-.btn-primary {
+.kt_checklist__button {
   background: var(--clr-1);
   border: 1px solid var(--clr-1);
 }
 
-.btn-primary1 {
+.kt_checklist__button1 {
   background: var(--clr-1);
   border: 1px solid var(--clr-1);
 }
 
-.clr-light {
+.kt_checklist__clr-light {
   color: var(--clr-3);
 }
 
+/* Commented on DT 13 Nov 2024 as we are not using
 .dark {
   color: var(--clr-black);
   fill: var(--clr-black);
@@ -50,14 +65,15 @@ body {
 .g-txt {
   color: #29ae13;
 }
+*/
 
-.checklist-main-inner {
+.kt_checklist__index_maindiv {
   /* max-width: 579px; */
   width: 100%;
   margin: 0 auto;
 }
 
-.check-1-col .slds-button .slds-button__icon {
+.kt_checklist__index_logo .slds-button .slds-button__icon {
   fill: var(--bg-clr);
   flex-shrink: 0;
   width: 20px;
@@ -65,37 +81,38 @@ body {
   margin-right: 0;
 }
 
-.check-1-col .slds-button {
+.kt_checklist__index_logo .slds-button {
   width: 40px;
   height: 40px;
 }
 
-.btn-primary .slds-button {
+.kt_checklist__button .slds-button {
   padding: 8px 32px;
 }
 
-.col-1 {
+.kt_checklist__dialog_col-1 {
   flex: 1 1 230px;
 }
 
-.box-inn .slds-grid.slds-wrap.slds-grid_align-space {
+.kt_checklist__box-inn .slds-grid.slds-wrap.slds-grid_align-space {
   gap: 32px;
 }
 
-.Accordion-index {
+.kt_checklist__Accordion-index {
   border: none;
 }
 
-.Accordion-index .slds-accordion__section {
+.kt_checklist__Accordion-index .slds-accordion__section {
   border-radius: 5.927px;
   border: 0.741px solid rgba(0, 0, 0, 0.1);
   background: #fafafa;
 }
 
-.Accordion-index .slds-accordion__list-item {
+.kt_checklist__Accordion-index .slds-accordion__list-item {
   border-top: 0;
 }
 
+/* Commented on DT 13 Nov 2024 as we are not using
 .progress-bar .slds-progress-bar.slds-progress-bar_medium.slds-progress-bar_circular {
   width: 90%;
 }
@@ -106,49 +123,53 @@ body {
   width: 24.01px;
   height: 24.01px;
 }
+*/
 
-.noDropPointer {
+.kt_checklist__noDropPointer {
   cursor: no-drop;
 }
 
-.cursorPointer {
+.kt_checklist__cursorPointer {
   cursor: pointer;
 }
 
-.clr-blue {
+.kt_checklist__clr-blue {
   color: var(--clr-1);
   font-size: 14px;
 }
 
-.clr-green {
-  color: var(--clr-green);
+.kt_checklist__clr-green {
+  color: var(--kt_checklist__clr-green);
   font-size: 14px;
 }
 
-.clr-red {
-  color: var(--clr-red);
+.kt_checklist__clr-red {
+  color: var(--kt_checklist__clr-red);
   font-size: 14px;
 }
 
-.clr-orange {
-  color: var(--clr-orange);
+.kt_checklist__clr-orange {
+  color: var(--kt_checklist__clr-orange);
   font-size: 14px;
 }
 
+/*  Commented on DT 13 Nov 2024 as we are not using
 .accordion-icon {
   border-color: #181818;
 }
+*/
 
 /***************************************** BOX-2 */
+/*  Commented on DT 13 Nov 2024 as we are not using
 .checklist-2 {
   width: 100%;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-}
+} */
 
-.checklist-box {
+.kt_checklist__checklist-box {
   max-width: 559px;
   width: 100%;
   margin: 0 auto;
@@ -162,29 +183,33 @@ body {
   height: 30px;
 } */
 
-.box {
+.kt_checklist__dialog_box {
   border-radius: 4px;
   background: #fff;
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.box-inn .col-1,
-.box-inn .col-1 {
+.kt_checklist__box-inn .kt_checklist__dialog_col-1,
+.kt_checklist__box-inn .col-1 {
   background: var(--bg-clr1);
   border-radius: 8px;
 }
 
+/* Commented on DT 13 Nov 2024 as we are not using
 .checklist-2 .slds-text-heading_medium.slds-text-align_center.slds-text-heading_medium {
   font-weight: 500;
   font-size: 22px;
 }
+*/
 
 /****************************************checklist with template****/
+/* Commented on DT 13 Nov 2024 as we are not using
 .checklist-3 {
   max-width: 500px;
   width: 100%;
   margin: 0 auto;
 }
+*/
 
 /* Commented this to avoid all standad override we added below for more presize the element
 .slds-input,
@@ -197,8 +222,8 @@ body {
 } */
 
 
-.add-item-form .slds-input,
-.add-item-form .slds-textarea {
+.kt_checklist__add-item-form .slds-input,
+.kt_checklist__add-item-form .slds-textarea {
   border-radius: 8px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   /* background: var(--bg-clr); */
@@ -207,14 +232,14 @@ body {
 }
 
 
-.add-item-form .slds-input-has-icon .slds-input__icon {
+.kt_checklist__add-item-form .slds-input-has-icon .slds-input__icon {
   flex-shrink: 0;
   width: 24px;
   height: 24px;
   margin-top: -0.6375rem;
 }
 
-.picklist .slds-combobox__input {
+.kt_checklist__picklist .slds-combobox__input {
   border-radius: 8px;
   align-items: center;
   padding: 16px;
@@ -222,17 +247,19 @@ body {
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.lookup .slds-input{
+.kt_checklist__lookup .slds-input{
   border-radius: 8px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   height: 48px;
 }
 
+/* Commented on DT 13 Nov 2024 as we are not using\
 .checklist-3 .slds-form-element__label {
   font-weight: 500;
   font-size: 14px;
   line-height: 24px;
 }
+*/
 
 /* Commented this to avoid the Standard components button override
 button {
@@ -240,6 +267,7 @@ button {
 } */
 
 /*****************************************************Checklist Without Template*********/
+/* Commented on DT 13 Nov 2024 as we are not using
 .checklist-4 {
   max-width: 750px;
   width: 100%;
@@ -247,6 +275,7 @@ button {
   height: 100%;
   padding: 120px 0;
 }
+*/
 
 .kt_checklist .slds-form-element__label {
   color: var(--clr-black);
@@ -255,42 +284,57 @@ button {
   font-weight: var(--fw-500);
 }
 
-.btn-save button {
+.kt_checklist .slds-form-element__icon {/* removed .slds-form-element__label'*/
+  vertical-align: text-bottom;
+}
+
+.kt_checklist__btn-save button {
   padding: 4px 32px;
 }
 
+.kt_checklist__btn-save button.slds-button_brand {
+  background: var(--clr-1);
+  border-color: var(--clr-1);
+}
+
+/* Commented on DT 13 Nov 2024 as we are not using
 .button-tick {
   left: 86%;
 }
+*/
 
-::placeholder,
-.btn-cancel,
-.txt-small {
+.kt_checklist ::placeholder,
+.kt_checklist__button-cancel,
+.kt_checklist__dialog_txt-small {
   color: var(--clr-3);
 }
-.btn-cancel .slds-button {
+
+.kt_checklist__button-cancel .slds-button {
   padding:8px 32px;
 }
 
 /*****checklist with template***/
+/* Commented on DT 13 Nov 2024 as we are not using
 .checklist {
   width: 100%;
   height: 100vh;
   background-color: #fff;
   overflow: hidden;
 }
+*/
 
-.chevron {
+.kt_checklist__chevron {
   width: 20px;
   padding: 3px;
   height: 20px;
   border-radius: 4px;
 }
 
-.checklist-inner {
+.kt_checklist__checklist-inner {
   background-color: var(--bg-clr);
 }
 
+/* Commented on DT 13 Nov 2024 as we are not using
 .checklist .slds-page-header {
   box-shadow: none;
   border: none;
@@ -307,13 +351,15 @@ button {
   gap: 24px;
   height: 100vh;
 }
+*/
 
-.my-checklist .slds-tabs_default__item.slds-is-active {
+.kt_checklist__my-checklist .slds-tabs_default__item.slds-is-active {
   color: var(--clr-1);
   font-weight: var(--fw-500);
 }
 
 /***mobile-view**/
+/* Commented on DT 13 Nov 2024 as we are not using
 .mobile-view.slds-page-header__controls {
   justify-content: flex-end;
   display: none;
@@ -328,15 +374,17 @@ button {
   padding: 0;
   border-radius: 4px !important;
 }
+*/
 
-.checklist-1-main .slds-button {
+.kt_checklist__index_section .slds-button {
   border-radius: 4px !important;
 }
 
+/* Commented on DT 13 Nov 2024 as we are not using
 .open-menu-curtain {
   width: 100%;
   height: 0%;
-  position: fixed;
+  position: relative; 
   left: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.6);
@@ -363,70 +411,75 @@ button {
 .o-list button svg {
   fill: var(--clr-1);
 }
+*/
 
 /*************************************************CREATE/EDIT NEW CHECKLIST TEMPLATE  *********/
+/* Commented on DT 13 Nov 2024 as we are not using
 #combobox-label-id-18 {
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+*/
 
 /**************************************checklist template/Empty State***/
-.empty-state-vrtl .slds-vertical-tabs__nav,
-.slds-vertical-tabs__content {
+.kt_checklist__empty-state-vrtl .slds-vertical-tabs__nav,
+.kt_checklist__empty-state-vrtl .slds-vertical-tabs__content {
   border-radius: 8px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   background: #fafafa;
-  width: 18rem;
+  width: 18rem;  
 }
 
-.empty-state {
+.kt_checklist__empty-state {
   height: 100vh;
 }
 
-.empty-state-vrtl.slds-vertical-tabs {
+.kt_checklist__empty-state-vrtl.slds-vertical-tabs {
   height: 100%;
   border: none;
 }
 
-.my-checklist .slds-vertical-tabs__nav-item {
+.kt_checklist__my-checklist .slds-vertical-tabs__nav-item {
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.my-checklist .slds-vertical-tabs__nav-item.slds-is-active {
+.kt_checklist__my-checklist .slds-vertical-tabs__nav-item.slds-is-active {
   background: #0176d3;
   color: #fff !important;
 }
 
 
-.my-checklist .slds-vertical-tabs__nav-item.slds-is-active .slds-vertical-tabs__link:hover,
-.my-checklist .slds-vertical-tabs__nav-item .slds-vertical-tabs__link:hover,
-.my-checklist .slds-vertical-tabs__nav-item .slds-vertical-tabs__link[aria-selected="true"] { 	/* aria-selected condition added */
+.kt_checklist__my-checklist .slds-vertical-tabs__nav-item.slds-is-active .slds-vertical-tabs__link:hover,
+.kt_checklist__my-checklist .slds-vertical-tabs__nav-item .slds-vertical-tabs__link:hover,
+.kt_checklist__my-checklist .slds-vertical-tabs__nav-item .slds-vertical-tabs__link[aria-selected="true"] { 	/* aria-selected condition added */
   background: #0176d3;
   color: #fff;
 }
 
-.my-checklist .slds-vertical-tabs__nav-item:hover .slds-truncate {
+.kt_checklist__my-checklist .slds-vertical-tabs__nav-item:hover .slds-truncate {
   color: #ffffff;
 }
 
-.my-checklist .slds-vertical-tabs__nav-item:hover .vrtl-icon,
-.my-checklist .slds-vertical-tabs__nav-item.slds-is-active .vrtl-icon {
+.kt_checklist__my-checklist .slds-vertical-tabs__nav-item:hover .kt_checklist__vrtl-icon,
+.kt_checklist__my-checklist .slds-vertical-tabs__nav-item.slds-is-active .kt_checklist__vrtl-icon {
   fill: var(--bg-clr);
 }
 
-.vrtl-icon {
+.kt_checklist__vrtl-icon {
   fill: var(--clr-1);
 }
 
-.empty-state-vrtl .slds-vertical-tabs__link {
+.kt_checklist__empty-state-vrtl .slds-vertical-tabs__link {
   gap: 8px;
 }
 
-.my-checklist .slds-vertical-tabs__nav-item.slds-is-active .vrtl-icon-container,
-.my-checklist .slds-vertical-tabs__nav-item:hover .vrtl-icon-container {
+
+/* Commented on DT 13 Nov 2024 as we are not using vrtl-icon-container class.
+.kt_checklist__my-checklist .slds-vertical-tabs__nav-item.slds-is-active .vrtl-icon-container,
+.kt_checklist__my-checklist .slds-vertical-tabs__nav-item:hover .vrtl-icon-container {
   border-color: var(--bg-clr);
 }
 
@@ -435,6 +488,9 @@ button {
   transition: all .15s ease-in-out;
 }
 
+*/
+
+/* Commented on DT 13 Nov 2024 as we are not using
 .vrtl-tab-content {
   display: flex;
   flex-direction: column;
@@ -445,29 +501,30 @@ button {
 }
 
 /*************My Checklist *******/
-.my-checklist .empty-state {
+.kt_checklist__my-checklist .kt_checklist__empty-state {
   height: 100%;
 }
 
-.vrtl-state-tab .slds-vertical-tabs__content {
+.kt_checklist__vrtl-state-tab .slds-vertical-tabs__content {
   padding: none;
 }
 
-.vrtl-accordion {
+.kt_checklist__navItem_vrtl-accordion {
   margin-left: 0 !important;
   list-style: none !important;
   border: none !important;
 }
 
-.vrtl-state-tab .slds-vertical-tabs__content {
+.kt_checklist__vrtl-state-tab .slds-vertical-tabs__content {
   border: none !important;
 }
 
-.vrtl-accordion-list-item .slds-accordion__summary.slds-grid_align-spread,
-.vrtl-accordion-list-item .slds-accordion__summary {
+.kt_checklist__navItem_vrtl-accordion-list-item .slds-accordion__summary.slds-grid_align-spread,
+.kt_checklist__navItem_vrtl-accordion-list-item .slds-accordion__summary {
   flex-direction: column;
 }
 
+/* Commented on DT 13 Nov 2024 as we are not using
 .vrtl-bar {
   display: flex;
   justify-content: flex-end;
@@ -477,6 +534,7 @@ button {
   width: 12%;
   gap: 10px;
 }
+*/
 
 /* .slds-avatar {
   border-radius: 50%;
@@ -486,6 +544,7 @@ button {
 
 
 @media (max-width: 991px) {
+  /* Commented on DT 13 Nov 2024 as we are not using
   .mobile-view.slds-page-header__controls {
       display: block;
   }
@@ -508,33 +567,36 @@ button {
       height: 100%;
       transition: all ease 0.8s;
   }
+  */
 
-  .my-checklist .slds-vertical-tabs,
-  .empty-state-vrtl.slds-vertical-tabs {
+  .kt_checklist__my-checklist .slds-vertical-tabs,
+  .kt_checklist__empty-state-vrtl.slds-vertical-tabs {
       flex-direction: column;
       gap: 32px;
   }
 
-  .my-checklist .slds-vertical-tabs__nav,
-  .my-checklist .slds-vertical-tabs__content,
-  .empty-state-vrtl .slds-vertical-tabs__nav,
-  .slds-vertical-tabs__content {
+  .kt_checklist__my-checklist .slds-vertical-tabs__nav,
+  .kt_checklist__my-checklist .slds-vertical-tabs__content,
+  .kt_checklist__empty-state-vrtl .slds-vertical-tabs__nav,
+  .kt_checklist .slds-vertical-tabs__content {
       width: 100%;
   }
 
-  .my-checklist .slds-vertical-tabs__content,
-  .slds-vertical-tabs__content {
+  .kt_checklist__my-checklist .slds-vertical-tabs__content,
+  .kt_checklist__my-checklist .slds-vertical-tabs__content {
       margin-left: 0;
       padding: 24px 16px;
   }
 
+  /* Commented on DT 13 Nov 2024 as we are not using
   .vrtl-bar #progress-bar-label-id-3 {
       width: 25%;
       gap: 10px;
   }
+  */
 
   .checklist,
-  .empty-state,
+  .kt_checklist__empty-state,
   .vrtl-tab-content {
       height: 100%;
 
@@ -542,15 +604,17 @@ button {
 }
 
 @media (max-width: 567px) {
+  /* Commented on DT 13 Nov 2024 as we are not using
   .checklist-2 {
       align-items: flex-end;
   }
+  */
 
-  .col-1 {
+  .kt_checklist__dialog_col-1 {
       flex: 1 1 auto;
   }
 
-  .Accordion-index .slds-accordion__section {
+  .kt_checklist__Accordion-index .slds-accordion__section {
       margin-bottom: 0;
       background-color: var(--bg-clr);
       border: none;
@@ -558,27 +622,27 @@ button {
 
   }
 
-  .btn-primary {
+  .kt_checklist__button {
       padding: 8px;
       font-size: 12px;
   }
 
-  .btn-primary1 {
+  .kt_checklist__button1 {
       padding: 0px 16px;
       font-size: 12px;
   }
 
-  .check-1-col .slds-button {
+  .kt_checklist__index_logo .slds-button {
       width: 29px;
       height: 29px;
   }
 
-  .Accordion-index {
+  .kt_checklist__Accordion-index {
       box-shadow: none !important;
       -webkit-box-shadow: none !important;
   }
 
-  .Accordion-index .slds-accordion__list-item {
+  .kt_checklist__Accordion-index .slds-accordion__list-item {
       border-top: 1px solid var(--clr-3);
   }
 
@@ -586,21 +650,24 @@ button {
       border-top: 0 !important;
   }
 
+  /* Commented on DT 13 Nov 2024 as we are not using
   .checklist-2 .slds-text-heading_medium.slds-text-align_center.slds-text-heading_medium,
   .slds-page-header__title {
       font-size: 14px;
       font-weight: 700;
   }
+  */
 
   .kt_checklist .slds-form-element__label {
       font-size: 12px;
   }
 
-  .box,
-  .checklist-main-inner {
+  .kt_checklist__dialog_box,
+  .kt_checklist__index_maindiv {
       padding: 24px 16px;
   }
 
+  /* Commented on DT 13 Nov 2024 as we are not using
   .checklist-4 {
       padding: 100px 0 0 0;
   }
@@ -612,27 +679,31 @@ button {
   .refresh-btn {
       display: none;
   }
+  */
 
-  .btn-save button {
-      padding: 4px 32px;
+  .kt_checklist__btn-save button {
+      padding: 2px 26px;
       font-size: 12px;
   }
-
-  .vrtl-accordion-list-item.slds-accordion__list-item {
+  
+  .kt_checklist__navItem_vrtl-accordion-list-item.slds-accordion__list-item {
       padding: 16px 8px;
   }
 
-  .my-checklist .slds-vertical-tabs__content {
+  .kt_checklist__my-checklist .slds-vertical-tabs__content {
       padding: 24px 0px;
   }
 
+  /* Commented on DT 13 Nov 2024 as we are not using
   .vrtl-bar #progress-bar-label-id-3 {
       width: 100%;
       gap: 10px;
   }
+  */
 }
 
 @media (max-width: 375px) {
+  /* Commented on DT 13 Nov 2024 as we are not using
   .open-menu-list {
       padding: 24px 16px;
   }
@@ -640,102 +711,55 @@ button {
   .checklist-4 {
       padding: 0px 0 0 0;
   }
+  */
 
-  .checklist-main-inner {
+  .kt_checklist__index_maindiv {
       padding: 24px 7px;
   }
 
-  .form-button {
+  .kt_checklist__index_button-icon {
       margin-right: 0;
   }
 
-  .btn-primary {
+  .kt_checklist__button {
       padding: 6px;
   }
 
-  .checklist-detail .slds-text-title_bold,
-  .clr-blue {
+  .kt_checklist__details .slds-text-title_bold,
+  .kt_checklist__clr-blue {
       font-size: 0.75rem;
   }
 
 }
 
 
-/* 
 
-.checklist-detail .slds-checkbox {
-  position: relative;
-}
-
-.checklist-detail .slds-checkbox label {
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 50%;
-  cursor: pointer;
-  height: 28px;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 28px;
-}
-
-.checklist-detail .slds-checkbox label:after {
-  border: 2px solid #fff;
-  border-top: none;
-  border-right: none;
-  content: "";
-  height: 6px;
-  left: 7px;
-  opacity: 0;
-  position: absolute;
-  top: 8px;
-  transform: rotate(-45deg);
-  width: 12px;
-}
-
-.checklist-detail .slds-checkbox input[type="checkbox"] {
-  visibility: hidden;
-}
-
-.checklist-detail .slds-checkbox input[type="checkbox"]:checked {
-  background-color: #66bb6a;
-  border-color: #66bb6a;
-}
-
-.checklist-detail .slds-checkbox input[type="checkbox"]:checked {
-  opacity: 1;
-} */
-
-.checklist-detail .container {
+.kt_checklist__details .kt_checklist__details_container {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
 }
 
-.checklist-detail .left-label {
-  flex: 1;
-  /* Take remaining space */
-  display: flex;
-  flex-direction: column;
-  /* Align items in column */
-}
-
-.checklist-detail .right-label {
+.kt_checklist__details .kt_checklist__details_right-label {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
 }
 
-.checklist-detail .right-label input[type="checkbox"] {
+.kt_checklist__details .kt_checklist__details_right-label input[type="checkbox"] {
   align-self: flex-end;
 }
 
-.checklist-detail .description {
+.kt_checklist__details .kt_checklist__details_description {
   margin-left: 24px;
   display: block;
 }
 
-.checklist-detail .rounded-checkbox {
+.kt_checklist__details .kt_checklist__details_description a {
+  color: var(--clr-1);
+}
+
+.kt_checklist__details .kt_checklist__details_rounded-checkbox {
   /* width: 16px;
   height: 16px;
   border-radius: 50%; */
@@ -746,12 +770,179 @@ button {
   outline: none; */
   cursor: pointer;
 }
-.checklist-detail .rounded-checkbox:disabled {
+.kt_checklist__details .kt_checklist__details_rounded-checkbox:disabled {
   border-color: rgba(118, 118, 118, 0.3);
   background-color: initial;
   cursor: not-allowed; 
   }
-/* .checklist-detail .rounded-checkbox:checked {
+/* .kt_checklist__details .kt_checklist__details_rounded-checkbox:checked {
   appearance: auto;
   clip-path: circle(50% at 50% 50%);
 } */
+
+
+
+
+
+
+/* Read only template Css start */
+.kt_checklist__timeline .slds-timeline__item_expandable.kt_checklist__success-class::before {
+  background: #2e844a;
+}
+
+.kt_checklist__timeline .slds-timeline__item_expandable.kt_checklist__error-class::before {
+  background: #ea001e;
+}
+
+.kt_checklist__custom-result-icon {
+  background-color: white;
+  padding-top: 5px;   
+}
+
+.kt_checklist__timeline .kt_checklist__icons .kt_checklist__custom-result-icon {
+  background-color: white;
+  padding-top: 5px;
+}
+.kt_checklist__timeline .kt_checklist__icons {
+  margin-left: 16px;
+}
+
+.kt_checklist__timeline .kt_checklist__icons .kt_checklist__collapsible-button {
+  min-width: 5px;
+  display: inline-block;
+}
+
+.kt_checklist__timeline .kt_checklist__icons .kt_checklist__custom-result-icon {
+  background-color: white;
+  padding-top: 5px;
+}
+
+.kt_checklist__timeline .slds-media__body.kt_checklist__wrapper {
+  padding-left: 0;
+}
+
+.kt_checklist__timeline .slds-media__body.kt_checklist__wrapper .slds-timeline__trigger:hover {
+  background-color: #fff;
+}
+
+.kt_checklist__timeline .slds-media__body.kt_checklist__wrapper .kt_checklist__job-step {
+  background-color: #fff;
+  z-index: 10;
+  padding: 5px 0;
+  transform: scale(1);
+  transition: 1.5s all ease;
+}
+
+/*
+.kt_checklist__timeline .slds-media__body.kt_checklist__wrapper .kt_checklist__info {
+  transform: scale(1);
+  transition: 1.5s all ease;
+}
+
+.kt_checklist__timeline .slds-media__body.kt_checklist__wrapper .options-menu {
+  width: 20px;
+} */
+
+.kt_checklist__timeline .slds-media__body.kt_checklist__wrapper .kt_checklist__activity-data {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: end;
+  gap: 0.1rem 1rem;
+  min-height: 30px;
+  margin-top: 0.5rem;
+  margin-left: 0.25rem;
+}
+
+.kt_checklist__timeline .slds-media__body.kt_checklist__wrapper .kt_checklist__activity-data .kt_checklist__Completedby {
+  width: auto;
+  /* margin: 0 0.25rem; */
+  align-self: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-right: 5px;
+}
+
+.kt_checklist__clickable{
+  color: #025fb2;
+  cursor: pointer;
+}
+
+.kt_checklist__timeline .slds-media__body.kt_checklist__wrapper .kt_checklist__activity-data .kt_checklist__Completed-date {
+  width: auto;
+  align-self: center;
+  margin-right: 5px;
+}
+
+/*
+.kt_checklist__custom-skipped-icon {
+  --sds-c-icon-color-foreground-default: #025fb2;
+  -ms-transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+  transform: rotate(135deg);
+}
+
+.kt_checklist__timeline .kt_checklist__icons .kt_checklist__custom-result-spinner {
+  margin-left: 22px;
+}
+
+.kt_checklist__timeline .kt_checklist__icons .kt_checklist__custom-result-spinner .loading {
+  position: absolute;
+  top: -2px;
+  left: 31px;
+  background-color: #fff;
+  height: 27px;
+  width: 27px;
+} */
+
+
+
+.kt_checklist__timeline-container {
+  position: relative;
+}
+
+.kt_checklist__timeline-container ul {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: auto;
+  max-height: 350px;
+}
+
+.kt_checklist__timeline-container .kt_checklist__gradient-mask {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: white;
+  height: 1.1rem;
+  width: calc(100% - 15px);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+}
+
+.kt_checklist__timeline-container ul {
+  scrollbar-width: thin;
+  scrollbar-color: #c1c1c1 transparent;
+}
+
+.kt_checklist__timeline-container ul::-webkit-scrollbar {
+  width: 6px;
+}
+
+.kt_checklist__timeline-container ul::-webkit-scrollbar-thumb {
+  background-color: #c1c1c1;
+  border-radius: 9999px;
+}
+
+.kt_checklist__timeline-container ul::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.kt_checklist__content-overflow {
+  overflow-wrap: break-word;
+}
+
+.kt_checklist__job-summary-padding {
+  padding-left: 36px;
+}
+
+/* Read only template Css end */

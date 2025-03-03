@@ -3,7 +3,6 @@
     <fullName>IsLocked__c</fullName>
     <defaultValue>false</defaultValue>
     <deprecated>false</deprecated>
-    <externalId>false</externalId>
     <inlineHelpText>If the Template is locked, a checklist of this template can not be added with more items.</inlineHelpText>
     <label>Is Locked?</label>
     <trackHistory>false</trackHistory>

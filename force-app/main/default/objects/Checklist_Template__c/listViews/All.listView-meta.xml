@@ -6,6 +6,7 @@
     <columns>Active__c</columns>
     <columns>IsLocked__c</columns>
     <columns>Template_Used_Count__c</columns>
+    <columns>Sequential__c</columns>
     <filterScope>Everything</filterScope>
     <label>All</label>
 </ListView>

@@ -1,9 +1,9 @@
 <template>
 
     <!-- Commented the mobile view  -->
-        <div lwc:if={isMobile} style={divStyle}>
+        <div lwc:if={isMobile} style={divStyle} class="slds-theme_default">
 
-        <div class="slds-text-heading_medium slds-text-align_center slds-text-heading_medium slds-text-align_center" style="margin-top:20px;">
+        <div class="slds-text-heading_medium slds-text-align_center slds-text-heading_medium slds-text-align_center" style="padding-top:20px;">
             Create New Checklist
         </div>
         <div class="slds-text-body_small slds-text-align_center" style="border: thin;padding-bottom: 10px;">
@@ -17,14 +17,14 @@
             </div>
         </div>
         <div>
-            <div class="checklist-box">
+            <div class="kt_checklist__checklist-box">
                 <div class="slds-p-around_small slds-is-relative">
 
-                    <div class="box-inn">
+                    <div class="kt_checklist__box-inn">
                         <div class="slds-form-element">
 
                             <template lwc:if={showTemplateField}>
-                                <div class="lookup">
+                                <div class="kt_checklist__lookup">
                                     <lightning-record-picker object-api-name="kt_checklist__Checklist_Template__c"
                                         field-level-help="Predefined Checklist Items are auto-generated if a Checklist Template is selected."
                                         placeholder="Search Checklist Templates..." label="Checklist Template"
@@ -36,19 +36,19 @@
                             </template>
 
                             <template lwc:if={showChecklistFields}>
-                                <div class="add-item-form">
+                                <div class="kt_checklist__add-item-form">
                                     <lightning-input type="text" label="Checklist Title"
                                         data-fieldname={checklistTitle_Field.fieldApiName} max-length='255'
-                                        value={formData.Checklist_Title__c} onchange={handleInputChange}
+                                        value={formData.kt_checklist__Checklist_Title__c} onchange={handleInputChange}
                                         required="true"></lightning-input>
 
 
-                                    <lightning-textarea value={formData.Description__c}
+                                    <lightning-textarea value={formData.kt_checklist__Description__c}
                                         data-fieldname={description_Field.fieldApiName} onchange={handleInputChange}
                                         label="Description" maxlength="255"></lightning-textarea>
                                     
 
-                                    <lightning-input value={formData.Due_Days__c} type="Number"
+                                    <lightning-input value={formData.kt_checklist__Due_Days__c} type="Number"
                                         label="Due Days"
                                         field-level-help="Number of days the checklist is due from the date of creation."
                                         data-fieldname={dueDays_Field.fieldApiName} min="0" max="9999"
@@ -59,14 +59,14 @@
                                         label="Due Date" value={addChecklistDueDate} disabled="true"
                                         style="width: 100%;padding-bottom: 5px;"></lightning-input>
 
-                                    <lightning-combobox class="picklist" name="field"
+                                    <lightning-combobox class="kt_checklist__picklist" name="field"
                                         field-level-help="If Others is selected, you can assign the Checklist to any particular user."
                                         label="Assign To" placeholder="--None--"
                                         value={selectedAssignedTo} options={assignToOptions.values}
                                         data-fieldname={assignTo_Field.fieldApiName} onchange={handleAssignToChange}
                                         required="true"></lightning-combobox>
                                 </div>
-                                <div class="lookup slds-m-bottom_x-small">
+                                <div class="kt_checklist__lookup slds-m-bottom_x-small">
                                     <template lwc:if={showUserLookup}>
                                         <lightning-record-picker object-api-name="User" placeholder="Search User..."
                                             label="User" filter={userFilter} required="true"
@@ -82,23 +82,23 @@
                                         </lightning-record-picker>
                                     </template>
 
-                                    <template lwc:if={checklistLookupField.relatedObjectApiName}>
+                                    <template lwc:if={checklistLookupField.displayFieldinUI}>
                                         <lightning-record-picker label={checklistLookupField.label} disabled="true"
                                             value={recordId}
                                             object-api-name={checklistLookupField.relatedObjectApiName}>
                                         </lightning-record-picker>
                                     </template>
                                 </div>
-                                <div class="" style="display: flex; align-items: center;">
-                                    <label for="togglevalue2" class="centerAlighment"  style="min-width: 70px;">Sequential
+                                <div class="slds-p-vertical_x-small" style="display: flex; align-items: center;">
+                                    <label for="togglevalue1" class="centerAlighment"  style="min-width: 70px;">Sequential
                                         <lightning-helptext class="helptext-icon" slot="start" content="When the Checklist is sequential, it's items must be completed in order. This option is set in the Template." style="position: relative; top: -4px; right: -2px;">
                                         </lightning-helptext>
                                     </label>
-                                    <lightning-input type="toggle" message-toggle-active="" name="togglevalue2" checked={formData.Sequential__c} message-toggle-inactive="" title="" disabled={showTemplateField} data-fieldname={is_Checklist_Sequential_Field.fieldApiName} onchange={handleInputChange}></lightning-input>
+                                    <lightning-input type="toggle" message-toggle-active="" name="togglevalue1" checked={formData.kt_checklist__Sequential__c} message-toggle-inactive="" title="" disabled={showTemplateField} data-fieldname={is_Checklist_Sequential_Field.fieldApiName} onchange={handleInputChange}></lightning-input>
                                 </div>
 
 
-                                <div class="add-item-form">
+                                <div class="kt_checklist__add-item-form">
                                     <template lwc:if={showAddItems}>
                                         <div
                                             class="slds-form-element slds-form-element_vertical slds-is-editing slds-m-top_small">
@@ -154,7 +154,7 @@
                                     </template>
 
                                     <template lwc:else>
-                                        <button class="btn-primary1 slds-button slds-button_brand"
+                                        <button class="kt_checklist__button1 slds-button slds-button_brand"
                                             onclick={handleAddItem} disabled={disableAddItem}>
                                             <lightning-icon icon-name="utility:add" alternative-text="Add Item"
                                                 title="Add Item" size="xx-small" variant="inverse"></lightning-icon>
@@ -167,7 +167,7 @@
                                 </div>
                             </template>
 
-                            <div class="btn-save  slds-m-top_medium slds-align_absolute-center">
+                            <div class="kt_checklist__btn-save  slds-m-top_medium slds-align_absolute-center">
                                 <button class="slds-button slds-button_text-destructive" onclick={handleChangeChecklistType}>Back</button>
                                 <template lwc:if={showChecklistFields}>
                                     <button class="slds-button slds-button_destructive" onclick={closeModal}>Cancel</button>
@@ -209,13 +209,13 @@
                         size="medium"></lightning-spinner>
 
                     <div>
-                        <div class="checklist-box">
+                        <div class="kt_checklist__checklist-box">
                             <div class="slds-p-around_small slds-is-relative">
-                                <div class="box-inn">
+                                <div class="kt_checklist__box-inn">
                                     <div class="slds-form-element">
 
                                         <template lwc:if={showTemplateField}>
-                                            <div class="lookup">
+                                            <div class="kt_checklist__lookup">
                                                 <lightning-record-picker
                                                     object-api-name="kt_checklist__Checklist_Template__c"
                                                     field-level-help="Predefined Checklist Items are auto-generated if a Checklist Template is selected."
@@ -232,7 +232,7 @@
                                         </template>
 
                                         <template lwc:if={showChecklistFields}>
-                                            <div class="add-item-form">
+                                            <div class="kt_checklist__add-item-form">
                                                 <lightning-input type="text" label="Checklist Title"
                                                     data-fieldname={checklistTitle_Field.fieldApiName} max-length='255'
                                                     value={formData.kt_checklist__Checklist_Title__c}
@@ -261,7 +261,7 @@
                                                     label="Due Date" value={addChecklistDueDate} disabled="true"
                                                     style="width: 100%;padding-bottom: 5px;"></lightning-input>
 
-                                                <lightning-combobox class="picklist" name="field"
+                                                <lightning-combobox class="kt_checklist__picklist" name="field"
                                                     field-level-help="If you wish, you can assign the Checklist to any particular user or a queue."
                                                     label="Assign To" placeholder="--None--"
                                                     value={assignToOptions.defaultValue.value}
@@ -270,7 +270,7 @@
                                                     onchange={handleAssignToChange}
                                                     required="true"></lightning-combobox>
                                             </div>
-                                            <div class="lookup slds-m-bottom_x-small">
+                                            <div class="kt_checklist__lookup slds-m-bottom_x-small">
                                                 <template lwc:if={showUserLookup}>
                                                     <lightning-record-picker object-api-name="User"
                                                         placeholder="Search User..." label="User" filter={userFilter}
@@ -288,7 +288,7 @@
                                                     </lightning-record-picker>
                                                 </template>
 
-                                                <template lwc:if={checklistLookupField.relatedObjectApiName}>
+                                                <template lwc:if={checklistLookupField.displayFieldinUI}>
                                                     <lightning-record-picker label={checklistLookupField.label}
                                                         disabled="true" value={recordId}
                                                         object-api-name={checklistLookupField.relatedObjectApiName}>
@@ -304,7 +304,7 @@
                                                 <lightning-input type="toggle" message-toggle-active="" name="togglevalue1" checked={formData.kt_checklist__Sequential__c} message-toggle-inactive="" title="" disabled={showTemplateField} data-fieldname={is_Checklist_Sequential_Field.fieldApiName} onchange={handleInputChange}></lightning-input>
                                             </div>
 
-                                            <div class="add-item-form">
+                                            <div class="kt_checklist__add-item-form">
                                                 <template lwc:if={showAddItems}>
                                                     <div
                                                         class="slds-form-element slds-form-element_vertical slds-is-editing slds-m-top_small">
@@ -363,7 +363,7 @@
                                                 </template>
 
                                                 <template lwc:else>
-                                                    <button class="btn-primary1 slds-button slds-button_brand"
+                                                    <button class="kt_checklist__button1 slds-button slds-button_brand"
                                                         onclick={handleAddItem}  disabled={disableAddItem}>
                                                         <lightning-icon icon-name="utility:add"
                                                             alternative-text="Add Item" title="Add Item" size="xx-small"
@@ -379,11 +379,11 @@
                                         </template>
 
                                         
-                                            <div class="btn-save  slds-m-top_medium slds-align_absolute-center">
+                                            <div class="kt_checklist__btn-save  slds-m-top_medium slds-align_absolute-center">
                                                 <button class="slds-button slds-button_text-destructive" onclick={handleChangeChecklistType}>Back</button>
                                                 <template lwc:if={showChecklistFields}>
                                                     <button class="slds-button slds-button_destructive" onclick={closeModal}>Cancel</button>
-                                                    <button class="btn-primary1 slds-button slds-button_brand" onclick={handleSubmitButton}
+                                                    <button class="kt_checklist__button1 slds-button slds-button_brand" onclick={handleSubmitButton}
                                                         disabled={showAddForm}>Save</button>
                                                 </template>
                                             </div>

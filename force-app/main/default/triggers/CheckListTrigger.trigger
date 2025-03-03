@@ -1,4 +1,5 @@
 trigger CheckListTrigger on Checklist__c (before insert, before update, after insert, after update, after delete) {
+
     if((Trigger.isInsert || Trigger.isUpdate) && Trigger.isBefore){
         //CheckListTriggerHandler.updateOwnerId(Trigger.New);
     }
@@ -9,6 +10,7 @@ trigger CheckListTrigger on Checklist__c (before insert, before update, after in
     }
     
     if(Trigger.isAfter && (Trigger.isInsert || Trigger.isUpdate )){
+        system.debug('Trigger.isUpdate : ');
     	CheckListTriggerHandler.updateTemplateUsedCount(Trigger.New, Trigger.oldMap);
     }
     

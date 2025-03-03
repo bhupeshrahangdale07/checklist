@@ -1,6 +1,6 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import LightningConfirm from 'lightning/confirm';
-import getRelatedFieldNameByRecordId from '@salesforce/apex/CheckListManager.getRelatedFieldNameByRecordId';
+import getRelatedFieldNameByRecordId from '@salesforce/apex/CheckListManagerDuc.getRelatedFieldNameByRecordId'; // Update class Name it before packaging*********************************
 import fetchTemplate from '@salesforce/apex/CheckListManagerDuc.fetchTemplate'; // Update class Name it before packaging*********************************
 import saveChecklistAndItems from '@salesforce/apex/CheckListManagerDuc.saveChecklistAndItems'; // Update class Name it before packaging*********************************
 import FORM_FACTOR from '@salesforce/client/formFactor';
@@ -315,7 +315,7 @@ export default class CreateChecklist extends NavigationMixin(LightningElement) {
 					this.processTempItems();
 					this.formData[this.checklistTemplate_Field?.fieldApiName] = this.CheckListTemplateId;
 					this.formData[this.checklistTitle_Field?.fieldApiName] = result.Name ? result.Name : '';
-					this.formData[this.is_Checklist_Sequential_Field?.fieldApiName] = result[this.templateIsSequential_Field?.fieldApiName] ? result[this.templateIsSequential_Field?.fieldApiName] : false;
+					// this.formData[this.is_Checklist_Sequential_Field?.fieldApiName] = result[this.templateIsSequential_Field?.fieldApiName] ? result[this.templateIsSequential_Field?.fieldApiName] : false;
 
 					if (this.isMobile) {
 
@@ -329,31 +329,32 @@ export default class CreateChecklist extends NavigationMixin(LightningElement) {
 
 						this.formData[this.is_Checklist_Locked_Field?.fieldApiName] = result[isLockedField] ? result[isLockedField] : false;
 
+						let sequentialField = this.templateIsSequential_Field?.fieldApiName;
+						if (sequentialField && !sequentialField.startsWith('kt_checklist__')) {
+							sequentialField = 'kt_checklist__' + sequentialField;
+						}
+						this.formData[this.templateIsSequential_Field?.fieldApiName] = result[sequentialField] ? result[sequentialField] : false;
+
+
 						let descriptionField = this.templateDescription_Field?.fieldApiName;
 
 						let dueDaysField = this.templateDueDays_Field?.fieldApiName;
 
-						let sequentialField = this.templateIsSequential_Field?.fieldApiName;
-						
 
 						if ((descriptionField && !descriptionField.startsWith('kt_checklist__')) ||
 
-							(dueDaysField && !dueDaysField.startsWith('kt_checklist__')) || 
-
-							(sequentialField && !sequentialField.startsWith('kt_checklist__'))) {
+							(dueDaysField && !dueDaysField.startsWith('kt_checklist__'))) {
 
 							descriptionField = 'kt_checklist__' + descriptionField;
 
 							dueDaysField = 'kt_checklist__' + dueDaysField;
 
-							sequentialField =  'kt_checklist__' + sequentialField;
-
 						}
+
 						this.formData[this.description_Field?.fieldApiName] = result[descriptionField] ? result[descriptionField] : '';
 
 						this.formData[this.dueDays_Field?.fieldApiName] = result[dueDaysField] ? result[dueDaysField] : '';
 
-						this.formData[this.is_Checklist_Sequential_Field?.fieldApiName] = result[sequentialField] ? result[sequentialField] : false;
 						this.pupulateDueDate(result[dueDaysField]);
 
 					} else {
@@ -757,6 +758,7 @@ export default class CreateChecklist extends NavigationMixin(LightningElement) {
 		}
 
 		saveChecklistAndItems({
+			recordId : this.recordId,
 			Items: JSON.stringify(items),
 			ChecklistRecord: [this.checklistTemporaryData]
 		})
@@ -833,7 +835,7 @@ export default class CreateChecklist extends NavigationMixin(LightningElement) {
 	navigateToChecklistTypeSelectionScreen() {
 		if (this.isMobile) {
 			let componentDef = {
-				componentDef: "c:createChecklistDialogDuc",
+				componentDef: "kt_checklist:createChecklistDialogDuc",
 				attributes: {
 					recordIdOfAcc: this.recordId,
 					ShowAsPopUp: false

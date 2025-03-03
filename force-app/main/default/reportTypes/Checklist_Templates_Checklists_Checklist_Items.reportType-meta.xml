@@ -89,6 +89,11 @@
             <field>Template_Used_Count__c</field>
             <table>Checklist_Template__c</table>
         </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Sequential__c</field>
+            <table>Checklist_Template__c</table>
+        </columns>
         <masterLabel>Checklist Templates</masterLabel>
     </sections>
     <sections>
@@ -187,6 +192,31 @@
             <field>Contact__c</field>
             <table>Checklist_Template__c.Checklists__r</table>
         </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Sequential__c</field>
+            <table>Checklist_Template__c.Checklists__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Related_To__c</field>
+            <table>Checklist_Template__c.Checklists__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Related_To_Id__c</field>
+            <table>Checklist_Template__c.Checklists__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Related_To_Object__c</field>
+            <table>Checklist_Template__c.Checklists__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Campaign__c</field>
+            <table>Checklist_Template__c.Checklists__r</table>
+        </columns>
         <masterLabel>Checklists</masterLabel>
     </sections>
     <sections>
@@ -243,6 +273,16 @@
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Checklist_Template_Item__c</field>
+            <table>Checklist_Template__c.Checklists__r.Checklist_Items__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>CompletedBy__c</field>
+            <table>Checklist_Template__c.Checklists__r.Checklist_Items__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>CompletedDate__c</field>
             <table>Checklist_Template__c.Checklists__r.Checklist_Items__r</table>
         </columns>
         <masterLabel>Checklist Items</masterLabel>

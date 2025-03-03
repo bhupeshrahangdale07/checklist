@@ -1,0 +1,78 @@
+<template>
+    <div class="checklist-container">
+
+        <div class="slds-text-heading_medium slds-text-align_center slds-text-heading_medium slds-text-align_center"
+            style=" padding: 10px; background: white;" if:true={isMobile}>
+            Create New Checklist
+        </div>
+
+    <div>
+        <div class="checklist-box">
+                <div class="kt_checklist__dialog_box centerdiv slds-p-around_medium slds-is-relative">
+                    <div class="kt_checklist__box-inn slds-text-align_center">
+                    <div class="slds-grid slds-wrap slds-grid_align-space">
+                        <div
+                                class=" kt_checklist__dialog_col-1 slds-col  slds-border_bottom slds-border_top slds-border_left slds-border_right slds-var-p-around_medium slds-col slds-medium-size_6-of-12  slds-large-size_6-of-12 selectchecklist">
+                            <div
+                                    class="kt_checklist__dialog_txt-small slds-text-body_small slds-text-align_center slds-text-title slds-p-bottom_x-small slds-border_bottom">
+                                Create Checklist <strong>with Template</strong></div>
+                                <div if:false={isMobile}>
+                            <button
+                                        class="kt_checklist__button slds-button slds-button_neutral slds-button_dual-stateful slds-is-pressed slds-var-m-top_small"
+                                        aria-live="assertive" aria-pressed="true" name="With Template"
+                                        onclick={handleButton}>
+
+                                <span class="slds-text-not-pressed">
+                                    Follow
+                                </span>
+                                <span class="slds-text-pressed">
+                                    Click Here</span>
+                            </button>
+                                </div>
+                                <div if:true={isMobile}>
+                                    <button class="kt_checklist__button-cancel slds-button slds-button_brand" aria-live="assertive"
+                                        aria-pressed="true" name="With Template" onclick={handleButton} 
+                                        style="color: #ffffff; background: #1b96ff; margin-top: 28px; margin-bottom: 12px">
+                                        <span class="slds-m-left_x-small" style=" font-size: smaller;">
+                                            Create Checklist
+                                        </span>
+                                    </button>
+                                </div>
+                        </div>
+
+                        
+                        <div
+                                class="kt_checklist__dialog_col-1 slds-col  slds-border_bottom slds-border_top slds-border_left slds-border_right slds-var-p-around_medium  slds-col  slds-medium-size_6-of-12 slds-large-size_6-of-12 selectchecklist">
+                            <div
+                                    class="kt_checklist__dialog_txt-small slds-text-body_small slds-text-align_center slds-text-title slds-p-bottom_x-small slds-border_bottom ">
+                                Create Checklist <strong>without Template</strong></div>
+                            <div if:false={isMobile}>
+                            <button
+                                        class="kt_checklist__button slds-button slds-button_neutral slds-button_dual-stateful slds-is-pressed slds-var-m-top_small"
+                                aria-live="assertive" aria-pressed="true" name="Without Template"
+                                onclick={handleButton}>
+                                <span class="slds-text-not-pressed">
+                                    Follow
+                                </span>
+                                <span class="slds-text-pressed">
+                                    Click Here
+                                </span>
+                            </button>
+                            </div>
+                            <div if:true={isMobile}>
+                                    <button class="kt_checklist__button-cancel slds-button slds-button_brand" aria-live="assertive"
+                                        aria-pressed="true" name="Without Template" onclick={handleButton} 
+                                        style="color: #ffffff; background: #1b96ff; margin-top: 28px; margin-bottom: 12px">
+                                        <span class="slds-m-left_x-small" style=" font-size: smaller;">
+                                            Create Checklist
+                                        </span>
+                                    </button>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</template>

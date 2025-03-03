@@ -1,0 +1,33 @@
+<template>
+
+    <div class="page-container">
+        <div class="centered-box">
+            <!-- Header -->
+            <div class="box-header-itemedit">
+                <h2 class="slds-text-heading_medium">Edit Checklist Item</h2>
+            </div>
+
+            <div class="box-body">
+                    <div class="kt_checklist__add-item-form" style="min-height: 30%;">
+    
+                        <p><b>Checklist: </b>{itemParentChecklistTitle}</p>
+                        <lightning-input type="text" field-level-help="" label="Item:" class="dialogItemEdit"
+                            title="Edit Item."
+                            value={itemToBeEdited} onchange={handleupdatedItem} placeholder="Type Item here...">
+                        </lightning-input>
+    
+                        <lightning-textarea name="kt_checklist__Description__c" label="Description:"
+                            max-length="255" placeholder="Type Description here..."
+                            value={descToBeEdited} onchange={handleupdatedDesc} class="">
+                        </lightning-textarea>
+                    </div>
+    
+                    <div class="slds-text-align_center slds-m-top_medium">
+                        <lightning-button variant="neutral" label="Cancel" onclick={closeDialogModal} class="slds-m-right_x-small"></lightning-button>
+                        <lightning-button variant="brand" label="Save" onclick={handleSaveEditedItem}></lightning-button>
+                    </div>
+            </div>
+
+        </div>
+    </div>
+</template>

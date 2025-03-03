@@ -1,0 +1,145 @@
+<template>
+
+    <div class="kt_checklist kt_checklist__details kt_checklist__Accordion-index">
+        <div lwc:if={ischeckListDataAvailable}>
+            <ul lwc:if={checkListData} class="slds-accordion">
+                <template for:each={checkListData} for:item="CheckL" for:index="checklistIndex">
+                    <li class="slds-accordion__list-item" key={CheckL.Id}>
+                        <section class={CheckL.accordionClass} data-checklistid={CheckL.Id} style="
+                                            border-radius: 5.927px;
+                                            border: 0.741px solid rgba(0, 0, 0, 0.1);
+                                            background: #fafafa; margin-bottom:15px;
+                                            ">
+                            <div class="slds-accordion__summary slds-grid_align-spread">
+                                <h2 class="slds-accordion__summary-heading">
+                                    <div style="display: flex; width: 100%; justify-content: space-between;">
+                                        <div class="slds-grid_vertical-align-center"
+                                            style="flex: 1; text-align: left; padding-right: 10px;">
+                                            <span class="slds-accordion__summary-content  slds-text-title_bold"
+                                                style=" white-space: normal; font-size: 16px;">
+                                                <!-- Project Checklist -->
+                                                {CheckL.kt_checklist__Checklist_Title__c}
+                                            </span>
+                                        </div>
+                                        <div style="text-align: right;">
+                                            <span
+                                                class="slds-accordion__summary-content kt_checklist__clr-blue slds-text-title_regular">
+                                                <!-- Due Date-08-09-2023 -->
+                                                <!-- Due: {CheckL.finalDueDate} -->
+                                                <span lwc:if={CheckL.kt_checklist__Due_Date__c}
+                                                    class={CheckL.dueColour}>
+                                                    Due: {CheckL.finalDueDate}
+                                                </span>
+                                            </span>
+                                            &nbsp;&nbsp;&nbsp;
+                                        </div>
+                                        <div style="text-align: right;">
+                                            <lightning-progress-ring slot="actions"
+                                                value={CheckL.kt_checklist__Percentage_Completion__c}
+                                                variant={CheckL.progressRingVariant} size="small"
+                                                title={CheckL.ProgressbarPercentage} aria-label="Progress">
+                                            </lightning-progress-ring>
+                                        </div>
+                                        <div style="text-align: right;">
+                                            <button onclick={handleAccordian} data-checklistid={CheckL.Id}
+                                                class="slds-m-left_small slds-button slds-button_reset slds-grid_align-end"
+                                                title="">
+                                                <svg class="kt_checklist__chevron slds-accordion__summary-action-icon"
+                                                    aria-hidden="true">
+                                                    <use xlink:href={accordion_ICON}></use>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </h2>
+                            </div>
+
+
+                            <div class="slds-accordion__content ">
+                                <template lwc:if={CheckL.kt_checklist__Description__c}>
+                                    <p class="slds-p-bottom_x-small" style="font-size: 14px;">
+                                        <c-Description-display description={CheckL.kt_checklist__Description__c}
+                                            flexipage-region-width={flexipageRegionWidth}></c-Description-display>
+                                    </p>
+                                </template>
+                                <!-- Checklist Items start here -->
+                                <template lwc:if={CheckL.kt_checklist__Checklist_Items__r}>
+                                    <div class="slds-card">
+                                        <div class="slds-card__body" part="body">
+                                            <div class="kt_checklist__timeline-container">
+                                                <ul class="slds-timeline slds-var-m-right_xx-small">
+                                                    <template for:each={CheckL.kt_checklist__Checklist_Items__r}
+                                                        for:item="item" for:index="itemIndex">
+                                                        <li key={item.Id} class="kt_checklist__timeline">
+                                                            <c-custom-timeline-item
+                                                                show-line={CheckL.kt_checklist__Sequential__c}
+                                                                item-type={item.kt_checklist__Checked__c}>
+                                                                <div slot="header">
+                                                                    {item.kt_checklist__Item__c}
+                                                                </div>
+
+                                                                <div slot="body">
+                                                                    <div class="slds-var-m-horizontal_xx-small">
+                                                                        <c-description-display
+                                                                            description={item.kt_checklist__Description__c}
+                                                                            flexipage-region-width={flexipageRegionWidth}></c-description-display>
+                                                                    </div>
+
+                                                                    <div lwc:if={item.showDetails}
+                                                                        class="slds-form-element__control slds-input-has-fixed-addon kt_checklist__activity-data">
+                                                                        <div class="kt_checklist__Completedby slds-badge" style="margin-left:0px;">
+
+                                                                            <span
+                                                                                class="kt_checklist__clickable slds-truncate">
+                                                                                <div lwc:if={item.CompletedBy}>
+                                                                                    <a href={item.CompletedByLink}
+                                                                                        target="_blank">
+                                                                                        {item.CompletedBy}
+                                                                                    </a>
+                                                                                </div>
+                                                                            </span>
+
+                                                                        </div>
+                                                                        <div lwc:if={item.CompletedDate} class="kt_checklist__Completed-date slds-badge" style="margin-left:0px;">
+                                                                            <span class="slds-truncate">
+                                                                                <lightning-formatted-text
+                                                                                    value={item.CompletedDate}></lightning-formatted-text>
+                                                                                <!-- <lightning-relative-date-time value={item.CompletedDate}></lightning-relative-date-time> -->
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </c-custom-timeline-item>
+                                                        </li>
+                                                    </template>
+                                                </ul>
+                                                <span lwc:if={CheckL.kt_checklist__Sequential__c}
+                                                    class="kt_checklist__gradient-mask"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </template>
+                            </div>
+                        </section>
+                    </li>
+                </template>
+            </ul>
+        </div>
+        <div lwc:else>
+            <div class="kt_checklist__empty-state-vrtl kt_checklist__vrtl-state-tab slds-vertical-tabs"
+                style="display: flex; border: 1px solid rgb(0,0,0,0.1); border-radius: 8px; flex-grow: 1;">
+                <div class="slds-vertical-tabs__content ">
+                    <div class="slds-text-longform">
+                        <div class="slds-text-align_center slds-p-around_small">
+                            <img src={noCLIcon} alt="" style="width:auto; height: auto;">
+                            <div class="slds-text-heading_medium ">
+                                <p>No Checklists.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

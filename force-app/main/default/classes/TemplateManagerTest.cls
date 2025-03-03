@@ -50,10 +50,13 @@ public class TemplateManagerTest {
     public static void saveTemplateAndItems_Test(){
         Checklist_Template__c ct = [Select id from Checklist_Template__c limit 1];
         Checklist_Template_Item__c ci = [Select id, Description__c, Item__c, Item_Order__c, Checklist_Template__c from Checklist_Template_Item__c limit 1];
+        ci.Item_Order__c = 4;
         
         Checklist_Template_Item__c ci1 = ci.clone();
         ci1.Item__c = 'ct1';
         ci1.Item_Order__c = 2;
+        insert ci1;
+        ci1.Item__c = 'ct1 updated';
         
         Checklist_Template_Item__c ci2 = ci.clone();
         ci1.Item__c = 'ct2';
@@ -61,7 +64,7 @@ public class TemplateManagerTest {
         ci2.Checklist_Template__c = null;
         
         Test.startTest();
-        Map<String, Object> response = TemplateManager.saveTemplateAndItems(JSON.serialize(ct), new List<Checklist_Template_Item__c>{ci1, ci2}, new List<Checklist_Template_Item__c>{ci});
+        Map<String, Object> response = TemplateManager.saveTemplateAndItems(JSON.serialize(ct), new List<Checklist_Template_Item__c>{ci, ci1, ci2}, new List<Checklist_Template_Item__c>{ci}, true);
         Test.stopTest();
         
         System.assertEquals('Success', response.get('Status'), 'saveTemplateAndItems did not return success');
@@ -97,7 +100,7 @@ public class TemplateManagerTest {
             }
             
             try{
-                TemplateManager.saveTemplateAndItems(JSON.serialize(ct), new List<Checklist_Template_Item__c>{ci1, ci2}, new List<Checklist_Template_Item__c>{ci});
+                TemplateManager.saveTemplateAndItems(JSON.serialize(ct), new List<Checklist_Template_Item__c>{ci1, ci2}, new List<Checklist_Template_Item__c>{ci}, true);
             }catch(AuraHandledException e){
                 System.assertEquals('Script-thrown exception', e.getMessage());                
             }

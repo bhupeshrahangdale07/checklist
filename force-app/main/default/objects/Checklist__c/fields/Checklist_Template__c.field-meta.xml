@@ -3,7 +3,6 @@
     <fullName>Checklist_Template__c</fullName>
     <deleteConstraint>SetNull</deleteConstraint>
     <deprecated>false</deprecated>
-    <externalId>false</externalId>
     <inlineHelpText>Predefined Checklist Items are auto-generated if a Checklist Template is selected.</inlineHelpText>
     <label>Checklist Template</label>
     <referenceTo>Checklist_Template__c</referenceTo>

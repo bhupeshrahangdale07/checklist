@@ -8,7 +8,7 @@ public with sharing class CheckListTriggerHandler {
     
     public static Boolean runDMLInSystemMode = false;
     
-    public static void createChecklistItems(List<Checklist__c> lstNewChecklists){
+    public static void createChecklistItems(List<Checklist__c> lstNewChecklists){        
         Set<Id> templateIds = new Set<Id>();
         for(Checklist__c check: lstNewChecklists){
             if(check.Checklist_Template__c != null){
@@ -16,7 +16,7 @@ public with sharing class CheckListTriggerHandler {
             }
         }
         
-        Map<Id, Checklist_Template__c> checkListTemplates = new Map<Id, Checklist_Template__c>([Select id, Name, Active__c, isLocked__c, Description__c, Sequential__c,
+        Map<Id, Checklist_Template__c> checkListTemplates = new Map<Id, Checklist_Template__c>([Select id, Name, Active__c, isLocked__c, Description__c, 
                                                                                                 (Select id, Item__c, Item_Order__c, Checklist_Template__c, Description__c from Checklist_Template_Items__r) 
                                                                                                 From Checklist_Template__c Where Id IN: templateIds WITH USER_MODE]);
         
@@ -57,7 +57,6 @@ public with sharing class CheckListTriggerHandler {
     
     public static void updateTemplateUsedCount(List<Checklist__c> newChecklists, Map<Id, Checklist__c> oldChecklistMap){
         Map<Id, Checklist_Template__c> checkListTemp = new Map<Id, Checklist_Template__c>();
-        
         
         for(Checklist__c check: newChecklists){
             if( (oldChecklistMap == null) || (oldChecklistMap != null && oldChecklistMap.containsKey(check.Id) && check.Checklist_Template__c != oldChecklistMap.get(check.Id).Checklist_Template__c )){

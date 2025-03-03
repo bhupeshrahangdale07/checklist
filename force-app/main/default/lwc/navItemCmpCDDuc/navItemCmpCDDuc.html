@@ -9,7 +9,7 @@
               <!--<p> Before Custom Accordion.</p>-->
               <!-- Accordion -->
               <div class="slds-card Accordion-index" style="">
-                <ul class="vrtl-accordion slds-accordion">
+                <ul class="kt_checklist__navItem_vrtl-accordion slds-accordion">
                   <template if:true={hasData}>
                     <template for:each={groupedCheckListsMapArray} for:item="mapCheckL" for:index="index">
                         <div key={mapCheckL.dUrl} class="slds-p-around_x-small slds-m-bottom_x-small"  style="background-color: #f4f4f4; border-radius: 8px;">   <!-- custom-border-top -->
@@ -37,10 +37,12 @@
                         
                         <div key={mapCheckL.dUrl} id={index} class="collapse-divs active" style="">
                             <div if:true={isDesktop}>
-                              <c-checklist-details-duc  enable-edit-mode="true" has-admin-permission={hasAdminPermission}
+                              <c-checklist-details-duc enable-edit-mode="true" has-admin-permission={hasAdminPermission}
                               has-admin-standard-permission={hasAdminStandardPermission}
                               view-checklist-item-activity="true"
-                              check-list={mapCheckL.records} ondeletechecklist={handleRemoveChecklist} onhandlecompletedchecklist={handlecompletedchecklist} onhandleuncompletedchecklist={handleuncompletedchecklist} flexipage-region-width='large' ></c-checklist-details-duc>
+                              check-list={mapCheckL.records} ondeletechecklist={handleRemoveChecklist} 
+                              onhandlecompletedchecklist={handlecompletedchecklist} onhandleuncompletedchecklist={handleuncompletedchecklist}
+                              ondeletechecklistitem={handleRemoveChecklistItem} flexipage-region-width='large' ></c-checklist-details-duc>
                             </div>
                             <!-- Uncomment this when Mobile designs are continued development
                             <div if:true={isMobile}>
@@ -65,7 +67,7 @@
 
       </template>
       <template if:false={hasData}>
-        <div class="empty-state-vrtl vrtl-state-tab slds-vertical-tabs" style="display: flex; border: 1px solid rgb(0,0,0,0.1); border-radius: 8px; flex-grow: 1; min-height: 435px;">
+        <div class="kt_checklist__empty-state-vrtl kt_checklist__vrtl-state-tab slds-vertical-tabs" style="display: flex; border: 1px solid rgb(0,0,0,0.1); border-radius: 8px; flex-grow: 1; min-height: 435px;">
           <div class="slds-vertical-tabs__content ">
             <div class="slds-text-longform">
                 <div class="slds-text-align_center slds-p-around_small slds-m-top_large">

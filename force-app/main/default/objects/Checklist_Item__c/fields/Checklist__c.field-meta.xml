@@ -2,7 +2,6 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Checklist__c</fullName>
     <deprecated>false</deprecated>
-    <externalId>false</externalId>
     <label>Checklist</label>
     <referenceTo>Checklist__c</referenceTo>
     <relationshipLabel>Checklist Items</relationshipLabel>

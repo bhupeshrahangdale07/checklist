@@ -2,6 +2,11 @@
     border-top: none !important;
 }
 
+.item-label{
+    font-weight: 500;
+    font-size: 16px;
+}
+
 .content-container {
     display: flex;
     flex-direction: row;
@@ -20,15 +25,6 @@
     margin-top: auto;
 }
 
-/* .delete-icon:hover lightning-button-icon {
-    filter: brightness(1.5) saturate(2) hue-rotate(330deg);
-} */
-
-/* .delete-icon:hover lightning-button-icon {
-    color: red;
-    filter: drop-shadow(1px 1px 1px red);
-} */
-
 .icon-clickable {
     transition: background-color 0.2s ease, color 0.2s ease;
     /* padding: 0.5rem; */
@@ -37,28 +33,25 @@
 
 /* Hover effect similar to SLDS button */
 .icon-clickable:hover {
-    background-color: #d8d8d8; /* Light gray background on hover */
-    color: #ba0517; /* Change icon color on hover */
+    background-color: #d8d8d8;
+    /* Light gray background on hover */
+    color: #ba0517;
+    /* Change icon color on hover */
 }
 
 /* Active (onclick) effect similar to SLDS button */
 .icon-clickable:active {
-    background-color: #c5c5c5; /* Darker gray when clicked */
+    background-color: #c5c5c5;
+    /* Darker gray when clicked */
 }
 
-.item-details{
+.item-details {
     display: flex;
     flex-wrap: wrap;
     /* justify-content: space-between; */
     justify-content: flex-end;
-    gap: 0.1rem 1rem;    
+    gap: 0.1rem 1rem;
 }
-
-/* .item-details > div{
-    display: grid;
-    
-} */
-
 
 .connecting-line {
     position: relative;
@@ -68,14 +61,14 @@
     content: '';
     position: absolute;
     top: 100%;
-    left: 4%; 
+    left: 4%;
     width: 3px;
     height: 20px;
-    background-color: #d5d5d5; 
+    background-color: #d5d5d5;
 }
 
 .connecting-line:last-child:after {
-    display: none; 
+    display: none;
 }
 
 .line-wrapper {
@@ -83,54 +76,96 @@
     align-items: center;
     flex-direction: column;
     justify-content: center;
-    height: 100%; /* Ensures full height */
+    height: 100%;
+    /* Ensures full height */
 }
 
 .line {
-    width: 2px; /* Line thickness */
-    background-color: #dddbda; /* Line color */
-    flex-grow: 1; /* This makes the line stretch to take up available space */
+    width: 2px;
+    /* Line thickness */
+    background-color: #dddbda;
+    /* Line color */
+    flex-grow: 1;
+    /* This makes the line stretch to take up available space */
 }
 
 .line:last-child {
-    display: none; /* Hide the line after the last checkbox */
+    display: none;
+    /* Hide the line after the last checkbox */
 }
 
 .slds-timeline__item_expandable:before {
-    --lwc-squareIconMediumBoundaryAlt: 0.78rem;
+    --lwc-squareIconMediumBoundaryAlt: 0.45rem;
     background-color: var(--timeline-background-color);
 }
 
 .timelineDefault {
     --timeline-background-color: #1B96FF;
 }
+
 .timelineIncomplete {
     --timeline-background-color: #1B96FF;
 }
+
 .timelineCompleted {
     --timeline-background-color: #2E844A;
 }
 
+.timeline-success::before {
+  background: #00a025;  
+  /* #2e844a; */
+}
+
+.timeline-default::before {
+    --timeline-background-color: #1B96FF;
+}
+
+.timeline-checkbox{
+    accent-color: #00a025;
+    /* filter: hue-rotate(283deg); */
+}
+
 @media (min-width: 768px) and (max-width: 1024px) {
     .slds-timeline__item_expandable:before {
-    --lwc-squareIconMediumBoundaryAlt: 0.90rem;
+        --lwc-squareIconMediumBoundaryAlt: 0.90rem;
     }
 }
+
 @media only screen and (max-width: 768px) {
     .slds-timeline__item_expandable:before {
-    --lwc-squareIconMediumBoundaryAlt: 0.90rem;
+        --lwc-squareIconMediumBoundaryAlt: 0.5rem;
     }
+    .checklist-item-Label {
+        margin-bottom: 8px;
+    }
+    .small-button-menu {
+        zoom: 0.8;
+      }
 }
+
 .slds-timeline__item_expandable {
     padding-bottom: 0;
 }
+
 ul.slds-timeline li:last-of-type .slds-timeline__item_expandable {
     border: none;
 }
 
+
 .checkbox-size {
-    transform: scale(1.4);
-    margin: 5px;
+    /* transform: scale(1.2); */
+    /* width: 18.2px;
+    height: 18.2px; */
+    /* margin: 5px; */
+} 
+
+.checkbox-size {
+    width: 18.2px;
+    height: 18.2px;
+}
+
+.checkbox-parent{
+    /* margin: 5px; */
 }
 
 .slds-timeline__trigger {

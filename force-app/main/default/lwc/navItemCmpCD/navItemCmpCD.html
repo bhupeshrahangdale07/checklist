@@ -1,0 +1,83 @@
+<template>
+    <!-- <lightning-card class="width: 100%; height: 100%;" style="flex-grow: 1;"> -->
+      <!-- <lightning-button label="New CheckList" variant="Brand" onclick={createCheckList} slot="actions"></lightning-button> -->
+      <!--..Nav item cmp CD..-->
+      <template if:true={hasData}>
+        <div class="width: 100%;" height="auto" style="">
+          <div class=" slds-is-open width: 100%;" style="">
+            <div style="">
+              <!--<p> Before Custom Accordion.</p>-->
+              <!-- Accordion -->
+              <div class="slds-card Accordion-index" style="">
+                <ul class="kt_checklist__navItem_vrtl-accordion slds-accordion">
+                  <template if:true={hasData}>
+                    <template for:each={groupedCheckListsMapArray} for:item="mapCheckL" for:index="index">
+                        <div key={mapCheckL.dUrl} class="slds-p-around_x-small slds-m-bottom_x-small"  style="background-color: #f4f4f4; border-radius: 8px;">   <!-- custom-border-top -->
+                          <div class="slds-flex slds-align-items-center" style="display: flex; justify-content: space-between">
+                            <div class="inner-flex" style="display: flex;">
+                              <div>
+                                <lightning-icon lwc:if={mapCheckL.firstRecordIcon} icon-name={mapCheckL.firstRecordIcon} size="small"></lightning-icon>
+
+                                <!-- <lightning-icon lwc:else src={mapCheckL.defaultIcon} size="small"></lightning-icon> -->
+                                <img lwc:else class="slds-icon slds-icon_small" src={mapCheckL.defaultIcon} alt="" >
+                              </div>
+                              <div>
+                                <a href={mapCheckL.firstRecordFullUrl} target="_blank">
+                                  <h1 style="color: black; font-size: 16px; margin-left: 8px;"> <b>{mapCheckL.dUrl}</b> </h1>
+                                </a>
+                              </div>
+                            </div>
+                            
+                            <div>
+                              <lightning-icon icon-name="utility:chevrondown" class="chevron-icon" size="x-small" key={mapCheckL.dUrl} onclick={toggleVisibility} data-index={index}></lightning-icon>
+                            </div>
+                            
+                          </div>
+                        </div>
+                        
+                        <div key={mapCheckL.dUrl} id={index} class="collapse-divs active" style="">
+                            <div if:true={isDesktop}>
+                              <c-checklist-details  enable-edit-mode="true" has-admin-permission={hasAdminPermission}
+                                                    has-admin-standard-permission={hasAdminStandardPermission}
+                              view-checklist-item-activity="true"
+                              check-list={mapCheckL.records} ondeletechecklist={handleRemoveChecklist} onhandlecompletedchecklist={handlecompletedchecklist} onhandleuncompletedchecklist={handleuncompletedchecklist} flexipage-region-width='large' ></c-checklist-details>
+                            </div>
+                            <!-- Uncomment this when Mobile designs are continued development
+                            <div if:true={isMobile}>
+                              <c-checklist-details-mob onhandlecompletedchecklist={handlecompletedchecklist} onhandleuncompletedchecklist={handleuncompletedchecklist} check-list={mapCheckL.records}></c-checklist-details-mob>
+                            </div> -->
+                        </div>
+                      
+                    </template>
+                  </template>
+                </ul>
+              </div>
+              
+              <!-- <p> After Custom Accordion.</p> -->
+
+              
+              
+            </div>
+          </div>
+        </div>
+
+        
+
+      </template>
+      <template if:false={hasData}>
+        <div class="kt_checklist__empty-state-vrtl kt_checklist__vrtl-state-tab slds-vertical-tabs" style="display: flex; border: 1px solid rgb(0,0,0,0.1); border-radius: 8px; flex-grow: 1; min-height: 435px;">
+          <div class="slds-vertical-tabs__content ">
+            <div class="slds-text-longform">
+                <div class="slds-text-align_center slds-p-around_small slds-m-top_large">
+                    <img src={noCLIcon} alt="" style="width:auto; height: auto;">
+                    <div class="slds-text-heading_medium ">
+                        <p>No Checklists in this category.</p>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+      </template>
+    <!-- </lightning-card> -->
+  </template>

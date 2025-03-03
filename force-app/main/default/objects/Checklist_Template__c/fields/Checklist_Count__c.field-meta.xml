@@ -2,7 +2,6 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Checklist_Count__c</fullName>
     <deprecated>false</deprecated>
-    <externalId>false</externalId>
     <label>Checklist Count</label>
     <summaryForeignKey>Checklist_Template_Item__c.Checklist_Template__c</summaryForeignKey>
     <summaryOperation>count</summaryOperation>

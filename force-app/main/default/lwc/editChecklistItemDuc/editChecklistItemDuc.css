@@ -1,0 +1,35 @@
+.box-header-itemedit {
+    /* background-color: #f4f6f9; */
+    color: rgb(0, 0, 0); /* White text for contrast */
+    padding: 15px;
+    text-align: center; /* Center the header text */
+    /* font-weight: bold; */
+  }
+.box-body {
+    padding: 20px; /* Space inside the body */
+    /*text-align: center;  Center-align the content */
+  }
+  .page-container {
+    background-color: #ffffff; /* Light page background */
+    height: 100vh; /* Full height of the viewport */
+    display: flex;
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    margin: 0;
+  }
+  
+  .centered-box {
+    background-color: #ffffff; /* Grey background for the box */
+    border-radius: 8px;  /*Rounded corners */
+    /*box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  Subtle shadow */
+    width: 93%; /* Adjust width */
+    max-width: 600px; /* Restrict max width for responsiveness */
+    display: flex;
+    flex-direction: column; /* Stack header, body, and footer */
+    overflow: hidden; /* Prevent overflow */
+    /* margin-left: 7px; */
+    border-top: 1px solid #dcdcdc;
+    border-left: 1px solid #dcdcdc;
+    border-right: 1px solid #dcdcdc;
+    border-bottom: 1px solid #dcdcdc;
+  }

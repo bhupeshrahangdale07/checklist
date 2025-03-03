@@ -1,0 +1,147 @@
+<template>
+    <div class="kt_checklist kt_checklist__index">
+        <section class="kt_checklist__index_section sldc-color-background-alt">
+            <div class="kt_checklist__index_maindiv slds-var-p-around_large">
+
+                <div class="slds-grid slds-m-bottom_small">
+                    <div class="slds-align-bottom slds-col">
+                        <div class="slds-grid slds-grid_vertical-align-center">
+                            <div class="kt_checklist__index_logo slds-p-left_none">
+                                <lightning-icon class="kt_checklist__button slds-p-around_x-small" size='small'
+                                    variant="inverse" icon-name="utility:edit_form"
+                                    alternative-text="Checklist Genius Icon"></lightning-icon>
+                            </div>
+                            <div class="slds-col slds-m-horizontal_x-small">
+                                <div class="slds-page-header__title">Checklist Genius</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div lwc:if={isAccessibleActions}
+                        class="slds-col slds-no-flex slds-grid slds-align-bottom slds-shrink">
+                            <lightning-button-icon-stateful icon-name="utility:filterList" selected={openFiltersList}
+                            onclick={handleOpenFiltersList} alternative-text="Filters" 
+                            class="slds-align-middle slds-m-right_xx-small" size="medium">
+                        </lightning-button-icon-stateful>
+                            
+                        <template lwc:if={enableEditMode}>
+                            <button style={checklistBtnStyle}
+                                class="kt_checklist__button slds-button slds-button_brand slds-p-vertical_xx-small slds-p-horizontal_x-small"
+                            onclick={handleCreateChecklist}>
+                                <svg class="kt_checklist__index_button-icon slds-button__icon slds-button__icon_left"
+                                    aria-hidden="true">
+                                <use xlink:href={icon2}></use>
+                            </svg>
+                            Create Checklist
+                        </button>
+                        </template>
+                    </div>
+                </div>
+
+                <div lwc:if={openFiltersList} class="slds-m-bottom_small">
+                    <lightning-combobox label="Filter" variant="label-hidden" placeholder="Select a Filter."
+                        options={filterOptions} value={selectedFilter} onchange={handleFilterChange}>
+                    </lightning-combobox>
+                </div>
+
+                <div lwc:else>
+                    <div lwc:if={showSelectedFilters}>
+                        <lightning-pill-container class="kt_checklist__index_filter-pill" items={selectedFilters}
+                            onitemremove={handleItemRemove}></lightning-pill-container>
+                    </div>
+                </div>
+
+                <div class="slds-p-around_small" style="text-align: justify; color: red;" lwc:if={showInstructions}>
+                    <!-- <p style="text-align: justify; color: red;">
+                        We're sorry, but we couldn't find a relationship field in the Checklist object that links to the
+                        current record. To use the checklist feature, please create a new lookup field in the Checklist
+                        object that establishes a relationship with the object you are currently viewing. Once the field
+                        is created, you'll be able to utilize this feature seamlessly. If you need assistance with
+                        creating the field, please reach out to your Salesforce administrator. Thank you!
+                    </p> -->
+
+                    <p>
+                        We’re sorry, but we couldn’t find a relationship field in the Checklist object that links to
+                        this record. To use the checklist feature, you can do either of following in setup:
+                    </p>
+                    <ul class="slds-list_dotted">
+                        <li>Create a new lookup field in the Checklist object to establish a relationship with the
+                            current object. </li>
+                        <li>Add an entry in the Custom Metadata Type called 'Checklist Relationship' for the current
+                            object. </li>
+                    </ul>
+                    <p>
+                        Once either of these steps is completed, the checklist feature will work seamlessly
+                            with this record. For assistance, please contact your Salesforce administrator. Thank you!
+                    </p>
+
+                </div>
+
+                <div lwc:if={CheckList} class="slds-is-relative">
+                    
+                    <!-- 
+                        * c-checklist-details is the component where we are Displaying the List of Checklists with Checkboxes
+                    -->
+
+                    <div lwc:if={_CheckList}>
+                        <c-checklist-details enable-edit-mode={enableEditMode} has-admin-permission={hasAdminPermission}
+                            has-admin-standard-permission={hasAdminStandardPermission} check-list={_CheckList}
+                            onhandleitemchange={handleupdatechecklist} onhandleupdatechecklist={handleupdatechecklist}
+                            ondeletechecklist={handleRemoveChecklist}
+                            onhandlecompletedchecklist={handlecompletedchecklist}
+                            onhandleuncompletedchecklist={handleuncompletedchecklist}
+                            flexipage-region-width={flexipageRegionWidth}></c-checklist-details>
+                    </div>
+                    
+                </div>
+
+                <div lwc:if={openCreateChecklistDialog}>
+
+                        <div lwc:if={isNotMobile}>
+
+                    <!-- 
+                        * c-modal-pop-up is a generic component used for showing a popup.
+                    -->
+                    <c-modal-pop-up show-modal={openCreateChecklistDialog} enable-header="true"
+                        onclose={closeDialogModal}>
+                        <div slot="header">
+                            <h2 slot="header" id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+                                Create New Checklist
+                            </h2>
+                        </div>
+                        <div slot="body">
+                            <div style="min-height: 30%;">
+
+                                <!-- 
+                                    * c-create-checklist is the popup component is used to Select the Checklist Type.
+                                    * onselected this event will fire when we select any Checklist Type.
+                                -->
+                                    <c-create-checklist-dialog onselected={handleCreateChecklistDialog}>
+                                    </c-create-checklist-dialog>
+                                </div>
+                            </div>
+                        </c-modal-pop-up>
+
+                        </div>
+
+
+                </div>
+
+                <div lwc:if={openCreateChecklist}>
+                    <!-- 
+                        * c-create-checklist is the popup component is used to Create new Checklist an items. 
+                        * template-type is used to set the type of checklist is it "With Template" or "Without Template" 
+                        * record-id  record id to Relate the checklist to.
+                        * onaddnewchecklistsuccess this event will fire when we save the checklist and items.
+                        * onclose this will close the popup when we click on cancel button.
+                     -->
+                    <c-create-checklist template-type={openCreateChecklistType} record-id={recordId}
+                        onclose={handleCloseCreateChecklist} onback={handleBackCreateChecklist}
+                        onaddnewchecklistsuccess={handleOnAddNewChecklistSuccess}></c-create-checklist>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+</template>

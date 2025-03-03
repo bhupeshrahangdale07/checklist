@@ -3,7 +3,6 @@
     <fullName>Is_Checklist_Locked__c</fullName>
     <defaultValue>false</defaultValue>
     <deprecated>false</deprecated>
-    <externalId>false</externalId>
     <label>Is Checklist Locked</label>
     <trackTrending>false</trackTrending>
     <type>Checkbox</type>
