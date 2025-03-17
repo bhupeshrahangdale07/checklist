@@ -568,6 +568,7 @@ export default class CreateChecklist extends NavigationMixin(LightningElement) {
 	}
 
 	handleAddSave(event) {
+		alert('Test2- '+JSON.stringify(event.detail));
 		event.stopPropagation();
 		event.preventDefault();
 		this.showAddForm = false;
@@ -585,8 +586,11 @@ export default class CreateChecklist extends NavigationMixin(LightningElement) {
 		let item = {};
 		item.Id = 'Temporary-' + tempIndex;
 		if (this.isMobile) {
-			item.kt_checklist__Item__c = addedItem.Item__c;
-			item.kt_checklist__Description__c = addedItem.Description__c;
+			alert('addedItem : '+JSON.stringify(addedItem));
+			// item.kt_checklist__Item__c = addedItem.Item__c;
+			// item.kt_checklist__Description__c = addedItem.Description__c;
+			item.kt_checklist__Item__c = addedItem.kt_checklist__Item__c ? addedItem.kt_checklist__Item__c : addedItem.Item__c;
+			item.kt_checklist__Description__c = addedItem.kt_checklist__Description__c ? addedItem.kt_checklist__Description__c : addedItem.Description__c;
 		} else {
 			item.kt_checklist__Item__c = addedItem.kt_checklist__Item__c;
 			item.kt_checklist__Description__c = addedItem.kt_checklist__Description__c;

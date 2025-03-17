@@ -191,8 +191,7 @@
             header-tagline={templateType} onclose={closeModal}>
 
             <div slot="header">
-                <div
-                    class="slds-text-heading_medium slds-text-align_center slds-text-heading_medium slds-text-align_center">
+                <div class="slds-text-heading_medium slds-text-align_center slds-text-heading_medium slds-text-align_center">
                     Create New Checklist
                 </div>
                 <div class="slds-text-body_small slds-text-align_center">
@@ -382,15 +381,15 @@
                                         </template>
 
 
-                                        <div
-                                            class="kt_checklist__btn-save  slds-m-top_medium slds-align_absolute-center">
+                                        <div class="kt_checklist__btn-save  slds-m-top_medium slds-align_absolute-center">
                                             <button class="slds-button slds-button_text-destructive"
                                                 onclick={handleChangeChecklistType}>Back</button>
                                             <template lwc:if={showChecklistFields}>
                                                 <button class="slds-button slds-button_destructive"
                                                     onclick={closeModal}>Cancel</button>
-                                                <button class="slds-button slds-button_brand"
-                                                    onclick={handleSubmitButton} disabled={showAddForm}>Save</button>
+                                                <button class="kt_checklist__button1 slds-button slds-button_brand"
+                                                    onclick={handleSubmitButton} 
+                                                    disabled={showAddForm}>Save</button>
                                             </template>
                                         </div>
 

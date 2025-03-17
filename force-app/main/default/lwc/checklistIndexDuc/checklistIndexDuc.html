@@ -84,7 +84,7 @@
                     -->
 
                     <div lwc:if={_CheckList}>
-                        <c-checklist-details-duc enable-edit-mode={enableEditMode}
+                        <c-checklist-details-duc enable-edit-mode={enableEditMode} can-edit={canEdit} can-delete={canDelete}
                             has-admin-permission={hasAdminPermission}
                             has-admin-standard-permission={hasAdminStandardPermission} check-list={_CheckList}
                             onhandleitemchange={handleupdatechecklist} onhandleupdatechecklist={handleupdatechecklist}
@@ -93,6 +93,7 @@
                             onhandlecompletedchecklist={handlecompletedchecklist}
                             onhandleuncompletedchecklist={handleuncompletedchecklist}
                             flexipage-region-width={flexipageRegionWidth}
+                            view-checklist-item-activity={ShowDetails}
                             ></c-checklist-details-duc>
                     </div>
 

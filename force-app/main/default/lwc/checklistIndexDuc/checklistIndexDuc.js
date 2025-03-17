@@ -1,5 +1,5 @@
 import { LightningElement, track, api, wire } from 'lwc';
-import ToastContainer from 'lightning/toastContainer';
+// import ToastContainer from 'lightning/toastContainer';
 
 import getRelatedFieldNameByRecordId from '@salesforce/apex/CheckListManagerDuc.getRelatedFieldNameByRecordId';  // we need to update it before packaging******************************************************
 import getAssignedPermissions from '@salesforce/apex/CheckListManagerDuc.assignedPermissions';
@@ -24,6 +24,8 @@ export default class ChecklistIndex extends NavigationMixin(LightningElement) {
 	@api flexipageRegionWidth;
 	@api readOnlyMode;
 	@api ShowDetails;
+	canEdit;
+	canDelete;
 
 	customCSS = Resource + '/css/style.css';
 
@@ -192,7 +194,8 @@ export default class ChecklistIndex extends NavigationMixin(LightningElement) {
 		if (data) {
 			this.hasAdminStandardPermission = data.isStandard ? data.isStandard : false;
 			this.hasAdminPermission = data.isAdmin ? data.isAdmin : false;
-
+			this.canEdit = data.canEdit;
+   			this.canDelete = data.canDelete;
 			if (!this.hasAdminStandardPermission && !this.hasAdminPermission && !data.isCommunity) {
 				this.showToast('Error', 'Please Add respective PermissionSet to Use Checklist Genius', 'error');
 			} else if(data.isCommunity){
@@ -209,6 +212,7 @@ export default class ChecklistIndex extends NavigationMixin(LightningElement) {
 	}
 
 	connectedCallback() {
+		console.log('ShowDetails- '+this.ShowDetails);
 		// const toastContainer = ToastContainer.instance();
 		// toastContainer.maxToasts = 5;
 		// toastContainer.toastPosition = 'top-center';
@@ -222,7 +226,7 @@ export default class ChecklistIndex extends NavigationMixin(LightningElement) {
 			this.checklistBtnStyle = 'white-space: nowrap;';
 		}
 
-		this.checkValidity(); //required?
+		//this.checkValidity(); //required?
 	}
 
 	renderedCallback() {
@@ -368,7 +372,7 @@ export default class ChecklistIndex extends NavigationMixin(LightningElement) {
 				console.log("inside handleCreateChecklist");
 				//event.preventDefault();
 				let componentDef = {
-  		     componentDef: "kt_checklist:createChecklistDialog",
+  		     componentDef: "kt_checklist:createChecklistDialogDuc",
 					attributes: {
 						recordIdOfAcc: this.recordId,
 						ShowAsPopUp: false

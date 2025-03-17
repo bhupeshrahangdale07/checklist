@@ -582,21 +582,17 @@ export default class CreateChecklist extends NavigationMixin(LightningElement) {
 
 		let item = {};
 		item.Id = 'Temporary-' + tempIndex;
+		
+		if (this.isMobile) {
+			item.kt_checklist__Item__c = addedItem.kt_checklist__Item__c ? addedItem.kt_checklist__Item__c : addedItem.Item__c;
+			item.kt_checklist__Description__c = addedItem.kt_checklist__Description__c ? addedItem.kt_checklist__Description__c : addedItem.Description__c;
+		} else {
+			item.kt_checklist__Item__c = addedItem.kt_checklist__Item__c;
+			item.kt_checklist__Description__c = addedItem.kt_checklist__Description__c;
+		}
 
 		//item.kt_checklist__Item__c = addedItem.kt_checklist__Item__c;
 		//item.Item_Order__c = currentItem.Item_Order__c;
-
-		//Commented the following and added next 2 lines on 2024.12.04
-		// if (this.isMobile) {
-		// 	item.kt_checklist__Item__c = addedItem.kt_checklist__Item__c;
-		// 	item.kt_checklist__Description__c = addedItem.kt_checklist__Description__c;
-		// } else {
-		// 	item.kt_checklist__Item__c = addedItem.kt_checklist__Item__c;
-		// 	item.kt_checklist__Description__c = addedItem.kt_checklist__Description__c;
-		// }
-		
-		item.kt_checklist__Item__c = addedItem.kt_checklist__Item__c;
-		item.kt_checklist__Description__c = addedItem.kt_checklist__Description__c;
 		
 		item.kt_checklist__Checklist__c = '';
 		item.isTemplateItem = false;

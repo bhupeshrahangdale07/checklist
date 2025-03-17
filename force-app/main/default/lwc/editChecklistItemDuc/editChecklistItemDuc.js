@@ -13,6 +13,7 @@ export default class EditChecklistItemDuc extends NavigationMixin(LightningEleme
     @api itemToBeEdited;
     @api descToBeEdited;
     @api itemToBeEditedId;
+    @api checklistId;
     //@api currentRecordId;
     @api pathUrl;
     @track itemData;
@@ -38,7 +39,7 @@ export default class EditChecklistItemDuc extends NavigationMixin(LightningEleme
     handleSaveEditedItem() {
         let isValid = this.validateEditForm();		
         if (isValid) {
-            saveEditedChecklistItem({ itemId: this.itemToBeEditedId, updatedItem: this.itemToBeEdited, updatedDesc: this.descToBeEdited })
+            saveEditedChecklistItem({ itemId: this.itemToBeEditedId, updatedItem: this.itemToBeEdited, updatedDesc: this.descToBeEdited, checklistId: this.checklistId })
                 .then((result) => {
                     // this.reCalculateProgressBar(checkListId, checkListItemId, CheckVal);
                     if (result) {

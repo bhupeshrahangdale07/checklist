@@ -112,8 +112,7 @@
                                                                         class="kt_checklist__details_container checklist-item-Label">
                                                                         <div class="slds-p-bottom_xx-small"
                                                                             style="width:100%;">
-                                                                            <label
-                                                                                class="item-label slds-p-right_x-small"
+                                                                            <label class="item-label slds-p-right_x-small"
                                                                                 style={item.value.itemStyle}>
                                                                                 <!-- for={Item.Id} -->
                                                                                 {item.value.kt_checklist__Item__c}
@@ -147,12 +146,12 @@
                                                                         </div>
                                                                         
                                                                         <div class="kt_checklist__details_right-label slds-p-top_xx-small"
-                                                                        style={item.value.style}>
-                                                                            <template lwc:if={CheckL.isDeletable}>
-                                                                                <lightning-button-menu alternative-text="Actions"
-                                                                                    menu-alignment="right" icon-size="small" class="small-button-menu">
+                                                                            style={item.value.style}>
+                                                                            <template lwc:if={item.value.showActionMenu}>
+                                                                                <lightning-button-menu alternative-text="Actions" style="pointer-events: auto;"
+                                                                                    menu-alignment="right" icon-size="small" class="small-button-menu" disabled={item.value.disableBMenu}>
                 
-                                                                                    <lightning-menu-item value="edit" label="Edit"
+                                                                                    <lightning-menu-item lwc:if={item.value.isEditable} value="edit" label="Edit"
                                                                                         prefix-icon-name="utility:edit"
                                                                                         onclick={handleEditItem}
                                                                                         data-checklistid={CheckL.Id}
@@ -162,7 +161,7 @@
                                                                                         data-desc={item.value.kt_checklist__Description__c}>
                                                                                     </lightning-menu-item>
                 
-                                                                                    <lightning-menu-item value="delete" label="Delete"
+                                                                                    <lightning-menu-item lwc:if={item.value.isDeletable} value="delete" label="Delete"
                                                                                         prefix-icon-name="utility:delete"
                                                                                         onclick={handleDeleteItem}
                                                                                         data-itemid={item.value.Id}
@@ -234,24 +233,21 @@
 
                                                                 <input lwc:else
                                                                     class="kt_checklist__details_rounded-checkbox checkbox-size"
-                                                                    type="checkbox" name="ChecklistItem"
-                                                                    id={item.value.Id} value={item.value.Checked}
+                                                                    type="checkbox"
+                                                                    name="ChecklistItem"
+                                                                    id={item.value.Id}
+                                                                    value={item.value.Checked}
                                                                     disabled={item.value.CheckboxDisabled}
                                                                     onchange={handleCheckbox}
                                                                     data-itemid={item.value.Id}
                                                                     data-checklistid={CheckL.Id} />
                                                             </template>
-                                                            <label
-                                                                class="item-label slds-m-left_x-small slds-p-right_x-small"
+                                                            <label class="item-label slds-m-left_x-small slds-p-right_x-small"
                                                                 style="">
                                                                 <!-- for={Item.Id} -->
                                                                 {item.value.kt_checklist__Item__c}
                                                             </label>
-
-
-
-                                                            <span
-                                                                class="kt_checklist__details_description slds-p-bottom_x-small"
+                                                            <span class="kt_checklist__details_description slds-p-bottom_x-small"
                                                                 style="margin-left: 1.65rem;">
                                                                 <template
                                                                     lwc:if={item.value.kt_checklist__Description__c}>
@@ -278,27 +274,31 @@
                                                                 </lightning-icon>
                                                             </template>
                                                             
-                                                            <template lwc:if={CheckL.isDeletable}>
+                                                            <template lwc:if={item.value.showActionMenu}>
                                                                 <lightning-button-menu alternative-text="Actions"
-                                                                    menu-alignment="right" icon-size="small" class="small-button-menu">
+                                                                    menu-alignment="right" icon-size="small" class="small-button-menu" disabled={item.value.disableBMenu}>
+                                                                    
+                                                                    <template lwc:if={item.value.isEditable}>
+                                                                        <lightning-menu-item lwc:if={item.value.isEditable} value="edit" label="Edit"
+                                                                            prefix-icon-name="utility:edit"
+                                                                            onclick={handleEditItem}
+                                                                            data-checklistid={CheckL.Id}
+                                                                            data-checklisttitle={CheckL.kt_checklist__Checklist_Title__c}
+                                                                            data-itemid={item.value.Id}
+                                                                            data-item={item.value.kt_checklist__Item__c}
+                                                                            data-desc={item.value.kt_checklist__Description__c}>
+                                                                        </lightning-menu-item>
+                                                                    </template>
 
-                                                                    <lightning-menu-item value="edit" label="Edit"
-                                                                        prefix-icon-name="utility:edit"
-                                                                        onclick={handleEditItem}
-                                                                        data-checklistid={CheckL.Id}
-                                                                        data-checklisttitle={CheckL.kt_checklist__Checklist_Title__c}
-                                                                        data-itemid={item.value.Id}
-                                                                        data-item={item.value.kt_checklist__Item__c}
-                                                                        data-desc={item.value.kt_checklist__Description__c}>
-                                                                    </lightning-menu-item>
-
-                                                                    <lightning-menu-item value="delete" label="Delete"
-                                                                        prefix-icon-name="utility:delete"
-                                                                        onclick={handleDeleteItem}
-                                                                        data-itemid={item.value.Id}
-                                                                        data-checklistid={CheckL.Id}
-                                                                        data-item={item.value.kt_checklist__Item__c}>
-                                                                    </lightning-menu-item>
+                                                                    <template lwc:if={item.value.isDeletable}>
+                                                                        <lightning-menu-item lwc:if={item.value.isDeletable} value="delete" label="Delete"
+                                                                            prefix-icon-name="utility:delete"
+                                                                            onclick={handleDeleteItem}
+                                                                            data-itemid={item.value.Id}
+                                                                            data-checklistid={CheckL.Id}
+                                                                            data-item={item.value.kt_checklist__Item__c}>
+                                                                        </lightning-menu-item>
+                                                                    </template>
 
                                                                 </lightning-button-menu>
                                                             </template>
@@ -373,8 +373,7 @@
                                                 <button class="kt_checklist__button1 slds-button slds-button_brand"
                                                     onclick={handleSubmitAddItemForm}
                                                     data-checklistid={CheckL.Id}>Save</button>
-                                                <button
-                                                    class="kt_checklist__button-cancel slds-button slds-button_neutral"
+                                                <button class="kt_checklist__button-cancel slds-button slds-button_neutral"
                                                     onclick={handleAddItemCancel}
                                                     data-checklistid={CheckL.Id}>Cancel</button>
                                             </div>
@@ -408,9 +407,8 @@
                     </li>
                 </template>
             </ul>
-
-
         </div>
+        
         <div lwc:else>
             <div class="kt_checklist__empty-state-vrtl kt_checklist__vrtl-state-tab slds-vertical-tabs"
                 style="display: flex; border: 1px solid rgb(0,0,0,0.1); border-radius: 8px; flex-grow: 1;">

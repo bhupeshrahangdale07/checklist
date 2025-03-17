@@ -4,6 +4,7 @@ import createChecklistItem from '@salesforce/apex/CheckListManagerDuc.createChec
 import deleteChecklist from '@salesforce/apex/CheckListManagerDuc.deleteChecklist'; // we need to update class Name it before packaging******************************************************
 import deleteChecklistItem from '@salesforce/apex/CheckListManagerDuc.deleteChecklistItem'; // we need to update class Name it before packaging******************************************************
 import saveEditedItem from '@salesforce/apex/CheckListManagerDuc.saveEditedItem'; // we need to update class Name it before packaging******************************************************
+// import { refreshApex } from '@salesforce/apex';
 
 // commented because their might be a case where the owner can be a Queue
 // import hasPermission_Owner_Can_Delete_Checklist from '@salesforce/customPermission/Owner_Can_Delete_Checklist';
@@ -24,7 +25,7 @@ import CHECK_POINT_FIELD from '@salesforce/schema/Checklist_Item__c.Item__c';
 import CHECK_POINT_ORDER_FIELD from '@salesforce/schema/Checklist_Item__c.Item_Order__c';
 import CHECKLIST_FIELD from '@salesforce/schema/Checklist_Item__c.Checklist__c';
 import DUEDATE_FIELD from '@salesforce/schema/Checklist__c.Due_Date__c';
-import { subscribe,APPLICATION_SCOPE, MessageContext } from 'lightning/messageService';
+import { subscribe, APPLICATION_SCOPE, MessageContext } from 'lightning/messageService';
 import REFRESH_MESSAGE from '@salesforce/messageChannel/RefreshMessageChannel__c';
 
 import readOnlyPage from './checklistDetailsReadOnly.html';
@@ -33,15 +34,17 @@ import defaultPage from './checklistDetailsDuc.html';
 import FORM_FACTOR from "@salesforce/client/formFactor";
 import { NavigationMixin } from 'lightning/navigation';
 
+import getChecklistEditDeletePermissions from '@salesforce/apex/CheckListManagerDuc.getChecklistEditDeletePermissions';
+
 
 export default class ChecklistDetails extends NavigationMixin(LightningElement) {
 	@api flexipageRegionWidth;
-	viewChecklistItemActivity = false; //Make it true when we want to release Item Activity feature
+	@api viewChecklistItemActivity; //Make it true when we want to release Item Activity feature
 	@api enableEditMode;
 	//@api recordId;
 
 	@wire(MessageContext)
-    messageContext;
+	messageContext;
 	subscription = null;
 
 
@@ -92,21 +95,47 @@ export default class ChecklistDetails extends NavigationMixin(LightningElement) 
 	}
 
 	connectedCallback() {
+		console.log('viewChecklistItemActivity- '+JSON.stringify(this.viewChecklistItemActivity));
 		//this.pathUrl = window.location.href;
-		if(FORM_FACTOR === "Small" || FORM_FACTOR === "Medium"){
-		this.subscription = subscribe(
-            this.messageContext,
-            REFRESH_MESSAGE,
-            (message) => this.replaceChecklistItemFromMainList(message.data),
-			{ scope: APPLICATION_SCOPE }
-        );
+		if (FORM_FACTOR === "Small" || FORM_FACTOR === "Medium") {
+			this.subscription = subscribe(
+				this.messageContext,
+				REFRESH_MESSAGE,
+				(message) => this.replaceChecklistItemFromMainList(message.data),
+				{ scope: APPLICATION_SCOPE }
+			);
+		}
 	}
-}
-	
+
 
 	renderedCallback() {
 		this.populateCheckValues();
 	}
+
+	@api canEdit = false;
+    @api canDelete = false;
+
+    // @wire(getChecklistEditDeletePermissions)
+    // wiredPermissions({ error, data }) {
+    //     if (data) {
+    //         this.canEdit = data.canEdit;
+    //         this.canDelete = data.canDelete;
+	// 		console.log('***canEdit:' + this.canEdit + ', canDelete:' + this.canDelete);
+    //     } else if (error) {
+    //         console.error('Error fetching permissions:', error);
+    //     }
+    // }
+
+	get canEditValue() {
+		console.log('Getting canEditValue:', this.canEdit);
+		return this.canEdit; 
+	}
+	
+	get canDeleteValue() {
+		console.log('Getting canDeleteValue:', this.canDelete);
+		return this.canDelete; 
+	}
+
 
 	/*
 	 * This method is used Check is their any active Add Item Form.
@@ -159,6 +188,9 @@ export default class ChecklistDetails extends NavigationMixin(LightningElement) 
 
 				if (item.kt_checklist__Checklist_Items__r) {
 					item.kt_checklist__Checklist_Items__r.forEach(each => {
+
+						
+
 						each.CheckboxDisabled = false;
 						each.showDetails = false;
 						each.CompletedBy = each.kt_checklist__CompletedBy__r?.Name;
@@ -202,6 +234,89 @@ export default class ChecklistDetails extends NavigationMixin(LightningElement) 
 						} else {
 							each.iconClass = 'kt_checklist__cursorPointer';
 						}
+
+						//start Item actionns
+						each.isEditable = this.canEditValue;
+							each.isDeletable = this.canDeleteValue;
+
+							if(item.kt_checklist__Is_Checklist_Locked__c == true){
+								console.log('Inside if locked true. Checklist:'+item.kt_checklist__Checklist_Title__c);
+								
+								if(each.CreatedById === loggedInUserId){
+									debugger;
+									console.log('Inside Locked canEdit- '+this.canEditValue);
+									console.log('Inside Locked canDelete- '+this.canDeleteValue);
+									if(this.canEditValue || this.canDeleteValue){
+										if(each.isNotApplicable){
+											each.disableBMenu = true;
+										} else {
+										if(!each.Checked){
+											each.disableBMenu = false;
+										}else{
+											each.disableBMenu = true;
+										}
+									}
+									} else{
+										each.disableBMenu = true;
+									}
+									
+									
+									// each.isEditable = true;
+									// each.isDeletable = true;
+								}else{
+									console.log('Inside else reCalculateProgressBar- ');
+									each.disableBMenu = true;
+									// each.isEditable = false;
+									// each.isDeletable = false;
+								}
+								
+							}else{
+								if(item.isDeletable){
+									each.isEditable = true;
+									each.isDeletable = true;
+									if(each.isNotApplicable){
+										each.disableBMenu = true;
+									} else {
+										if(!each.Checked){
+											each.disableBMenu = false;
+										}else{
+											each.disableBMenu = true;
+										}
+									}
+								}else if(each.CreatedById === loggedInUserId && (each.isEditable || each.isDeletable)){
+									if(each.isNotApplicable){
+										each.disableBMenu = true;
+									} else {
+										if(!each.Checked){
+											each.disableBMenu = false;
+										}else{
+											each.disableBMenu = true;
+										}
+									}
+
+									// if(!each.Checked){
+									// 	each.disableBMenu = false;
+									// }else{
+									// 	each.disableBMenu = true;
+									// }
+									
+									// each.isEditable = true;
+									// each.isDeletable = true;
+								}else{
+									each.disableBMenu = true;
+									// each.isEditable = false;
+									// each.isDeletable = false;
+								}
+							}
+							
+							// if(each.isEditable || each.isDeletable){
+							// 	each.showActionMenu = true;
+							// }else{
+							// 	each.showActionMenu = false;
+							// }
+							each.showActionMenu = true;
+						//end Item actions
+
 					});
 
 					//console.log('item.kt_checklist__Sequential__c:', item.kt_checklist__Sequential__c);
@@ -340,16 +455,36 @@ export default class ChecklistDetails extends NavigationMixin(LightningElement) 
 
 		const CheckVal = Checked ? 'Yes' : 'No';
 
-		saveCheckListItems({ recordId: checkListItemId, isChecked: CheckVal })
+		saveCheckListItems({ recordId: checkListItemId, isChecked: CheckVal, checklistId: checkListId })
 			.then((result) => {
+				console.log('Result- ' + JSON.stringify(result));
 				// this.reCalculateProgressBar(checkListId, checkListItemId, CheckVal);
-				if (result) {
-					this.replaceChecklistItemFromMainList(result);
+				if (result && result.Success) {
+					this.replaceChecklistItemFromMainList(result.Success);
+				} else if (result === null) {
+
+					this.showToast('Error', 'error', 'Unable to check or uncheck the item because the checklist has already been deleted.');
+
+					this.dispatchEvent(new CustomEvent('deletechecklist', {
+						detail: { checklistid: checkListId }
+					}));
 				}
 			}).catch((err) => {
-				this.showToast('Error', 'error', err?.body?.message);
-				element.checked = !Checked;
-				element.value = !Checked;
+
+				if (err?.body?.message?.includes('ENTITY_IS_DELETED')) {
+
+					this.dispatchEvent(new CustomEvent('deletechecklistitem', {
+						detail: { checkListItemId: checkListItemId, checkListId: checkListId }
+					}));
+
+					this.showToast('Error', 'error', 'Unable to check or uncheck the item because it has already been deleted.');
+
+				} else {
+					console.log('Something went wrong');
+					this.showToast('Error', 'error', err?.body?.message);
+					element.checked = !Checked;
+					element.value = !Checked;
+				}
 			});
 	}
 
@@ -365,10 +500,6 @@ export default class ChecklistDetails extends NavigationMixin(LightningElement) 
 	handleNotApplicable(event) {
 		let Checked = event.currentTarget.dataset.checked;
 		let checkedvalue = event.currentTarget.dataset.checkedvalue;
-
-		console.log('***Checked:', Checked);
-		console.log('***checkedvalue:', checkedvalue);
-
 		if (Checked === 'true' || checkedvalue === 'Yes') {
 			return;
 		}
@@ -377,20 +508,34 @@ export default class ChecklistDetails extends NavigationMixin(LightningElement) 
 		const checkListId = event.currentTarget.dataset.checklistid;
 		const CheckVal = checkedvalue === undefined || checkedvalue === 'No' || checkedvalue === '' ? 'Not Applicable' : 'No';
 
-		console.log('***checkListItemId:', checkListItemId);
-		console.log('***checkListId:', checkListId);
-		console.log('***CheckVal:', CheckVal);
 
-		saveCheckListItems({ recordId: checkListItemId, isChecked: CheckVal })
+		saveCheckListItems({ recordId: checkListItemId, isChecked: CheckVal, checklistId: checkListId })
 			.then((result) => {
 
-				if (result) {
+				if (result && result.Success) {
 					// this.reCalculateProgressBar(checkListId, checkListItemId, CheckVal);
-					this.replaceChecklistItemFromMainList(result);
+					this.replaceChecklistItemFromMainList(result.Success);
 					this.populateCheckValues();
+				} else if (result === null) {
+
+					this.showToast('Error', 'error', 'Unable to proceed as the checklist has already been deleted.');
+
+					this.dispatchEvent(new CustomEvent('deletechecklist', {
+						detail: { checklistid: checkListId }
+					}));
 				}
 			}).catch((err) => {
-				this.showToast('Error', 'error', err?.body?.message);
+
+				if (err?.body?.message?.includes('ENTITY_IS_DELETED')) {
+
+					this.dispatchEvent(new CustomEvent('deletechecklistitem', {
+						detail: { checkListItemId: checkListItemId, checkListId: checkListId }
+					}));
+
+					this.showToast('Error', 'error', 'Unable to proceed because this item has already been deleted.');
+				} else {
+					this.showToast('Error', 'error', err?.body?.message);
+				}
 			});
 	}
 
@@ -415,7 +560,7 @@ export default class ChecklistDetails extends NavigationMixin(LightningElement) 
 			return item;
 		});
 
-
+		console.log('viewChecklistItemActivity- '+JSON.stringify(this.viewChecklistItemActivity));
 
 		if (this.viewChecklistItemActivity) {
 			this.dispatchEvent(new CustomEvent('handleitemchange', {
@@ -444,6 +589,9 @@ export default class ChecklistDetails extends NavigationMixin(LightningElement) 
 
 					if (item.kt_checklist__Checklist_Items__r) {
 						item.kt_checklist__Checklist_Items__r.forEach(each => {
+
+							
+
 							if (each.Id === checklistItemId) {
 								each.kt_checklist__Checked__c = checkValue;
 							}
@@ -488,6 +636,89 @@ export default class ChecklistDetails extends NavigationMixin(LightningElement) 
 							} else {
 								each.iconClass = 'kt_checklist__cursorPointer';
 							}
+
+							// start Item Actions
+							each.isEditable = this.canEditValue;
+							each.isDeletable = this.canDeleteValue;
+
+							if(item.kt_checklist__Is_Checklist_Locked__c == true){
+								console.log('Inside if locked true. Checklist:'+item.kt_checklist__Checklist_Title__c);
+								
+								if(each.CreatedById === loggedInUserId){
+									debugger;
+									console.log('Inside Locked canEdit- '+this.canEditValue);
+									console.log('Inside Locked canDelete- '+this.canDeleteValue);
+									if(this.canEditValue || this.canDeleteValue){
+										if(each.isNotApplicable){
+											each.disableBMenu = true;
+										} else {
+										if(!each.Checked){
+											each.disableBMenu = false;
+										}else{
+											each.disableBMenu = true;
+										}
+									}
+									} else{
+										each.disableBMenu = true;
+									}
+									
+									
+									// each.isEditable = true;
+									// each.isDeletable = true;
+								}else{
+									console.log('Inside else reCalculateProgressBar- ');
+									each.disableBMenu = true;
+									// each.isEditable = false;
+									// each.isDeletable = false;
+								}
+								
+							}else{
+								if(item.isDeletable){
+									each.isEditable = true;
+									each.isDeletable = true;
+									if(each.isNotApplicable){
+										each.disableBMenu = true;
+									} else {
+										if(!each.Checked){
+											each.disableBMenu = false;
+										}else{
+											each.disableBMenu = true;
+										}
+									}
+								}else if(each.CreatedById === loggedInUserId && (each.isEditable || each.isDeletable)){
+									if(each.isNotApplicable){
+										each.disableBMenu = true;
+									} else {
+										if(!each.Checked){
+											each.disableBMenu = false;
+										}else{
+											each.disableBMenu = true;
+										}
+									}
+
+									// if(!each.Checked){
+									// 	each.disableBMenu = false;
+									// }else{
+									// 	each.disableBMenu = true;
+									// }
+									
+									// each.isEditable = true;
+									// each.isDeletable = true;
+								}else{
+									each.disableBMenu = true;
+									// each.isEditable = false;
+									// each.isDeletable = false;
+								}
+							}
+							
+							// if(each.isEditable || each.isDeletable){
+							// 	each.showActionMenu = true;
+							// }else{
+							// 	each.showActionMenu = false;
+							// }
+							each.showActionMenu = true;
+							//end Item Actions
+
 						});
 
 						this.handleSequential(item);
@@ -599,8 +830,19 @@ export default class ChecklistDetails extends NavigationMixin(LightningElement) 
 					this.replaceChecklistFromMainList(result);
 					element.disabled = false;
 				}).catch((err) => {
-					this.showToast('Failed to Save Item', 'error', err?.body?.message);
-					element.disabled = false;
+
+					if (err?.body?.message?.includes('ENTITY_IS_DELETED')) {
+
+						this.dispatchEvent(new CustomEvent('deletechecklist', {
+							detail: { checklistid: checklistrecordId }
+						}));
+
+						this.showToast('Error', 'error', 'This checklist has already been deleted. Unable to add an item.');
+
+					} else {
+						this.showToast('Failed to Save Item', 'error', err?.body?.message);
+						element.disabled = false;
+					}
 				});
 		} else {
 			element.disabled = false;
@@ -677,6 +919,7 @@ export default class ChecklistDetails extends NavigationMixin(LightningElement) 
 				rec.isActiveAddItem = false;
 				rec.finalDueDate = item.finalDueDate;
 				rec.dueColour = item.dueColour;
+				rec.isDeletable = item.isDeletable;
 				rec.accordionClass = 'slds-accordion__section slds-is-open slds-var-m-bottom_small';
 				this.isActiveAddItemOpened = false;
 				return rec;
@@ -882,25 +1125,26 @@ export default class ChecklistDetails extends NavigationMixin(LightningElement) 
 
 		console.log('Inside handleEditItem');
 		if (FORM_FACTOR === "Small" || FORM_FACTOR === "Medium") {
-			 event.preventDefault();
-    		let componentDef = {
-    			componentDef: 'kt_checklist:editChecklistItemDuc',
-    			attributes: {
+			event.preventDefault();
+			let componentDef = {
+				componentDef: 'kt_checklist:editChecklistItemDuc',
+				attributes: {
 					itemParentChecklistTitle: this.itemParentChecklistTitle,
-					itemToBeEdited : this.itemToBeEdited,
-					descToBeEdited : this.descToBeEdited,
-					itemToBeEditedId : this.itemToBeEditedId
+					itemToBeEdited: this.itemToBeEdited,
+					descToBeEdited: this.descToBeEdited,
+					itemToBeEditedId: this.itemToBeEditedId,
+					checklistId: this.itemParentChecklistId
 					//currentRecordId : this.recordId, 
 					//pathUrl : this.window.location.href
-    			}
-    		};
-    		let encodedComponentDef = btoa(JSON.stringify(componentDef));
-    		this[NavigationMixin.Navigate]({
-    			type: 'standard__webPage',
-    			attributes: {
-    				url: '/one/one.app#' + encodedComponentDef
-    			}
-    		});
+				}
+			};
+			let encodedComponentDef = btoa(JSON.stringify(componentDef));
+			this[NavigationMixin.Navigate]({
+				type: 'standard__webPage',
+				attributes: {
+					url: '/one/one.app#' + encodedComponentDef
+				}
+			});
 
 		} else {
 			this.openEditItemDialog = true;
@@ -923,23 +1167,41 @@ export default class ChecklistDetails extends NavigationMixin(LightningElement) 
 
 	handleSaveEditedItem(event) {
 
-		let isValid = this.validateEditForm();		
+		let isValid = this.validateEditForm();
 		if (isValid) {
-			saveEditedItem({ itemId: this.itemToBeEditedId, updatedItem: this.itemToBeEdited, updatedDesc: this.descToBeEdited })
+			saveEditedItem({ itemId: this.itemToBeEditedId, updatedItem: this.itemToBeEdited, updatedDesc: this.descToBeEdited, checklistId: this.itemParentChecklistId })
 				.then((result) => {
 					// this.reCalculateProgressBar(checkListId, checkListItemId, CheckVal);
 					if (result) {
-						console.log('***result:'+result)
+						console.log('***result:' + result)
 						this.showToast('Success', 'success', 'Checklist item \'' + this.itemToBeEdited + '\' edited successfully.');
 						this.replaceChecklistItemFromMainList(result);
+					} else if (result === null) {
+
+						this.showToast('Error', 'error', 'Unable to edit the item because the checklist has already been deleted.');
+
+						this.dispatchEvent(new CustomEvent('deletechecklist', {
+							detail: { checklistid: this.itemParentChecklistId }
+						}));
+
 					}
 				}).catch((err) => {
-					this.showToast('Error', 'error', err?.body?.message);
-				});
-		this.openEditItemDialog = false;
-	}
+					if (err?.body?.message?.includes('ENTITY_IS_DELETED')) {
 
-		
+						this.dispatchEvent(new CustomEvent('deletechecklistitem', {
+							detail: { checkListItemId: this.itemToBeEditedId, checkListId: this.itemParentChecklistId }
+						}));
+
+						this.showToast('Error', 'error', 'Unable to edit. This item has already been deleted.');
+
+					} else {
+						this.showToast('Error', 'error', err?.body?.message);
+					}
+				});
+			this.openEditItemDialog = false;
+		}
+
+
 	}
 
 	// validateEditForm() {
@@ -952,12 +1214,12 @@ export default class ChecklistDetails extends NavigationMixin(LightningElement) 
 	// 			}
 	// 			return validSoFar;
 	// 		}, true);
-	
+
 	// 	return allValid;
 	// }
 	validateEditForm() {
 		const itemField = this.template.querySelector('.dialogItemEdit'); // Select only the item field
-	
+
 		if (itemField) {
 			itemField.value = itemField.value?.trim(); // Trim whitespace
 			if (!itemField.value) {
@@ -969,11 +1231,11 @@ export default class ChecklistDetails extends NavigationMixin(LightningElement) 
 				itemField.reportValidity();
 			}
 		}
-		
+
 		return true; // Validation passed
 	}
-	
-	
+
+
 
 	async handleDeleteItem(event) {
 		const checkListItemId = event.currentTarget.dataset.itemid;
@@ -989,7 +1251,7 @@ export default class ChecklistDetails extends NavigationMixin(LightningElement) 
 		});
 
 		if (result) {
-			deleteChecklistItem({ checkListItemId: checkListItemId, checkListId: checkListId})
+			deleteChecklistItem({ checkListItemId: checkListItemId, checkListId: checkListId })
 				.then((result) => {
 					this.dispatchEvent(new CustomEvent('deletechecklistitem', {
 						detail: { checkListItemId: checkListItemId, checkListId: checkListId }
@@ -997,7 +1259,24 @@ export default class ChecklistDetails extends NavigationMixin(LightningElement) 
 
 					this.showToast('Success', 'success', 'Successfully Deleted Checklist item ' + '\"' + item + '\".');
 				}).catch((err) => {
-					this.showToast('Failed while deleting Checklist item.', 'error', err?.body?.message);
+					console.log('Error- ' + err?.body?.message)
+					if (err?.body?.message == 'Checklist not found') {
+
+						this.dispatchEvent(new CustomEvent('deletechecklist', {
+							detail: { checklistid: checkListId }
+						}));
+
+						this.showToast('Failed while deleting Checklist item.', 'error', 'Unable to delete the item because the checklist has already been deleted.');
+
+					} else if (err?.body?.message == 'Checklist Item not found') {
+
+						this.dispatchEvent(new CustomEvent('deletechecklistitem', {
+							detail: { checkListItemId: checkListItemId, checkListId: checkListId }
+						}));
+						this.showToast('Failed while deleting Checklist item.', 'error', 'This item has already been deleted.');
+					} else {
+						this.showToast('Failed while deleting Checklist item.', 'error', err?.body?.message);
+					}
 				});
 		}
 	}
