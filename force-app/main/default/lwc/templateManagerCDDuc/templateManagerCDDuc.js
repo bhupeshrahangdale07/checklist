@@ -1,6 +1,6 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import FORM_FACTOR from '@salesforce/client/formFactor';
-import getTemplateItems from '@salesforce/apex/TemplateManager.getTemplateItems';
+import getTemplateItems from '@salesforce/apex/TemplateManagerDuc.getTemplateItems';
 import saveTemplateAndItems from '@salesforce/apex/TemplateManagerDuc.saveTemplateAndItems'; // we need to update class Name it before packaging******************************************************
 import getAssignedPermissions from '@salesforce/apex/CheckListManagerDuc.assignedPermissions';
 import { NavigationMixin } from 'lightning/navigation';
@@ -17,6 +17,7 @@ import Resource from '@salesforce/resourceUrl/ChecklistGeniusDuc';
 
 export default class TemplateManager extends NavigationMixin(LightningElement) {
     dueDaysField = DueDays_FIELD;
+    
 
     askToupdateRelatedOpenChecklists = false;
     openCreateChecklistTemplDialog = true;
@@ -49,11 +50,17 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
 
     @track blankItemAdded = false;
 
+    useRTA = false;
+
     @wire(getAssignedPermissions)
     wiredData({ error, data }) {
         if (data) {
             this.hasAdminStandardPermission = data.isStandard ? data.isStandard : false;
             this.hasAdminPermission = data.isAdmin ? data.isAdmin : false;
+
+            this.useRTA = data.canUseRTA;
+            console.log('***this.useRTA:',this.useRTA);
+   		    
 
             if (!this.hasAdminStandardPermission && !this.hasAdminPermission) {
                 this.handleShowToast('Error', 'Please Add respective PermissionSet to Use Checklist Genius', 'error', '');
@@ -82,7 +89,7 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
             this.isActive = event.target.checked;
         } else{
             this.isSequential = event.target.checked;
-            console.log('this.isSequential:'+this.isSequential);
+            //console.log('this.isSequential:'+this.isSequential);
         }
     }
 
@@ -94,7 +101,12 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
         if (field == 'kt_checklist__Due_Days__c') {
             this.dueDaysValue = event.target.value;
         }
-        this.descriptionValue = this.template.querySelector('lightning-input-field[data-name="kt_checklist__Description__c"]').value;
+        if(!this.useRTA){
+            this.descriptionValue = this.template.querySelector('lightning-input-field[data-name="kt_checklist__Description__c"]').value;
+        }else{
+            this.descriptionValue = this.template.querySelector('lightning-input-field[data-name="kt_checklist__Description_New__c"]').value;
+        }
+        
 
     }
     disablePullToRefresh () {
@@ -222,11 +234,8 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
     get dynamicStyle() {
         return this.isMobile ? '' : 'border-right: 1px solid #ccc;';
     }
-    get dynamicClassDet() {
-        return this.isMobile ? 'slds-col' : 'slds-col slds-size_1-of-2 ';
-    }
-    get dynamicClassItm() {
-        return this.isMobile ? 'slds-col' : 'slds-col slds-size_1-of-2 ';
+    get dynamicClasses() {
+        return this.isMobile ? 'slds-col' : 'slds-col slds-size_1-of-2';
     }
 
 
@@ -314,7 +323,13 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
                 if (data[Sequential_FIELD.fieldApiName]) {
                     this.isSequential = data[Sequential_FIELD.fieldApiName];
                 }
-                this.descriptionValue = data['kt_checklist__Description__c'];
+
+                if (this.useRTA && data['kt_checklist__Description_New__c']) {
+                    this.descriptionValue = data['kt_checklist__Description_New__c'];
+                }else{
+                    this.descriptionValue = data['kt_checklist__Description__c'];
+                }
+                
 
                 this.editForm = true;
                 this.headerTitle = 'Edit Checklist Template';
@@ -398,12 +413,67 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
         }
 
         
-        //event.target.scrollIntoView({ behavior: 'smooth', block: 'bottom' });
-
-        //setTimeout(() => {
-            
-        //}, 100);
+        // event.target.scrollIntoView({ behavior: 'smooth', block: 'bottom' });
     
+    }
+
+    @track showUploadForm = false;
+    handleImportItems(){
+        this.showUploadForm = true;
+    }
+
+    handleImportCancel(){
+        this.showUploadForm = false;
+    }
+
+    handleImportSave(event){
+        event.stopPropagation();
+        event.preventDefault();
+        this.showUploadForm = false;
+    
+            let addedItems = event.detail;
+            if (!Array.isArray(addedItems)) {
+                addedItems = [addedItems];
+            }
+    
+            addedItems.forEach(addedItem => {
+    
+                let AddedItems = this.templateItems ? this.templateItems.length : 0;
+                let tempIndex = AddedItems;
+    
+                let item = {};
+                item.Id = 'Temporary-' + tempIndex;
+                if (this.isMobile) {
+                    item.kt_checklist__Item__c = addedItem.kt_checklist__Item__c ? addedItem.kt_checklist__Item__c : addedItem.Item__c;
+                    item.kt_checklist__Description__c = addedItem.kt_checklist__Description__c ? addedItem.kt_checklist__Description__c : addedItem.Description__c;
+                } else {
+                    item.kt_checklist__Item__c = addedItem.kt_checklist__Item__c;
+                    item.kt_checklist__Description__c = addedItem.kt_checklist__Description__c;
+                }
+                //item.kt_checklist__Item__c = addedItem.kt_checklist__Item__c;
+                //item.Item_Order__c = currentItem.Item_Order__c;
+    
+                if ('kt_checklist__Checklist__c' in item) {
+                    delete item['kt_checklist__Checklist__c'];
+                }
+
+                if ('Id' in item) {
+                    delete item['Id'];
+                }
+
+                item.isTemplateItem = false;
+                item.kt_checklist__Item_Order__c = tempIndex + 1;
+                if (this.templateItems) {
+                    this.templateItems.push(item);
+                } else {
+                    this.templateItems = [];
+                    this.templateItems.push(item);
+                }
+    
+            });
+            // let row = { 'kt_checklist__Item__c': '', 'kt_checklist__Item_Order__c': this.templateItems.length + 1, 'kt_checklist__Description__c': '' };
+            // this.templateItems.push(row);
+
     }
 
     /*
@@ -711,7 +781,7 @@ export default class TemplateManager extends NavigationMixin(LightningElement) {
 
     handleSave(){
         
-        debugger;
+
         // Assign the updated templateItems back to the property
             //this.templateItems = updatedTemplateItems;
             saveTemplateAndItems({ Template: JSON.stringify(this.formData.fields), TemplateItems: this.formData.updatedTemplateItems, DeletedTemplateItems: this.formData.deleteItems, updateRelatedOpenChecklist : this.updateRelatedOpenChecklist })

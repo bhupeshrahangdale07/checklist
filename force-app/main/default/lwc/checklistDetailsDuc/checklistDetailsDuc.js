@@ -236,17 +236,15 @@ export default class ChecklistDetails extends NavigationMixin(LightningElement) 
 						}
 
 						//start Item actionns
-						each.isEditable = this.canEditValue;
-							each.isDeletable = this.canDeleteValue;
+							each.isEditable = true;
+							each.isDeletable = true;
 
 							if(item.kt_checklist__Is_Checklist_Locked__c == true){
 								console.log('Inside if locked true. Checklist:'+item.kt_checklist__Checklist_Title__c);
-								
-								if(each.CreatedById === loggedInUserId){
-									debugger;
-									console.log('Inside Locked canEdit- '+this.canEditValue);
-									console.log('Inside Locked canDelete- '+this.canDeleteValue);
-									if(this.canEditValue || this.canDeleteValue){
+								each.isEditable = this.canEditValue;
+								each.isDeletable = this.canDeleteValue;
+								if(each.CreatedById === loggedInUserId && (this.canEditValue || this.canDeleteValue)){
+									console.log('Editable1- '+this.canEditValue+' Deletable1- '+this.canDeleteValue);
 										if(each.isNotApplicable){
 											each.disableBMenu = true;
 										} else {
@@ -256,15 +254,10 @@ export default class ChecklistDetails extends NavigationMixin(LightningElement) 
 											each.disableBMenu = true;
 										}
 									}
-									} else{
-										each.disableBMenu = true;
-									}
-									
 									
 									// each.isEditable = true;
 									// each.isDeletable = true;
 								}else{
-									console.log('Inside else reCalculateProgressBar- ');
 									each.disableBMenu = true;
 									// each.isEditable = false;
 									// each.isDeletable = false;
@@ -272,8 +265,6 @@ export default class ChecklistDetails extends NavigationMixin(LightningElement) 
 								
 							}else{
 								if(item.isDeletable){
-									each.isEditable = true;
-									each.isDeletable = true;
 									if(each.isNotApplicable){
 										each.disableBMenu = true;
 									} else {
@@ -283,7 +274,7 @@ export default class ChecklistDetails extends NavigationMixin(LightningElement) 
 											each.disableBMenu = true;
 										}
 									}
-								}else if(each.CreatedById === loggedInUserId && (each.isEditable || each.isDeletable)){
+								}else if(each.CreatedById === loggedInUserId){
 									if(each.isNotApplicable){
 										each.disableBMenu = true;
 									} else {
@@ -638,35 +629,28 @@ export default class ChecklistDetails extends NavigationMixin(LightningElement) 
 							}
 
 							// start Item Actions
-							each.isEditable = this.canEditValue;
-							each.isDeletable = this.canDeleteValue;
+							each.isEditable = true;
+							each.isDeletable = true;
 
 							if(item.kt_checklist__Is_Checklist_Locked__c == true){
 								console.log('Inside if locked true. Checklist:'+item.kt_checklist__Checklist_Title__c);
-								
-								if(each.CreatedById === loggedInUserId){
-									debugger;
-									console.log('Inside Locked canEdit- '+this.canEditValue);
-									console.log('Inside Locked canDelete- '+this.canDeleteValue);
-									if(this.canEditValue || this.canDeleteValue){
+								each.isEditable = this.canEditValue;
+								each.isDeletable = this.canDeleteValue;
+								if(each.CreatedById === loggedInUserId && (this.canEditValue || this.canDeleteValue)){
+									console.log('Editable1- '+this.canEditValue+' Deletable1- '+this.canDeleteValue);
 										if(each.isNotApplicable){
 											each.disableBMenu = true;
 										} else {
-										if(!each.Checked){
-											each.disableBMenu = false;
-										}else{
-											each.disableBMenu = true;
+											if(!each.Checked){
+												each.disableBMenu = false;
+											}else{
+												each.disableBMenu = true;
+											}
 										}
-									}
-									} else{
-										each.disableBMenu = true;
-									}
-									
 									
 									// each.isEditable = true;
 									// each.isDeletable = true;
 								}else{
-									console.log('Inside else reCalculateProgressBar- ');
 									each.disableBMenu = true;
 									// each.isEditable = false;
 									// each.isDeletable = false;
@@ -674,8 +658,6 @@ export default class ChecklistDetails extends NavigationMixin(LightningElement) 
 								
 							}else{
 								if(item.isDeletable){
-									each.isEditable = true;
-									each.isDeletable = true;
 									if(each.isNotApplicable){
 										each.disableBMenu = true;
 									} else {
@@ -685,7 +667,7 @@ export default class ChecklistDetails extends NavigationMixin(LightningElement) 
 											each.disableBMenu = true;
 										}
 									}
-								}else if(each.CreatedById === loggedInUserId && (each.isEditable || each.isDeletable)){
+								}else if(each.CreatedById === loggedInUserId){
 									if(each.isNotApplicable){
 										each.disableBMenu = true;
 									} else {

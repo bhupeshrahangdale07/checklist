@@ -3,7 +3,7 @@ import fetchCheckLists from '@salesforce/apex/MyChecklistsPageManagerDuc.fetchCh
 import FORM_FACTOR from '@salesforce/client/formFactor';
 // import getRelationObjectIconFieldMap from '@salesforce/apex/MyChecklistsPageManager.getRelationObjectIconFieldMap';
 import fetchIcons from '@salesforce/apex/MyChecklistsPageManagerDuc.fetchIcons';  // we need to update it before packaging******************************************************
-import getAssignedPermissions from '@salesforce/apex/CheckListManager.assignedPermissions';
+import getAssignedPermissions from '@salesforce/apex/CheckListManagerDuc.assignedPermissions';
 
 
 import { getRecord } from 'lightning/uiRecordApi';
@@ -68,20 +68,26 @@ export default class NavItemCmp extends LightningElement {
 
     @track hasAdminStandardPermission = false;
     @track hasAdminPermission = false;
+    canEdit;
+	canDelete;
 
     @wire(getAssignedPermissions)
     wiredData({ error, data }) {
         if (data) {
+            console.log('Nav Data- '+JSON.stringify(data));
+            debugger;
+            console.log('this.canEdit- '+data.canEdit +' this.canDelete'+ data.canDelete);
             this.hasAdminStandardPermission = data.isStandard ? data.isStandard : false;
             this.hasAdminPermission = data.isAdmin ? data.isAdmin : false;
-
+            this.canEdit = data.canEdit;
+   			this.canDelete = data.canDelete;
             if (!this.hasAdminStandardPermission && !this.hasAdminPermission) {
                 // handleShowToast(title, message, variant, mode)
                 this.handleShowToast('Error', 'Please Add respective PermissionSet to Use Checklist Genius', 'error', '');
             }
-
+            this.fetchRecords();
         } else if (error) {
-            this.handleShowToast('Error', err?.body?.message, 'error', '');
+            this.handleShowToast('Error', error?.body?.message, 'error', '');
         }
     }
 
@@ -97,6 +103,7 @@ export default class NavItemCmp extends LightningElement {
             this.handleShowToast('Error fetching user details', error?.body?.message, 'error', '');
         }
     }
+
 
     /*
      * This method fetches Icon Map for different objects. Assigns it to a variable relationFieldIconMap, which will then be used in grouped checklists array variable in another method.
@@ -144,7 +151,7 @@ export default class NavItemCmp extends LightningElement {
         //     this.fetchRecords();
         // }
 
-        this.fetchRecords();
+        //this.fetchRecords();
 
         if (FORM_FACTOR === 'Large') {
             this.isDesktop = true;
@@ -521,10 +528,6 @@ export default class NavItemCmp extends LightningElement {
         this.fetchRecords();
     }
 
-    // handleRemoveChecklistItem(){
-    //     debugger;
-    //     this.fetchRecords();
-    // }
     /*
      * Generic method to show toast message on UI. Can be called from multiple places.
     */
@@ -553,10 +556,10 @@ export default class NavItemCmp extends LightningElement {
         // Filter the CheckList array to remove the object with the matching recId
         //this.CheckList = this.CheckList.filter(item => item.Id !== recId);
 
-        console.log('Inside handleRemoveChecklistItem in navItemCmpCDDuc');
+        // console.log('Inside handleRemoveChecklistItem in navItemCmpCDDuc');
         const checkListId = event.detail.checkListId;
         const checkListItemId = event.detail.checkListItemId;
-        console.log('Inside handleRemoveChecklistItem in checklistIndexDuc, *checkListId:' + checkListId + '*checkListItemId:' + checkListItemId);
+        // console.log('Inside handleRemoveChecklistItem in checklistIndexDuc, *checkListId:' + checkListId + '*checkListItemId:' + checkListItemId);
 
         // Find the checklist that contains the item
         this.CheckList = this.CheckList.map(checkl => {

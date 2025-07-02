@@ -150,6 +150,7 @@ global with sharing class CheckListManagerDuc {
         if(String.isNotBlank(fieldName)){
             try{
                 checklistRecords = database.query(query, Accesslevel.USER_MODE);
+                system.debug('checklistRecords- '+checklistRecords);
             }catch(QueryException qe){
                 //// system.debug('qe.getInaccessibleFields()' +qe.getInaccessibleFields());
                 // system.debug('qe.getMessage()' +qe.getMessage());
@@ -695,15 +696,18 @@ global with sharing class CheckListManagerDuc {
 
     @AuraEnabled(cacheable=true)
     public static Map<String, Boolean> getChecklistEditDeletePermissions() {
-        Checklist_Item_Edit_Delete_Permission__c userPermission = Checklist_Item_Edit_Delete_Permission__c.getInstance();
+        List<Checklist_Item_Edit_Delete_Permissions__c> userPermission = new List<Checklist_Item_Edit_Delete_Permissions__c>([SELECT Id, Edit_Permission__c, Delete_Permission__c FROM  Checklist_Item_Edit_Delete_Permissions__c ORDER BY LastModifiedDate DESC LIMIT 1]);//Checklist_Item_Edit_Delete_Permissions__c.getInstance();
+        Boolean editAccess = false;
+        Boolean deleteAccess = false;
         
-        if (userPermission == null) {
-            throw new AuraHandledException('Permission settings not found.');
+        if (!userPermission.isEmpty()) {
+            editAccess = userPermission[0].Edit_Permission__c;
+            deleteAccess = userPermission[0].Delete_Permission__c;
         }
     
         return new Map<String, Boolean>{
-            'canEdit' => userPermission.Edit_Permission__c,
-            'canDelete' => userPermission.Delete_Permission__c
+            'canEdit' => editAccess,
+            'canDelete' => deleteAccess
         };
     }
     
